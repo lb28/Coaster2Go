@@ -4,7 +4,7 @@
     android:installLocation="auto">
 
     <application>
-        <activity android:name="de.uulm.dbis.coaster2go.MainActivity">
+        <activity android:name="de.uulm.dbis.coaster2go.MainActivity" android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
