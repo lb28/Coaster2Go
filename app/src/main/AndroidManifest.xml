@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.uulm.dbis.coaster2go"
+    android:installLocation="auto">
 
     <application>
         <activity android:name="de.uulm.dbis.coaster2go.MainActivity">
@@ -9,6 +11,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="de.uulm.dbis.coaster2go.TimsTestActivity"></activity>
     </application>
 
 </manifest>
