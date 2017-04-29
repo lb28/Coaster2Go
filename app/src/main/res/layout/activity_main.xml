@@ -63,6 +63,13 @@
         android:layout_height="wrap_content"
         android:text="Zur Parkübersicht" />
 
+    <Button
+        android:id="@+id/testActivityButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Data Test Activity"
+        android:onClick="clickTestButton"/>
+
 
 </LinearLayout>
 

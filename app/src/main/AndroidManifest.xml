@@ -3,15 +3,21 @@
     package="de.uulm.dbis.coaster2go"
     android:installLocation="auto">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application>
-        <activity android:name="de.uulm.dbis.coaster2go.MainActivity" android:theme="@style/Theme.AppCompat">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="de.uulm.dbis.coaster2go.TimsTestActivity"></activity>
+        <activity android:name=".TimsTestActivity" />
+        <activity android:name=".TestDataActivity"
+            android:theme="@style/Theme.AppCompat"></activity>
     </application>
 
 </manifest>
