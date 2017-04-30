@@ -34,13 +34,12 @@
         />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="0dp"
-        android:text="Message Board"
+        android:text="Login"
         android:layout_marginTop="10dp"
-        android:onClick="goToMessageActivity"
+        android:onClick="verifyLogin"
         />
 
     <TextView
@@ -59,6 +58,7 @@
         android:layout_height="wrap_content"
         android:text="Registrieren"
         android:layout_marginTop="20dp"
+        android:onClick="goToRegisterActivity"
         />
 
     <Button
@@ -74,6 +74,13 @@
         android:text="Data Test Activity"
         android:onClick="clickTestButton"/>
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Message Board"
+        android:onClick="goToMessageActivity"
+        />
 
 </LinearLayout>
 

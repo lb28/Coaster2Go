@@ -61,8 +61,8 @@
         android:id="@+id/textViewMsg3"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="57dp"
-        android:layout_marginLeft="129dp"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="100dp"
         android:lines="3"
         android:text="Message"
         android:textAlignment="textStart"
@@ -74,13 +74,12 @@
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginBottom="30dp"
-        android:layout_marginLeft="129dp"
+        android:layout_marginLeft="100dp"
         android:lines="3"
         android:text="Message"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/textViewMsg3"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="330dp" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
         android:id="@+id/textViewName2"
@@ -101,13 +100,12 @@
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginBottom="29dp"
-        android:layout_marginLeft="129dp"
+        android:layout_marginLeft="100dp"
         android:lines="3"
         android:text="Message"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/textViewMsg2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="252dp" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
         android:id="@+id/textViewName1"

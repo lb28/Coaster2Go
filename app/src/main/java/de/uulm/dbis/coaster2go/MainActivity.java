@@ -37,6 +37,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void verifyLogin(View view) {
+
+    }
+
+    public void goToRegisterActivity(View view) {
+
+    }
+
     public void goToMessageActivity(View view) {
         Intent intent = new Intent(this, MessageActivity.class);
         startActivity(intent);

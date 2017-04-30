@@ -1,5 +1,8 @@
 package de.uulm.dbis.coaster2go;
 
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,8 +24,7 @@ import de.uulm.dbis.coaster2go.model.Message;
 public class MessageActivity extends AppCompatActivity {
 
     private DatabaseReference database;
-
-    DatabaseReference messageRef;
+    private DatabaseReference messageRef;
 
     public static final String TAG = "messages test";
 
@@ -39,7 +40,15 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                List<Message> messageList = new ArrayList<Message>(3);
+                try {
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                    r.play();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                List<Message> messageList = new ArrayList<>(3);
 
                 // Get Message objects...
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
