@@ -26,6 +26,7 @@ name
 beschreibung
 lat //Breitengrad
 lon //Längengrad
+typ //Art der Attraktion, Tags
 bild(er) //Link
 anzahlBewertungen
 durschschnittBewertung				//alle Wartezeiten-
