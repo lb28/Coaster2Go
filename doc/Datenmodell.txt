@@ -1,0 +1,60 @@
+USER:
+----------
+username //als id?
+userID //optional dank username als id?
+passwort //nur Hash
+email
+admin:boolean //Angabe ob Admin oder nicht??
+
+PARK:
+-----------
+id
+name
+ort
+beschreibung
+lat //Breitengrad
+lon //Längengrad
+bild(er) //Link
+anzahlBewertungen
+durschschnittBewertung
+admin //username oder id des Admin
+
+ATTRAKTION:
+-------------
+id
+name
+beschreibung
+lat //Breitengrad
+lon //Längengrad
+bild(er) //Link
+anzahlBewertungen
+durschschnittBewertung				//alle Wartezeiten-
+anzahlGesamtWartezeiten				//durchschnitte könnten
+durchschnittGesamtWartezeit			//theoretisch auch on
+anzahlHeuteWartezeiten				//the fly berechnet werden
+durchschnittHeuteWartezeiten		//(auf server oder
+anzahlAktuellWartezeiten			//client Seite) und
+durchschnittAktuellWartezeiten		//nicht gespeichert werden
+ggf. zusätzliche Speicherung für duchschnittszeiten der einzelnen Uhrzeiten
+parkID //ID des Parks
+
+BEWERTUNG:
+------------
+id
+typ //park oder attraktionsbewertung
+parkID/attraktionID //id des zu bewertenden Objekts
+username //oder userid
+anzahlSterne
+kommentar
+datum //Jahr, Monat, Tag extra oder Datumsobjekt
+
+WARTEZEIT:
+-------------
+id
+attraktionID
+username //oder userID
+minuten
+datum //Jahr, Monat, Tag extra oder Datumsobjekt
+uhrzeit //Stunden, Minuten extra oder als Uhrzeit/Datumsobjekt
+
+//Ids könnten zum Teil bei Speicherung im JSON-Format weg gelassen werden...

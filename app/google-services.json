@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1016916354621",
+    "firebase_url": "https://coaster2go.firebaseio.com",
+    "project_id": "coaster2go",
+    "storage_bucket": "coaster2go.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016916354621:android:b6cbb4fe26155293",
+        "android_client_info": {
+          "package_name": "de.uulm.dbis.coaster2go"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1016916354621-gq63e03dedqi9240t0tf1ssvrngl56nv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.uulm.dbis.coaster2go",
+            "certificate_hash": "65b9abc1256bac10fb50ea5991f26edcf9b73cec"
+          }
+        },
+        {
+          "client_id": "1016916354621-2apa6dtmnl60oe4ian4alplkp4qgg9bf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-O_FFzLtUvFK2WTg8jVgjTSz9KXTxk-o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1016916354621-2apa6dtmnl60oe4ian4alplkp4qgg9bf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

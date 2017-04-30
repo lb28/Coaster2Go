@@ -6,22 +6,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.uulm.dbis.coaster2go.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="20dp"
+    >
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         />
 
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Passwort"
@@ -35,8 +38,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="0dp"
-        android:text="Login"
+        android:text="Message Board"
         android:layout_marginTop="10dp"
+        android:onClick="goToMessageActivity"
         />
 
     <TextView

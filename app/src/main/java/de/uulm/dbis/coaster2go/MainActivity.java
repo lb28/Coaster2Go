@@ -36,4 +36,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TestDataActivity.class);
         startActivity(intent);
     }
+
+    public void goToMessageActivity(View view) {
+        Intent intent = new Intent(this, MessageActivity.class);
+        startActivity(intent);
+    }
 }

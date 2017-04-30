@@ -5,16 +5,18 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application>
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat">
+    <application
+        android:theme="@style/AppTheme"
+        android:label="Coaster2Go">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MessageActivity"
+            android:label="Message Board"/>
         <activity android:name=".TimsTestActivity" />
         <activity android:name=".TestDataActivity"
             android:theme="@style/Theme.AppCompat"></activity>
