@@ -27,16 +27,8 @@ public class Park {
      * @param admin
      */
     public Park(String id, String name, String location, String description, double lat, double lon, String image, int numberOfReviews, double averageReview, String admin) {
+        this(name, location, description, lat, lon, image, numberOfReviews, averageReview, admin);
         this.id = id;
-        this.name = name;
-        this.location = location;
-        this.description = description;
-        this.lat = lat;
-        this.lon = lon;
-        this.image = image;
-        this.numberOfReviews = numberOfReviews;
-        this.averageReview = averageReview;
-        this.admin = admin;
     }
 
     /** Konstruktor ohne id

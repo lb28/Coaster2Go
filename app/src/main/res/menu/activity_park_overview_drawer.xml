@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_park_overview"
+            android:icon="@drawable/ic_local_activity_black_24dp"
+            android:title="@string/park_overview" />
+        <item
+            android:id="@+id/nav_sign_in"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/sign_in" />
+        <item
+            android:id="@+id/nav_my_account"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/my_account" />
+    </group>
+
+    <item android:title="@string/settings">
+        <menu>
+            <item
+                android:id="@+id/nav_offline_switch"
+                android:icon="@drawable/ic_airplanemode_active_black_24dp"
+                android:title="@string/offline_mode"
+                app:actionLayout="@layout/offline_switch"
+                />
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/settings" />
+            <item
+                android:id="@+id/nav_sign_out"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="@string/logout" />
+        </menu>
+    </item>
+
+</menu>

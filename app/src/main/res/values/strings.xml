@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Coaster2Go</string>
+    <string name="facebook_application_id" translatable="false">810569725772828</string>
+    <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">fb810569725772828</string>
+    <string name="title_activity_park_overview">Park Overview</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="sign_in_cancelled">Anmeldevorgang abgebrochen</string>
+    <string name="no_internet_connection">Keine Internetverbindung</string>
+    <string name="unknown_error">Unbekannter Fehler</string>
+    <string name="unknown_sign_in_response">Unbekannte Antwort vom Anmeldedienst</string>
+    <string name="offline_mode">Offline-Modus</string>
+    <string name="logout">Logout</string>
+    <string name="settings">Einstellungen</string>
+    <string name="my_account">Mein Account</string>
+    <string name="sign_in">Login</string>
+    <string name="park_overview">Parkübersicht</string>
 </resources>

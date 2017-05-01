@@ -6,8 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:theme="@style/AppTheme"
-        android:label="Coaster2Go">
+        android:label="Coaster2Go"
+        android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,11 +15,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MessageActivity"
-            android:label="Message Board"/>
+        <activity
+            android:name=".MessageActivity"
+            android:label="Message Board" />
         <activity android:name=".TimsTestActivity" />
-        <activity android:name=".TestDataActivity"
-            android:theme="@style/Theme.AppCompat"></activity>
+        <activity
+            android:name=".TestDataActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".ParkOverviewActivity"
+            android:label="@string/title_activity_park_overview"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

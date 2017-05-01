@@ -1,86 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout_MainActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context="de.uulm.dbis.coaster2go.MainActivity"
-    android:orientation="vertical"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:layout_marginTop="20dp"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editText"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Name"
-        android:inputType="textPersonName"
-        android:layout_gravity="center_horizontal"
-        />
-
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Passwort"
-        android:inputType="textPassword"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        />
-
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:layout_marginTop="10dp"
-        android:onClick="verifyLogin"
-        />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="google / facebook login"
-        android:height="60dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:gravity="center"
-        />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registrieren"
-        android:layout_marginTop="20dp"
-        android:onClick="goToRegisterActivity"
-        />
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ems="10"
+            android:hint="Name"
+            android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Zur Parkübersicht" />
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Passwort"
+            android:inputType="textPassword" />
 
-    <Button
-        android:id="@+id/testActivityButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Data Test Activity"
-        android:onClick="clickTestButton"/>
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:onClick="verifyLogin"
+            android:text="Login" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Message Board"
-        android:onClick="goToMessageActivity"
-        />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:height="60dp"
+            android:gravity="center"
+            android:text="google / facebook login" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:onClick="goToRegisterActivity"
+            android:text="Registrieren" />
 
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Zur Parkübersicht"
+            android:onClick="goToParkOverview" />
+
+        <Button
+            android:id="@+id/testActivityButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="clickTestButton"
+            android:text="Data Test Activity" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="goToMessageActivity"
+            android:text="Message Board" />
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
