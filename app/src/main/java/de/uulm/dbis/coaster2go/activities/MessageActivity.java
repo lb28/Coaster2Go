@@ -1,4 +1,4 @@
-package de.uulm.dbis.coaster2go;
+package de.uulm.dbis.coaster2go.activities;
 
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.model.Message;
 
 public class MessageActivity extends AppCompatActivity {

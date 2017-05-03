@@ -1,4 +1,4 @@
-package de.uulm.dbis.coaster2go;
+package de.uulm.dbis.coaster2go.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Park;
 
 public class TestDataActivity extends AppCompatActivity {

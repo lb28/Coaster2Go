@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.uulm.dbis.coaster2go.TestDataActivity">
+    tools:context="de.uulm.dbis.coaster2go.activities.TestDataActivity">
 
     <TextView
         android:id="@+id/testDataTextView"

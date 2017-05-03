@@ -1,12 +1,9 @@
-package de.uulm.dbis.coaster2go;
+package de.uulm.dbis.coaster2go.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -27,84 +25,83 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
-public class ParkOverviewActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import de.uulm.dbis.coaster2go.R;
 
+/**
+ * A base activity that provides the menu drawer, has to be extended by
+ * the other activities that need a menu drawer
+ *
+ * adapted from <a href='http://stackoverflow.com/questions/4922641/sliding-drawer-appear-in-all-activities'>
+ *     http://stackoverflow.com/questions/4922641/sliding-drawer-appear-in-all-activities</a>
+ */
+public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int RC_SIGN_IN = 1;
 
-    NavigationView navigationView;
+    FirebaseUser user;
+
+    protected DrawerLayout baseLayout;
+    protected FrameLayout actContent;
+
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_park_overview);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    public void setContentView(final int layoutResID) {
+
+        baseLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base, null);
+        actContent = (FrameLayout) baseLayout.findViewById(R.id.activity_content);
+
+        getLayoutInflater().inflate(layoutResID, actContent, true);
+        super.setContentView(baseLayout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         // user signed in?
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        TextView subtitle = (TextView) navigationView.getHeaderView(0)
+                .findViewById(R.id.nav_header_subtitle);
         if (user != null) {
             // User is signed in
             setMenuItemsSignedIn();
+            subtitle.setText(user.getEmail());
         } else {
             // No user is signed in
             setMenuItemsSignedOut();
+            subtitle.setText(R.string.not_signed_in);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add_park);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawerToggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        drawer.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+
+    private void setMenuItemsSignedIn() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_sign_in).setVisible(false);
+        nav_Menu.findItem(R.id.nav_sign_out).setVisible(true);
+        nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.park_overview, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_sort_abc) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    private void setMenuItemsSignedOut() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_sign_in).setVisible(true);
+        nav_Menu.findItem(R.id.nav_sign_out).setVisible(false);
+        nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle navigation view item clicks
         int id = item.getItemId();
         if (id == R.id.nav_sign_in) {
             startActivityForResult(
@@ -145,41 +142,17 @@ public class ParkOverviewActivity extends AppCompatActivity
         return true;
     }
 
-    public static Intent createIntent(MainActivity mainActivity, IdpResponse response) {
-        Intent intent = new Intent(mainActivity, ParkOverviewActivity.class);
-        intent.putExtra("email", response.getEmail());
-        intent.putExtra("idpToken", response.getIdpToken());
-        return intent;
-    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
 
-    private void showSnackbar(int resId) {
-        Snackbar.make(
-                findViewById(R.id.coordinatorLayout_ParkOverview),
-                resId,
-                Snackbar.LENGTH_LONG
-        );
-    }
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
 
-    private void setMenuItemsSignedIn() {
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu nav_Menu = navigationView.getMenu();
-        nav_Menu.findItem(R.id.nav_sign_in).setVisible(false);
-        nav_Menu.findItem(R.id.nav_sign_out).setVisible(true);
-        nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
-        TextView subtitle = (TextView) navigationView.getHeaderView(0)
-                .findViewById(R.id.nav_header_subtitle);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        subtitle.setText(user.getEmail());
-    }
-    private void setMenuItemsSignedOut() {
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu nav_Menu = navigationView.getMenu();
-        nav_Menu.findItem(R.id.nav_sign_in).setVisible(true);
-        nav_Menu.findItem(R.id.nav_sign_out).setVisible(false);
-        nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
-        TextView subtitle = (TextView) navigationView.getHeaderView(0)
-                .findViewById(R.id.nav_header_subtitle);
-        subtitle.setText("Sie sind nicht eingeloggt");
+        return super.onOptionsItemSelected(item);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -216,5 +189,25 @@ public class ParkOverviewActivity extends AppCompatActivity
             showSnackbar(R.string.unknown_sign_in_response);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void showSnackbar(int resId) {
+        Snackbar.make(
+                findViewById(R.id.coordinatorLayout_ParkOverview),
+                resId,
+                Snackbar.LENGTH_LONG
+        );
+    }
+
+
 
 }

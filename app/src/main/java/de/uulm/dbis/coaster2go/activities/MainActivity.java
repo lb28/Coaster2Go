@@ -1,22 +1,18 @@
-package de.uulm.dbis.coaster2go;
+package de.uulm.dbis.coaster2go.activities;
 
 import android.content.Intent;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
-import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.microsoft.windowsazure.mobileservices.*;
 
 import java.net.MalformedURLException;
-import java.util.Arrays;
+
+import de.uulm.dbis.coaster2go.R;
 
 public class MainActivity extends AppCompatActivity {
 

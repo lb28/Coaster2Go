@@ -8,7 +8,7 @@
     <application
         android:label="Coaster2Go"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -16,14 +16,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MessageActivity"
+            android:name=".activities.MessageActivity"
             android:label="Message Board" />
-        <activity android:name=".TimsTestActivity" />
+        <activity android:name=".activities.TimsTestActivity" />
         <activity
-            android:name=".TestDataActivity"
+            android:name=".activities.TestDataActivity"
             android:theme="@style/Theme.AppCompat" />
         <activity
-            android:name=".ParkOverviewActivity"
+            android:name=".activities.ParkOverviewActivity"
             android:label="@string/title_activity_park_overview"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -32,6 +32,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.BaseActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
