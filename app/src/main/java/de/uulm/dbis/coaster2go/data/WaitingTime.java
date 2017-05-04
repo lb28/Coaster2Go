@@ -8,7 +8,7 @@ public class WaitingTime {
     private String displayName;
     private String userId;
     private int minutes;
-    private Date date; //Not sure if this equals the Azure SQL Date format
+    private Date createdAt; //Not sure if this equals the Azure SQL Date format
 
     /** Constructor with id.
      *
@@ -17,16 +17,16 @@ public class WaitingTime {
      * @param displayName
      * @param userId
      * @param minutes
-     * @param date
+     * @param createdAt
      */
     public WaitingTime(String id, String attractionId, String displayName, String userId,
-                       int minutes, Date date) {
+                       int minutes, Date createdAt) {
         this.id = id;
         this.attractionId = attractionId;
         this.displayName = displayName;
         this.userId = userId;
         this.minutes = minutes;
-        this.date = date;
+        this.createdAt = createdAt;
     }
 
     /** Constructor without id.
@@ -35,15 +35,15 @@ public class WaitingTime {
      * @param displayName
      * @param userId
      * @param minutes
-     * @param date
+     * @param createdAt
      */
     public WaitingTime(String attractionId, String displayName, String userId,
-                       int minutes, Date date) {
+                       int minutes, Date createdAt) {
         this.attractionId = attractionId;
         this.displayName = displayName;
         this.userId = userId;
         this.minutes = minutes;
-        this.date = date;
+        this.createdAt = createdAt;
     }
 
     public String getId() {
@@ -86,11 +86,11 @@ public class WaitingTime {
         this.minutes = minutes;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

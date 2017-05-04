@@ -10,7 +10,7 @@ public class Review {
     private String userId;
     private int numberOfStars;
     private String comment;
-    private Date date; //Not sure if this equals the Azure SQL Date format
+    private Date createdAt; //Not sure if this equals the Azure SQL Date format
 
     /** Constructor with id.
      *
@@ -20,17 +20,17 @@ public class Review {
      * @param userId
      * @param numberOfStars
      * @param comment
-     * @param date
+     * @param createdAt
      */
     public Review(String id, String reviewedId, String displayName, String userId, int numberOfStars,
-                  String comment, Date date) {
+                  String comment, Date createdAt) {
         this.id = id;
         this.reviewedId = reviewedId;
         this.displayName = displayName;
         this.userId = userId;
         this.numberOfStars = numberOfStars;
         this.comment = comment;
-        this.date = date;
+        this.createdAt = createdAt;
     }
 
     /** Constructor without id.
@@ -40,16 +40,16 @@ public class Review {
      * @param userId
      * @param numberOfStars
      * @param comment
-     * @param date
+     * @param createdAt
      */
     public Review(String reviewedId, String displayName, String userId, int numberOfStars,
-                  String comment, Date date) {
+                  String comment, Date createdAt) {
         this.reviewedId = reviewedId;
         this.displayName = displayName;
         this.userId = userId;
         this.numberOfStars = numberOfStars;
         this.comment = comment;
-        this.date = date;
+        this.createdAt = createdAt;
     }
 
     public String getId() {
@@ -108,12 +108,12 @@ public class Review {
         this.comment = comment;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class Review {
                 ", userId='" + userId + '\'' +
                 ", numberOfStars=" + numberOfStars +
                 ", comment='" + comment + '\'' +
-                ", date=" + date +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

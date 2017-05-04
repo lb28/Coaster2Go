@@ -13,6 +13,7 @@ public class Attraction {
     private double averageWaitingTime;
     private int numberOfTodayWaitingTimes;
     private double averageTodayWaitingTime;
+    //private int numberOfCurrentWaitingTimes //probably not necessary
     private double currentWaitingTime;
     private String parkId;
 

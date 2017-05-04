@@ -10,7 +10,7 @@ public class Park {
     private String image;
     private int numberOfReviews;
     private double averageReview;
-    private String admin;
+    private String admin; //UserId of Park Creator
 
 
     /** Konstruktor mit id

@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import de.uulm.dbis.coaster2go.R;
+import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.Park;
 
 public class TestDataActivity extends AppCompatActivity {
@@ -32,8 +33,6 @@ public class TestDataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_data);
-
-        System.out.println("--------------------------- start testklasse");
 
         //Startimplementierung der Verbindung
         try {
@@ -72,6 +71,8 @@ public class TestDataActivity extends AppCompatActivity {
                 3, 5.0, "admin");
 
 
+
+
 /*
         //Test Park in Datenbank ladem:
         mClient.getTable(Park.class).insert(testPark, new TableOperationCallback<Park>() {
@@ -85,43 +86,24 @@ public class TestDataActivity extends AppCompatActivity {
         });
 */
 
-    //Zweite (wahrscheinlich bessere Variante Park in Datenbank laden und zu lesen:
+    //Thread testet die neusten Methoden des AzureDBManagers
         new Thread(new Runnable() {
             public void run() {
-                try {
-                    //Park hochladen
-                    Park resultPark = mParkTable.insert(testPark).get();
-                    Park resultPark2 = mParkTable.insert(testPark2).get();
-                    Park resultPark3 = mParkTable.insert(testPark3).get();
-                    System.out.println("--------------------------- nach hochladen der Daten");
+                System.out.println("--------------------------- AzureDBManager Test Start");
+                AzureDBManager.test();
+                Park res = AzureDBManager.createPark(mParkTable, testPark);
+                Park res2 = AzureDBManager.createPark(mParkTable, testPark2);
+                Park res3 = AzureDBManager.createPark(mParkTable, testPark3);
+                System.out.println(res.toString()+res2.toString()+res3.toString());
+                List<Park> parkList = AzureDBManager.getParkList(mParkTable);
+                System.out.println(parkList.toString());
+                res3.setAdmin("Test Update");
+                Park resUpdate = AzureDBManager.editPark(mParkTable, res3);
+                System.out.println(resUpdate.toString());
+                System.out.println(AzureDBManager.getParkById(mParkTable, res.getId()));
 
-                    //Liste aller Parks zurück geben:
-                    List<Park> results = mParkTable.execute().get();
-                    System.out.println("--------------------------- nach runterladen der Daten");
+                System.out.println("--------------------------- AzureDBManager Test Ende");
 
-                    //Parks anzeigen
-                    resultText = "Gelesene Daten:\n ";
-                    for(Park r: results){
-                        resultText += r.toString();
-                    }
-                    System.out.println(resultText);
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            testText = (TextView) findViewById(R.id.testDataTextView);
-                            testText.setText(resultText);
-                        }
-                    });
-
-
-                } catch (MobileServiceException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
             }
         }).start();
 
