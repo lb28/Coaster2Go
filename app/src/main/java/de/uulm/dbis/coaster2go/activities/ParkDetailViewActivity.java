@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import de.uulm.dbis.coaster2go.R;
 
-public class TimsTestActivity extends AppCompatActivity {
+public class ParkDetailViewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tims_test);
+        setContentView(R.layout.activity_park_detail_view);
     }
 }

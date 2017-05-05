@@ -18,7 +18,6 @@
         <activity
             android:name=".activities.MessageActivity"
             android:label="Message Board" />
-        <activity android:name=".activities.TimsTestActivity" />
         <activity
             android:name=".activities.TestDataActivity"
             android:theme="@style/Theme.AppCompat" />
@@ -36,8 +35,10 @@
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.BaseActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activities.BaseActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.ParkDetailViewActivity"></activity>
     </application>
 
 </manifest>

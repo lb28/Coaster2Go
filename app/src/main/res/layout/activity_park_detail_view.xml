@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/park_detail_view_relativelayout"
+    tools:context="de.uulm.dbis.coaster2go.activities.ParkDetailViewActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/park_image_linearlayout">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/park_image"
+            android:src="@mipmap/ic_launcher" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/park_image_linearlayout"
+        android:paddingTop="10dp"
+        android:id="@+id/park_detail_view_header_relativelayout">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher_round"
+            android:background="@color/tw__solid_white"
+            android:id="@+id/button_favorite_park"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/button_favorite_park"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="20dp"
+            android:text="EUROPAPARK"
+            android:id="@+id/park_detail_parkname"
+            android:layout_above="@+id/parkaverage_ratingbar" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button_favorite_park"
+            android:id="@+id/parkaverage_ratingbar"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/parkaverage_ratingbar"
+            android:layout_below="@id/park_detail_parkname"
+            android:textSize="20dp"
+            android:text="4,0"
+            android:paddingLeft="5dp"
+            android:id="@+id/park_detail_average"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/park_detail_view_header_relativelayout"
+        android:layout_below="@id/park_image_linearlayout"
+        android:paddingTop="10dp"
+        android:paddingLeft="5dp"
+        android:orientation="horizontal"
+        android:id="@+id/park_detail_gps_linearlayout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:text="Rust"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="400 km"
+                android:id="@+id/park_detail_distance"/>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher_round"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:background="@color/cardview_light_background"
+            />
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/park_detail_view_header_relativelayout"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Attraktionen"/>
+
+
+
+
+
+</RelativeLayout>
