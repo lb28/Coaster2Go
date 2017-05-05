@@ -28,4 +28,6 @@
     <string name="alphabetically">Alphabetisch</string>
     <string name="rating">Bewertung</string>
     <string name="distance">Entfernung</string>
+    <string name="all_page_title">Alle</string>
+    <string name="favs_page_title">Favoriten</string>
 </resources>

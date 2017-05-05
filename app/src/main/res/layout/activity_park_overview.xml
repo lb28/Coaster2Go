@@ -18,25 +18,36 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            android:theme="@style/AppTheme"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_park_overview"
-        android:id="@+id/include" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPagerParkTabs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayoutPark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_gravity="top"/>
+
+    </android.support.v4.view.ViewPager>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_park"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|left"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:clickable="true"
         android:src="@drawable/ic_add_black_24dp"
-        app:backgroundTint="@color/tw__composer_red"
+        app:backgroundTint="@color/colorAccent"
         app:fabSize="normal"
-        app:layout_anchor="@+id/include"
         app:layout_anchorGravity="bottom|right" />
 
 </android.support.design.widget.CoordinatorLayout>
