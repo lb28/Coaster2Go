@@ -62,7 +62,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         if (user != null) {
             // User is signed in
             setMenuItemsSignedIn();
-            subtitle.setText(user.getEmail());
+            subtitle.setText(user.getDisplayName());
         } else {
             // No user is signed in
             setMenuItemsSignedOut();
@@ -163,6 +163,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
             // Successfully signed in
             if (resultCode == ResultCodes.OK) {
+
                 Intent intent = getIntent();
                 finish();
                 startActivity(intent);

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/parkList_image"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/ic_local_activity_black_24dp"
+        android:contentDescription="@string/park_image" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/parkList_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textSize="20sp" />
+
+        <RatingBar
+            android:id="@+id/parkList_rating"
+            style="?android:attr/ratingBarStyleIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:numStars="5"
+            android:rating="3"
+            android:stepSize="0.5"
+            android:visibility="visible"
+            android:isIndicator="true"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/parkList_location"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="right|center"
+            android:text="Ort" />
+
+        <TextView
+            android:id="@+id/parkList_distance"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="right|center"
+            android:text="Entf." />
+
+    </LinearLayout>
+
+</LinearLayout>
