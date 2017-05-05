@@ -5,9 +5,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:label="Coaster2Go"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,10 +36,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.BaseActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.ParkDetailViewActivity"></activity>
+        <activity android:name=".activities.BaseActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activities.ParkDetailViewActivity"
+            android:parentActivityName=".activities.ParkOverviewActivity"/>
+        <activity android:name=".activities.MyAccountActivity"
+            android:label="@string/my_account"
+            android:parentActivityName=".activities.ParkOverviewActivity"/>
     </application>
 
 </manifest>

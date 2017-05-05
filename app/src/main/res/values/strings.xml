@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Coaster2Go</string>
     <string name="facebook_application_id" translatable="false">810569725772828</string>
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
@@ -21,7 +21,7 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="park_image">Park-Bild</string>
-    <string name="name">name</string>
+    <string name="name">Name</string>
     <string name="not_signed_in">Sie sind nicht eingeloggt</string>
     <string name="refresh">Aktualisieren</string>
     <string name="sort_method">Sortierung</string>
@@ -30,4 +30,90 @@
     <string name="distance">Entfernung</string>
     <string name="all_page_title">Alle</string>
     <string name="favs_page_title">Favoriten</string>
+
+
+    <!-- FIREBASE UI AUTH Strings -->
+    <!-- Common -->
+    <string name="default_toolbar_title">@string/app_name</string>
+    <string name="progress_dialog_loading">Laden…</string>
+    <string name="sign_in_default">Anmelden</string>
+    <string name="general_error">Ein Fehler ist aufgetreten.</string>
+
+    <!-- Provider -->
+    <string name="idp_name_google">Google</string>
+    <string name="idp_name_facebook">Facebook</string>
+    <string name="idp_name_twitter">Twitter</string>
+
+    <!-- Auth method picker -->
+    <string name="sign_in_with_google">Anmeldung mit Google</string>
+    <string name="sign_in_with_facebook">Anmeldung mit Facebook</string>
+    <string name="sign_in_with_twitter">Anmeldung mit Twitter</string>
+    <string name="sign_in_with_email">Anmeldung mit E-Mail</string>
+
+    <!-- Email common-->
+    <string name="next_default">Weiter</string>
+    <string name="email_hint">E-Mail</string>
+    <string name="password_hint">Passwort</string>
+    <string name="required_field">Sie können dieses Feld nicht leer lassen.</string>
+    <string name="invalid_email_address">Diese E-Mail-Adresse ist nicht korrekt</string>
+    <string name="missing_email_address">Geben Sie Ihre E-Mail-Adresse ein, um fortzufahren</string>
+    <string name="progress_dialog_checking_accounts">Prüfung auf bestehende Konten…</string>
+
+    <!-- Email sign up -->
+    <string name="title_register_email">Registrieren</string>
+    <string name="name_hint">Benutzername</string>
+    <string name="button_text_save">Speichern</string>
+    <string name="progress_dialog_signing_up">Registrieren…</string>
+    <string name="error_weak_password">
+        <item quantity="one">Passwort nicht stark genug. Verwenden Sie mindestens %1$d Zeichen und eine Mischung aus Buchstaben und Zahlen</item>
+        <item quantity="other">Passwort nicht stark genug. Verwenden Sie mindestens %1$d Zeichen und eine Mischung aus Buchstaben und Zahlen</item>
+    </string>
+    <string name="email_account_creation_error">E-Mail-Konto-Registrierung nicht erfolgreich.</string>
+    <string name="error_user_collision">Ein Konto existiert bereits mit dieser E-Mail-Adresse.</string>
+    <string name="create_account_preamble">"Mit dem Erstellen eines Accounts erklären Sie sich einverstanden mit den "</string>
+    <string name="terms_of_service">Nutzungsbedingungen</string>
+
+    <!-- Idp/Email welcome back -->
+    <string name="title_welcome_back_idp_prompt">@string/sign_in_default</string>
+    <string name="title_welcome_back_password_prompt">@string/sign_in_default</string>
+    <string name="welcome_back_idp_header">Sie haben schon einen Account!</string>
+    <string name="welcome_back_email_header">Willkommen zurück!</string>
+    <string name="welcome_back_idp_prompt">
+        Sie haben <xliff:g example="jane.doe@example.com" id="email_addr">%1$s</xliff:g> schon verwendet.
+        Melden Sie sich mit <xliff:g example="Google" id="provider_name">%2$s</xliff:g> an, um fortzufahren.
+    </string>
+    <string name="welcome_back_password_prompt_body">
+        Sie haben <xliff:g example="jane.doe@example.com" id="email_addr">%1$s</xliff:g> schon verwendet,
+        um sich anzumelden. Geben Sie Ihr Passwort für diesen Account ein.
+    </string>
+    <string name="progress_dialog_signing_in">Anmeldung…</string>
+    <string name="trouble_signing_in">Probleme beim Login?</string>
+
+    <!-- Password recovery -->
+    <string name="title_recover_password_activity">Passwort zurücksetzen</string>
+    <string name="title_confirm_recover_password">Überprüfen Sie Ihr E-Mail-Postfach</string>
+    <string name="password_recovery_body">Sie erhalten Anweisungen zum Zurücksetzen Ihres Passwortes
+        an diese E-Mail-Adresse.</string>
+    <string name="button_text_send">Senden</string>
+    <string name="confirm_recovery_body">Folgen Sie den Anweisungen, die an %1$s gesendet wurden,
+        um Ihr Passwort zurückzusetzen.</string>
+    <string name="progress_dialog_sending">Senden…</string>
+    <string name="error_email_does_not_exist">Diese E-Mail-Adresse stimmt mit keinem vorhandenen
+        Konto überein</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="user_name">Benutzername</string>
+
 </resources>

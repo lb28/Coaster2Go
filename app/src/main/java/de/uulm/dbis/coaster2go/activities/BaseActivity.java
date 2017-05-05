@@ -5,14 +5,18 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -36,6 +40,7 @@ import de.uulm.dbis.coaster2go.R;
  */
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int RC_SIGN_IN = 1;
+    private static final String TAG = "BaseActivity";
 
     FirebaseUser user;
 
@@ -43,6 +48,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     protected FrameLayout actContent;
 
     private ActionBarDrawerToggle drawerToggle;
+    Toolbar toolbar;
+    ContentLoadingProgressBar progressBar;
+    TextView textViewUserName;
 
     @Override
     public void setContentView(final int layoutResID) {
@@ -53,26 +61,27 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         getLayoutInflater().inflate(layoutResID, actContent, true);
         super.setContentView(baseLayout);
 
+        progressBar = (ContentLoadingProgressBar) findViewById(R.id.progressBar);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         // user signed in?
         user = FirebaseAuth.getInstance().getCurrentUser();
-        TextView subtitle = (TextView) navigationView.getHeaderView(0)
+        textViewUserName = (TextView) navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_header_subtitle);
         if (user != null) {
             // User is signed in
             setMenuItemsSignedIn();
-            subtitle.setText(user.getDisplayName());
+            textViewUserName.setText(user.getDisplayName());
         } else {
             // No user is signed in
             setMenuItemsSignedOut();
-            subtitle.setText(R.string.not_signed_in);
+            textViewUserName.setText(R.string.not_signed_in);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        configureToolbar();
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(drawerToggle);
@@ -80,8 +89,24 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        progressBar.hide();
+
     }
 
+    private void configureToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar == null) {
+            Log.i(TAG, "configureToolbar: toolbar == null");
+        }
+        // changes made here, try to find if getSupportActionBar() is null or not after setting it - setSupportActionBar
+
+        if (getSupportActionBar() == null) {
+            setSupportActionBar(toolbar);
+        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
     private void setMenuItemsSignedIn() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -117,11 +142,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                     RC_SIGN_IN);
         }
         else if (id == R.id.nav_park_overview) {
-
+            startActivity(new Intent(this, ParkOverviewActivity.class));
         } else if (id == R.id.nav_my_account) {
-
-        } else if (id == R.id.nav_offline_switch) {
-
+            startActivity(new Intent(this, MyAccountActivity.class));
+        } else if (id == R.id.drawer_switch) {
+            Switch offlineSwitch = (Switch) findViewById(R.id.drawer_switch);
+            if (offlineSwitch.isChecked()) {
+                Toast.makeText(this, "offline mode activated (TODO)", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "online mode (TODO)", Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_sign_out) {

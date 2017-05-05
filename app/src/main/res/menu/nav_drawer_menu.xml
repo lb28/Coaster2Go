@@ -24,6 +24,7 @@
                 android:icon="@drawable/ic_airplanemode_active_black_24dp"
                 android:title="@string/offline_mode"
                 app:actionLayout="@layout/offline_switch"
+                android:enabled="false"
                 />
             <item
                 android:id="@+id/nav_settings"
