@@ -72,6 +72,14 @@
             android:layout_marginBottom="5dp"
             android:id="@+id/park_detail_average"/>
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_map_black_24dp"
+            android:layout_alignParentRight="true"
+            android:background="@color/cardview_light_background"
+            android:id="@+id/park_detail_button_map"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,14 +98,6 @@
             android:layout_below="@id/park_detail_location"
             android:layout_toLeftOf="@id/park_detail_button_map"
             android:id="@+id/park_detail_distance"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_map_black_24dp"
-            android:layout_alignParentRight="true"
-            android:background="@color/cardview_light_background"
-            android:id="@+id/park_detail_button_map"/>
 
     </RelativeLayout>
 

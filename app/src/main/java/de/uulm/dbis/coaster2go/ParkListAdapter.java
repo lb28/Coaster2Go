@@ -1,14 +1,11 @@
 package de.uulm.dbis.coaster2go;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
-import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -19,8 +16,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.uulm.dbis.coaster2go.activities.ParkDetailViewActivity;
-import de.uulm.dbis.coaster2go.activities.ParkOverviewActivity;
 import de.uulm.dbis.coaster2go.data.Park;
 
 /**
@@ -29,6 +24,7 @@ import de.uulm.dbis.coaster2go.data.Park;
 public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHolder> {
 
     public static final String SORT_MODE_RATING = "SORT_MODE_RATING";
+    public static final String SORT_MODE_ABC = "SORT_MODE_ABC";
 
     // TODO implement SortedList?
     // private SortedList<Park> parkList;
@@ -109,6 +105,10 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
 
     public void changeSort(String mode) {
         switch (mode) {
+            case SORT_MODE_ABC:
+                Collections.sort(parkList, new AbcComparator());
+                notifyDataSetChanged();
+                break;
             case SORT_MODE_RATING:
                 Collections.sort(parkList, new RatingComparator());
                 notifyDataSetChanged();
@@ -118,12 +118,19 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         }
     }
 
-    public class RatingComparator implements Comparator<Park> {
-
+    private class RatingComparator implements Comparator<Park> {
         @Override
         public int compare(Park park1, Park park2) {
             // park1 and park2 are reversed so the highest rating is on top
             return Double.compare(park2.getAverageReview(), park1.getAverageReview());
+        }
+    }
+
+    private class AbcComparator implements Comparator<Park> {
+        @Override
+        public int compare(Park park1, Park park2) {
+            // park1 and park2 are reversed so the highest rating is on top
+            return park1.getName().compareTo(park2.getName());
         }
     }
 

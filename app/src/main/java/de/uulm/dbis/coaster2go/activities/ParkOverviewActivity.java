@@ -22,16 +22,8 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
-import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.squareup.okhttp.OkHttpClient;
-
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import de.uulm.dbis.coaster2go.OnParkItemClickListener;
 import de.uulm.dbis.coaster2go.ParkListAdapter;
@@ -45,12 +37,14 @@ public class ParkOverviewActivity extends BaseActivity {
     public static final String MODE_ALL = "all";
     public static final String MODE_FAVS = "favs";
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter tabsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    private ViewPager tabsViewPager;
+
+    private int currentFragmentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +56,18 @@ public class ParkOverviewActivity extends BaseActivity {
 
         // Create the adapter that will return a fragment for each of the two
         // sections (all vs. favorites) of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        tabsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.viewPagerParkTabs);
-        Log.i(TAG, "onCreate: viewPager: " + mViewPager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabsViewPager = (ViewPager) findViewById(R.id.viewPagerParkTabs);
+        Log.i(TAG, "onCreate: viewPager: " + tabsViewPager);
+        tabsViewPager.setAdapter(tabsPagerAdapter);
+
+        currentFragmentIndex = 0;
 
         // Hook the TabLayout up to the viewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutPark);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(tabsViewPager);
 
         // Set up the floatingActionButton
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add_park);
@@ -80,6 +76,23 @@ public class ParkOverviewActivity extends BaseActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        tabsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentFragmentIndex = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
@@ -99,10 +112,10 @@ public class ParkOverviewActivity extends BaseActivity {
 
         switch (id) {
             case R.id.action_sort_abc:
-                Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
-                        "TODO sort abc", Snackbar.LENGTH_SHORT).show();
+                changeParkListSort(ParkListAdapter.SORT_MODE_ABC);
                 return true;
             case R.id.action_sort_rating:
+                changeParkListSort(ParkListAdapter.SORT_MODE_RATING);
                 return true;
             case R.id.action_sort_distance:
                 return  true;
@@ -111,6 +124,16 @@ public class ParkOverviewActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * @param sortMode one of the sort modes available in {@link ParkListAdapter}
+     */
+    public void changeParkListSort(String sortMode) {
+        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        if (currentFragment != null && currentFragment.parkListAdapter != null) {
+            currentFragment.parkListAdapter.changeSort(sortMode);
+        }
     }
 
     /**
@@ -145,36 +168,6 @@ public class ParkOverviewActivity extends BaseActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            /*
-            MobileServiceClient mClient;
-            MobileServiceTable<Park> mParkTable = null;
-
-            try {
-                mClient = new MobileServiceClient(
-                        "https://coaster2go.azurewebsites.net",
-                        getContext()
-                );
-                mParkTable = mClient.getTable(Park.class);
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            */
-/*
-            Park testPark = new Park("id1", "Europa Park", "Rust", "schöner Park", 48.266015, 7.721972,
-                    "http://www.mehrdrauf.de/cm/sparkasse-staufen-breisach/images/Europa-Park/EP2016_300x200.jpg",
-                    2, 4.5, "admin");
-
-            Park testPark2 = new Park("id2", "Pripyat", "Tschernobyl", "Geschlossen.", 51.408246, 30.055386,
-                    "https://f1.blick.ch/img/incoming/origs3669981/9972533768-w1280-h960/tschernobyl00010.jpg",
-                    1, 1.0, "admin");
-            Park testPark3 = new Park("id3", "Handschuhwelt", "Bikini Bottom", "Luft anhalten.", 11.644220, 165.376451,
-                    "http://en.spongepedia.org/images/9/90/Gloverworld.jpg",
-                    3, 5.0, "admin");
-
-            List<Park> testParks = Arrays.asList(testPark, testPark2, testPark3);
-*/
-
             new LoadParksTask().execute();
 
             List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
@@ -202,6 +195,11 @@ public class ParkOverviewActivity extends BaseActivity {
             recyclerView.addItemDecoration(dividerItemDecoration);
 
             return rootView;
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            return super.onOptionsItemSelected(item);
         }
 
 
@@ -235,16 +233,21 @@ public class ParkOverviewActivity extends BaseActivity {
      * one of the sections/tabs/pages.
      */
     private class SectionsPagerAdapter extends FragmentPagerAdapter {
+        List<ParkListFragment> fragmentList;
 
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            fragmentList = new ArrayList<>();
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a ParkListFragment (defined as a static inner class below).
-            return ParkListFragment.newInstance(position);
+            // Return a ParkListFragment (defined as a static inner class).
+            if (position >= fragmentList.size() || fragmentList.get(position) == null) {
+                fragmentList.add(ParkListFragment.newInstance(position));
+            }
+            return fragmentList.get(position);
         }
 
         @Override
