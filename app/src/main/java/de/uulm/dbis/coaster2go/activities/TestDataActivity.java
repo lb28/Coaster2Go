@@ -91,16 +91,18 @@ public class TestDataActivity extends AppCompatActivity {
             public void run() {
                 System.out.println("--------------------------- AzureDBManager Test Start");
                 AzureDBManager.test();
-                Park res = AzureDBManager.createPark(mParkTable, testPark);
-                Park res2 = AzureDBManager.createPark(mParkTable, testPark2);
-                Park res3 = AzureDBManager.createPark(mParkTable, testPark3);
+
+                AzureDBManager dbManager = new AzureDBManager(TestDataActivity.this);
+                Park res = dbManager.createPark(testPark);
+                Park res2 = dbManager.createPark(testPark2);
+                Park res3 = dbManager.createPark(testPark3);
                 System.out.println(res.toString()+res2.toString()+res3.toString());
-                List<Park> parkList = AzureDBManager.getParkList(mParkTable);
+                List<Park> parkList = dbManager.getParkList();
                 System.out.println(parkList.toString());
                 res3.setAdmin("Test Update");
-                Park resUpdate = AzureDBManager.editPark(mParkTable, res3);
+                Park resUpdate = dbManager.editPark(res3);
                 System.out.println(resUpdate.toString());
-                System.out.println(AzureDBManager.getParkById(mParkTable, res.getId()));
+                System.out.println(dbManager.getParkById(res.getId()));
 
                 System.out.println("--------------------------- AzureDBManager Test Ende");
 

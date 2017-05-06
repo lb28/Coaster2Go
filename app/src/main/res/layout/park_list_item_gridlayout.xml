@@ -14,6 +14,7 @@
         app:layout_rowSpan="2"
         app:layout_gravity="fill"
         app:layout_rowWeight="2"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:src="@drawable/ic_local_activity_black_24dp"
         android:contentDescription="@string/park_image" />
 
@@ -41,8 +42,6 @@
         android:stepSize="0.5"
         android:visibility="visible"
         android:isIndicator="true"/>
-
-
 
     <TextView
         android:id="@+id/parkList_location"

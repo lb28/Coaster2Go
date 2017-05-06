@@ -1,6 +1,7 @@
 package de.uulm.dbis.coaster2go.activities;
 
-import android.app.ActionBar;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,8 +9,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +22,29 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.squareup.okhttp.OkHttpClient;
+
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import de.uulm.dbis.coaster2go.OnParkItemClickListener;
+import de.uulm.dbis.coaster2go.ParkListAdapter;
 import de.uulm.dbis.coaster2go.R;
+import de.uulm.dbis.coaster2go.data.AzureDBManager;
+import de.uulm.dbis.coaster2go.data.Park;
 
 public class ParkOverviewActivity extends BaseActivity {
 
     private static final String TAG = "ParkOverviewActivity";
+    public static final String MODE_ALL = "all";
+    public static final String MODE_FAVS = "favs";
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
@@ -95,23 +116,25 @@ public class ParkOverviewActivity extends BaseActivity {
     /**
      * A fragment containing a list of parks
      */
-    public static class PlaceholderFragment extends Fragment {
-        public PlaceholderFragment() {
+    public static class ParkListFragment extends Fragment {
+        ParkListAdapter parkListAdapter;
+
+        public ParkListFragment() {
         }
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static ParkListFragment newInstance(int tabIndex) {
+            ParkListFragment fragment = new ParkListFragment();
             Bundle args = new Bundle();
-            switch (sectionNumber) {
+            switch (tabIndex) {
                 case 0:
-                    args.putString("mode", "all");
+                    args.putString("mode", MODE_ALL);
                     break;
                 case 1:
-                    args.putString("mode", "favs");
+                    args.putString("mode", MODE_FAVS);
                     break;
             }
             fragment.setArguments(args);
@@ -121,10 +144,89 @@ public class ParkOverviewActivity extends BaseActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
+            /*
+            MobileServiceClient mClient;
+            MobileServiceTable<Park> mParkTable = null;
+
+            try {
+                mClient = new MobileServiceClient(
+                        "https://coaster2go.azurewebsites.net",
+                        getContext()
+                );
+                mParkTable = mClient.getTable(Park.class);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            */
+/*
+            Park testPark = new Park("id1", "Europa Park", "Rust", "schöner Park", 48.266015, 7.721972,
+                    "http://www.mehrdrauf.de/cm/sparkasse-staufen-breisach/images/Europa-Park/EP2016_300x200.jpg",
+                    2, 4.5, "admin");
+
+            Park testPark2 = new Park("id2", "Pripyat", "Tschernobyl", "Geschlossen.", 51.408246, 30.055386,
+                    "https://f1.blick.ch/img/incoming/origs3669981/9972533768-w1280-h960/tschernobyl00010.jpg",
+                    1, 1.0, "admin");
+            Park testPark3 = new Park("id3", "Handschuhwelt", "Bikini Bottom", "Luft anhalten.", 11.644220, 165.376451,
+                    "http://en.spongepedia.org/images/9/90/Gloverworld.jpg",
+                    3, 5.0, "admin");
+
+            List<Park> testParks = Arrays.asList(testPark, testPark2, testPark3);
+*/
+
+            new LoadParksTask().execute();
+
+            List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
+
+            parkListAdapter = new ParkListAdapter(getContext(), parkList, new OnParkItemClickListener() {
+                @Override
+                public void onParkItemClick(Park park) {
+                    Intent intent = new Intent(getContext(), ParkDetailViewActivity.class);
+                    intent.putExtra("parkId", park.getId());
+                    startActivity(intent);
+                }
+            });
+
             View rootView = inflater.inflate(R.layout.fragment_parklist, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewParkList);
             textView.setText("mode: " + getArguments().getString("mode")); // for testing
+            recyclerView.setAdapter(parkListAdapter);
+            // Set layout manager to position the items
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(layoutManager);
+
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                    layoutManager.getOrientation());
+            recyclerView.addItemDecoration(dividerItemDecoration);
+
             return rootView;
+        }
+
+
+        public class LoadParksTask extends AsyncTask<Void, Void, List<Park>> {
+
+            @Override
+            protected void onPreExecute() {
+                ((ParkOverviewActivity) getActivity()).progressBar.show();
+            }
+
+            @Override
+            protected List<Park> doInBackground(Void... params) {
+                return new AzureDBManager(getContext()).getParkList();
+            }
+
+            @Override
+            protected void onPostExecute(List<Park> parkList) {
+                if (parkList == null) {
+                    Log.e(TAG, "LoadParksTask.onPostExecute: parkList was null!");
+                } else {
+                    parkListAdapter.setParkList(parkList);
+                    parkListAdapter.notifyItemRangeInserted(0, parkList.size());
+                }
+                ((ParkOverviewActivity) getActivity()).progressBar.hide();
+            }
         }
     }
 
@@ -141,8 +243,8 @@ public class ParkOverviewActivity extends BaseActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position);
+            // Return a ParkListFragment (defined as a static inner class below).
+            return ParkListFragment.newInstance(position);
         }
 
         @Override
