@@ -10,7 +10,7 @@ public class WaitingTime {
     private int minutes;
     private Date createdAt; //Not sure if this equals the Azure SQL Date format
 
-    /** Constructor with id.
+    /** Constructor with id and with createdAt.
      *
      * @param id
      * @param attractionId
@@ -29,21 +29,19 @@ public class WaitingTime {
         this.createdAt = createdAt;
     }
 
-    /** Constructor without id.
+    /** Constructor without id and without createdAt.
      *
      * @param attractionId
      * @param displayName
      * @param userId
      * @param minutes
-     * @param createdAt
      */
     public WaitingTime(String attractionId, String displayName, String userId,
-                       int minutes, Date createdAt) {
+                       int minutes) {
         this.attractionId = attractionId;
         this.displayName = displayName;
         this.userId = userId;
         this.minutes = minutes;
-        this.createdAt = createdAt;
     }
 
     public String getId() {

@@ -12,7 +12,7 @@ public class Review {
     private String comment;
     private Date createdAt; //Not sure if this equals the Azure SQL Date format
 
-    /** Constructor with id.
+    /** Constructor with id and with createdAt.
      *
      * @param id
      * @param reviewedId
@@ -33,23 +33,21 @@ public class Review {
         this.createdAt = createdAt;
     }
 
-    /** Constructor without id.
+    /** Constructor without id and without createdAt .
      *
      * @param reviewedId
      * @param displayName
      * @param userId
      * @param numberOfStars
      * @param comment
-     * @param createdAt
      */
     public Review(String reviewedId, String displayName, String userId, int numberOfStars,
-                  String comment, Date createdAt) {
+                  String comment) {
         this.reviewedId = reviewedId;
         this.displayName = displayName;
         this.userId = userId;
         this.numberOfStars = numberOfStars;
         this.comment = comment;
-        this.createdAt = createdAt;
     }
 
     public String getId() {

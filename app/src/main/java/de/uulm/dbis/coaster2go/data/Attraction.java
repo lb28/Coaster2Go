@@ -3,24 +3,26 @@ package de.uulm.dbis.coaster2go.data;
 public class Attraction {
     private String id;
     private String name;
-    private String type;
+    private String type; //TODO make a list of all possible types
+    private String description;
     private double lat;
     private double lon;
     private String image;
     private int numberOfReviews;
     private double averageReview;
     private int numberOfWaitingTimes;
-    private double averageWaitingTime;
+    private int averageWaitingTime;
     private int numberOfTodayWaitingTimes;
-    private double averageTodayWaitingTime;
+    private int averageTodayWaitingTime;
     //private int numberOfCurrentWaitingTimes //probably not necessary
-    private double currentWaitingTime;
+    private int currentWaitingTime;
     private String parkId;
 
     /** Konstruktor ohne Id.
      *
      * @param name
      * @param type
+     * @param description
      * @param lat
      * @param lon
      * @param image
@@ -33,12 +35,13 @@ public class Attraction {
      * @param currentWaitingTime
      * @param parkId
      */
-    public Attraction( String name, String type, double lat, double lon, String image,
+    public Attraction( String name, String type, String description, double lat, double lon, String image,
                       int numberOfReviews, double averageReview, int numberOfWaitingTimes,
-                      double averageWaitingTime, int numberOfTodayWaitingTimes,
-                      double averageTodayWaitingTime, double currentWaitingTime, String parkId) {
+                       int averageWaitingTime, int numberOfTodayWaitingTimes,
+                       int averageTodayWaitingTime, int currentWaitingTime, String parkId) {
         this.name = name;
         this.type = type;
+        this.description = description;
         this.lat = lat;
         this.lon = lon;
         this.image = image;
@@ -57,6 +60,7 @@ public class Attraction {
      * @param id
      * @param name
      * @param type
+     * @param description
      * @param lat
      * @param lon
      * @param image
@@ -69,13 +73,14 @@ public class Attraction {
      * @param currentWaitingTime
      * @param parkId
      */
-    public Attraction(String id, String name, String type, double lat, double lon, String image,
+    public Attraction(String id, String name, String type, String description, double lat, double lon, String image,
                       int numberOfReviews, double averageReview, int numberOfWaitingTimes,
-                      double averageWaitingTime, int numberOfTodayWaitingTimes,
-                      double averageTodayWaitingTime, double currentWaitingTime, String parkId) {
+                      int averageWaitingTime, int numberOfTodayWaitingTimes,
+                      int averageTodayWaitingTime, int currentWaitingTime, String parkId) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.description = description;
         this.lat = lat;
         this.lon = lon;
         this.image = image;
@@ -165,7 +170,7 @@ public class Attraction {
         return averageWaitingTime;
     }
 
-    public void setAverageWaitingTime(double averageWaitingTime) {
+    public void setAverageWaitingTime(int averageWaitingTime) {
         this.averageWaitingTime = averageWaitingTime;
     }
 
@@ -181,7 +186,7 @@ public class Attraction {
         return averageTodayWaitingTime;
     }
 
-    public void setAverageTodayWaitingTime(double averageTodayWaitingTime) {
+    public void setAverageTodayWaitingTime(int averageTodayWaitingTime) {
         this.averageTodayWaitingTime = averageTodayWaitingTime;
     }
 
@@ -189,7 +194,7 @@ public class Attraction {
         return currentWaitingTime;
     }
 
-    public void setCurrentWaitingTime(double currentWaitingTime) {
+    public void setCurrentWaitingTime(int currentWaitingTime) {
         this.currentWaitingTime = currentWaitingTime;
     }
 
@@ -199,6 +204,14 @@ public class Attraction {
 
     public void setParkId(String parkId) {
         this.parkId = parkId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
