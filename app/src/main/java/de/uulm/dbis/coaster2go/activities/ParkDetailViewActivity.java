@@ -3,12 +3,14 @@ package de.uulm.dbis.coaster2go.activities;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -61,6 +63,13 @@ public class ParkDetailViewActivity extends BaseActivity {
 
 
     }
+
+    public void goToAttractionOverview(View view) {
+        Intent intent = new Intent(this, AttractionOverviewActivity.class);
+        intent.putExtra("parkId", parkId);
+        startActivity(intent);
+    }
+
 
     public class LoadParkAsync extends AsyncTask<Void, Void, Park> {
 

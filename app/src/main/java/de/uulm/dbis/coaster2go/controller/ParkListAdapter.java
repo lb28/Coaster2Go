@@ -1,4 +1,4 @@
-package de.uulm.dbis.coaster2go;
+package de.uulm.dbis.coaster2go.controller;
 
 import android.content.Context;
 import android.location.Location;
@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Park;
 
 /**

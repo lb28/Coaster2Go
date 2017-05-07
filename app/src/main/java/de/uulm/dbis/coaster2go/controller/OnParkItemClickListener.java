@@ -1,4 +1,4 @@
-package de.uulm.dbis.coaster2go;
+package de.uulm.dbis.coaster2go.controller;
 
 import de.uulm.dbis.coaster2go.data.Park;
 

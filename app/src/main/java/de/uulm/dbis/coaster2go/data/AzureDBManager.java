@@ -199,7 +199,7 @@ public class AzureDBManager {
      * @param parkId Id of the Park
      * @return List with all Attractions of the park
      */
-    public List<Attraction> getParkList(String parkId){
+    public List<Attraction> getAttractionList(String parkId){
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
         List<Attraction> attractionList = null;

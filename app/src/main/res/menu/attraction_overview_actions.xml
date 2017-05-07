@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_refresh_black_24dp"
+        android:title="@string/refresh"
+        app:showAsAction="never"/>
+    <item
+        android:icon="@drawable/ic_sort_black_24dp"
+        android:title="@string/sort_method"
+        android:checkableBehavior="single"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/action_sort_abc"
+                android:icon="@drawable/ic_sort_by_alpha_black_24dp"
+                android:title="@string/alphabetically" />
+            <item
+                android:id="@+id/action_sort_rating"
+                android:icon="@drawable/ic_stars_black_24dp"
+                android:title="@string/rating" />
+            <item
+                android:id="@+id/action_sort_distance"
+                android:icon="@drawable/ic_place_black_24dp"
+                android:title="@string/distance"/>
+
+        </menu>
+    </item>
+
+</menu>

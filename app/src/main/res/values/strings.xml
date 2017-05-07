@@ -115,5 +115,6 @@
         completions."
     </string>
     <string name="user_name">Benutzername</string>
+    <string name="title_activity_attraction_overview">Attraktionsübersicht</string>
 
 </resources>

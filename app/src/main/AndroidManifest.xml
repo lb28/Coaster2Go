@@ -13,6 +13,9 @@
     <application
         android:label="Coaster2Go"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".activities.BaseActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,13 +39,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.BaseActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activities.ParkDetailViewActivity"
-            android:parentActivityName=".activities.ParkOverviewActivity"/>
-        <activity android:name=".activities.MyAccountActivity"
+        <activity
+            android:name=".activities.ParkDetailViewActivity"
+            android:parentActivityName=".activities.ParkOverviewActivity" />
+        <activity
+            android:name=".activities.MyAccountActivity"
             android:label="@string/my_account"
-            android:parentActivityName=".activities.ParkOverviewActivity"/>
+            android:parentActivityName=".activities.ParkOverviewActivity" />
+        <activity
+            android:name=".activities.AttractionOverviewActivity"
+            android:label="@string/title_activity_attraction_overview"
+            />
     </application>
 
 </manifest>

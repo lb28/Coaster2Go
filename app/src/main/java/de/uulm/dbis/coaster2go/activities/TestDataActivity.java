@@ -130,7 +130,7 @@ public class TestDataActivity extends AppCompatActivity {
                 Park res2 = dbManager.createPark(testPark2);
                 Park res3 = dbManager.createPark(testPark3);
                 System.out.println(res.toString()+res2.toString()+res3.toString());
-                List<Park> parkList = dbManager.getParkList();
+                List<Park> parkList = dbManager.getAttractionList();
                 System.out.println(parkList.toString());
                 res3.setAdmin("Test Update");
                 Park resUpdate = dbManager.updatePark(res3);
@@ -139,7 +139,7 @@ public class TestDataActivity extends AppCompatActivity {
                 */
 
                 /*
-                List<Park> parkList = dbManager.getParkList();
+                List<Park> parkList = dbManager.getAttractionList();
                 String parkId = parkList.get(0).getId();
                 testAttraction.setParkId(parkId);
                 testAttraction2.setParkId(parkId);
@@ -157,7 +157,7 @@ public class TestDataActivity extends AppCompatActivity {
                 resAtt = dbManager.getAttractionById(resAtt3.getId()).get(0);
                 System.out.println(resAtt.toString());
 
-                List<Attraction> attractionList = dbManager.getParkList(parkId);
+                List<Attraction> attractionList = dbManager.getAttractionList(parkId);
                 System.out.println(attractionList.toString());
 
                 */
@@ -166,7 +166,7 @@ public class TestDataActivity extends AppCompatActivity {
                 String parkId = parkList.get(0).getId();
                 testReview.setReviewedId(parkId);
 
-                List<Attraction> attractionList = dbManager.getParkList(parkId);
+                List<Attraction> attractionList = dbManager.getAttractionList(parkId);
                 String attractionId = attractionList.get(0).getId();
 
                 /*

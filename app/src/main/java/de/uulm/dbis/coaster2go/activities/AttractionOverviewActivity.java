@@ -1,38 +1,38 @@
 package de.uulm.dbis.coaster2go.activities;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.TextView;
+        import android.content.Intent;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.support.design.widget.Snackbar;
+        import android.support.design.widget.TabLayout;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentManager;
+        import android.support.v4.app.FragmentPagerAdapter;
+        import android.support.v4.view.ViewPager;
+        import android.support.v7.widget.DividerItemDecoration;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.support.v7.widget.Toolbar;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.ViewGroup;
+        import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.List;
 
-import de.uulm.dbis.coaster2go.controller.OnParkItemClickListener;
-import de.uulm.dbis.coaster2go.controller.ParkListAdapter;
-import de.uulm.dbis.coaster2go.R;
-import de.uulm.dbis.coaster2go.data.AzureDBManager;
-import de.uulm.dbis.coaster2go.data.Park;
+        import de.uulm.dbis.coaster2go.controller.AttractionListAdapter;
+        import de.uulm.dbis.coaster2go.controller.OnAttractionItemClickListener;
+        import de.uulm.dbis.coaster2go.R;
+        import de.uulm.dbis.coaster2go.data.Attraction;
+        import de.uulm.dbis.coaster2go.data.AzureDBManager;
 
-public class ParkOverviewActivity extends BaseActivity {
+public class AttractionOverviewActivity extends BaseActivity {
 
-    private static final String TAG = "ParkOverviewActivity";
+    private static final String TAG = "AttrOverviewActivity";
     public static final String MODE_ALL = "all";
     public static final String MODE_FAVS = "favs";
 
@@ -44,11 +44,14 @@ public class ParkOverviewActivity extends BaseActivity {
     private ViewPager tabsViewPager;
 
     private int currentFragmentIndex;
+    private String parkId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_park_overview);
+        setContentView(R.layout.activity_attraction_overview);
+
+        parkId = getIntent().getStringExtra("parkId");
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -58,20 +61,18 @@ public class ParkOverviewActivity extends BaseActivity {
         tabsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        tabsViewPager = (ViewPager) findViewById(R.id.viewPagerParkTabs);
+        tabsViewPager = (ViewPager) findViewById(R.id.viewPagerAttractionTabs);
         tabsViewPager.setAdapter(tabsPagerAdapter);
 
         currentFragmentIndex = 0;
 
         // Hook the TabLayout up to the viewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutPark);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutAttr);
         tabLayout.setupWithViewPager(tabsViewPager);
 
         tabsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int pos, float offs, int posOffsPx) {}
 
             @Override
             public void onPageSelected(int position) {
@@ -88,7 +89,7 @@ public class ParkOverviewActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.park_overview_actions, menu);
+        getMenuInflater().inflate(R.menu.attraction_overview_actions, menu);
         return true;
     }
 
@@ -100,10 +101,10 @@ public class ParkOverviewActivity extends BaseActivity {
 
         switch (id) {
             case R.id.action_sort_abc:
-                changeParkListSort(ParkListAdapter.SORT_MODE_ABC);
+                changeAttractionListSort(AttractionListAdapter.SORT_MODE_ABC);
                 return true;
             case R.id.action_sort_rating:
-                changeParkListSort(ParkListAdapter.SORT_MODE_RATING);
+                changeAttractionListSort(AttractionListAdapter.SORT_MODE_RATING);
                 return true;
             case R.id.action_sort_distance:
                 return  true;
@@ -115,40 +116,35 @@ public class ParkOverviewActivity extends BaseActivity {
     }
 
     /**
-     * @param sortMode one of the sort modes available in {@link ParkListAdapter}
+     * @param sortMode one of the sort modes available in {@link AttractionListAdapter}
      */
-    public void changeParkListSort(String sortMode) {
-        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
-        if (currentFragment != null && currentFragment.parkListAdapter != null) {
-            currentFragment.parkListAdapter.changeSort(sortMode);
+    public void changeAttractionListSort(String sortMode) {
+        AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        if (currentFragment != null && currentFragment.attractionListAdapter != null) {
+            currentFragment.attractionListAdapter.changeSort(sortMode);
         }
     }
 
-    /**
-     * calls the add park activity (called on click of the "add" button)
-     * @param view
-     */
-    public void addPark(View view) {
-        Snackbar.make(view, "TODO Add Park Activity", Snackbar.LENGTH_LONG)
+    public void addAttraction(View view) {
+        Snackbar.make(view, "TODO Add Attraction Activity", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
-                .show();
-    }
+                .show();    }
 
     /**
      * A fragment containing a list of parks
      */
-    public static class ParkListFragment extends Fragment {
-        ParkListAdapter parkListAdapter;
+    public static class AttractionListFragment extends Fragment {
+        AttractionListAdapter attractionListAdapter;
 
-        public ParkListFragment() {
+        public AttractionListFragment() {
         }
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static ParkListFragment newInstance(int tabIndex) {
-            ParkListFragment fragment = new ParkListFragment();
+        public static AttractionListFragment newInstance(int tabIndex) {
+            AttractionListFragment fragment = new AttractionListFragment();
             Bundle args = new Bundle();
             switch (tabIndex) {
                 case 0:
@@ -166,16 +162,14 @@ public class ParkOverviewActivity extends BaseActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            new LoadParksTask().execute();
+            new LoadAttractionsTask().execute();
 
-            List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
+            List<Attraction> attractionList = new ArrayList<>(); // empty list before it is loaded
 
-            parkListAdapter = new ParkListAdapter(getContext(), parkList, new OnParkItemClickListener() {
+            attractionListAdapter = new AttractionListAdapter(getContext(), attractionList, new OnAttractionItemClickListener() {
                 @Override
-                public void onParkItemClick(Park park) {
-                    Intent intent = new Intent(getContext(), ParkDetailViewActivity.class);
-                    intent.putExtra("parkId", park.getId());
-                    startActivity(intent);
+                public void onAttractionItemClick(Attraction attraction) {
+                    Snackbar.make(getView(), "TODO", Snackbar.LENGTH_SHORT).show();
                 }
             });
 
@@ -183,7 +177,7 @@ public class ParkOverviewActivity extends BaseActivity {
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewParkList);
             textView.setText("mode: " + getArguments().getString("mode")); // for testing
-            recyclerView.setAdapter(parkListAdapter);
+            recyclerView.setAdapter(attractionListAdapter);
             // Set layout manager to position the items
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
@@ -201,27 +195,28 @@ public class ParkOverviewActivity extends BaseActivity {
         }
 
 
-        public class LoadParksTask extends AsyncTask<Void, Void, List<Park>> {
+        public class LoadAttractionsTask extends AsyncTask<Void, Void, List<Attraction>> {
 
             @Override
             protected void onPreExecute() {
-                ((ParkOverviewActivity) getActivity()).progressBar.show();
+                ((AttractionOverviewActivity) getActivity()).progressBar.show();
             }
 
             @Override
-            protected List<Park> doInBackground(Void... params) {
-                return new AzureDBManager(getContext()).getParkList();
+            protected List<Attraction> doInBackground(Void... params) {
+                String parkId = getArguments().getString("parkId");
+                return new AzureDBManager(getContext()).getAttractionList(parkId);
             }
 
             @Override
-            protected void onPostExecute(List<Park> parkList) {
-                if (parkList == null) {
+            protected void onPostExecute(List<Attraction> attractionList) {
+                if (attractionList == null) {
                     Log.e(TAG, "LoadParksTask.onPostExecute: parkList was null!");
                 } else {
-                    parkListAdapter.setParkList(parkList);
-                    parkListAdapter.notifyItemRangeInserted(0, parkList.size());
+                    attractionListAdapter.setAttractionList(attractionList);
+                    attractionListAdapter.notifyItemRangeInserted(0, attractionList.size());
                 }
-                ((ParkOverviewActivity) getActivity()).progressBar.hide();
+                ((AttractionOverviewActivity) getActivity()).progressBar.hide();
             }
         }
     }
@@ -231,7 +226,7 @@ public class ParkOverviewActivity extends BaseActivity {
      * one of the sections/tabs/pages.
      */
     private class SectionsPagerAdapter extends FragmentPagerAdapter {
-        List<ParkListFragment> fragmentList;
+        List<AttractionListFragment> fragmentList;
 
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -243,7 +238,9 @@ public class ParkOverviewActivity extends BaseActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a ParkListFragment (defined as a static inner class).
             if (position >= fragmentList.size() || fragmentList.get(position) == null) {
-                fragmentList.add(ParkListFragment.newInstance(position));
+                AttractionListFragment newFragment = AttractionListFragment.newInstance(position);
+                newFragment.setArguments(getIntent().getExtras());
+                fragmentList.add(newFragment);
             }
             return fragmentList.get(position);
         }
