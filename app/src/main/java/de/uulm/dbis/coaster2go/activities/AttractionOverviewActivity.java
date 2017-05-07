@@ -143,7 +143,7 @@ public class AttractionOverviewActivity extends BaseActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static AttractionListFragment newInstance(int tabIndex) {
+        public static AttractionListFragment newInstance(int tabIndex, String parkId) {
             AttractionListFragment fragment = new AttractionListFragment();
             Bundle args = new Bundle();
             switch (tabIndex) {
@@ -154,6 +154,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     args.putString("mode", MODE_FAVS);
                     break;
             }
+            args.putString("parkId", parkId);
             fragment.setArguments(args);
             return fragment;
         }
@@ -217,6 +218,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.notifyItemRangeInserted(0, attractionList.size());
                 }
                 ((AttractionOverviewActivity) getActivity()).progressBar.hide();
+                ((AttractionOverviewActivity) getActivity()).progressBar.hide();
             }
         }
     }
@@ -238,8 +240,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a ParkListFragment (defined as a static inner class).
             if (position >= fragmentList.size() || fragmentList.get(position) == null) {
-                AttractionListFragment newFragment = AttractionListFragment.newInstance(position);
-                newFragment.setArguments(getIntent().getExtras());
+                AttractionListFragment newFragment = AttractionListFragment.newInstance(position, parkId);
                 fragmentList.add(newFragment);
             }
             return fragmentList.get(position);
