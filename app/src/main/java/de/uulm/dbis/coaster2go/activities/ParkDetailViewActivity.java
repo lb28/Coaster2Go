@@ -49,8 +49,12 @@ public class ParkDetailViewActivity extends BaseActivity {
         });
 
 
-        park = parkList.get(0);
-        parkName.setText(park.getName());
+        if(parkList == null){
+            parkName.setText("leere Liste!");
+        } else {
+            park = parkList.get(0);
+            parkName.setText(park.getName());
+        }
 
 
 
