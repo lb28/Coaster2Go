@@ -62,7 +62,7 @@ public class ParkDetailViewActivity extends BaseActivity {
 
     }
 
-    public class LoadParkAsync extends AsyncTask<Void, Void, List<Park>> {
+    public class LoadParkAsync extends AsyncTask<Void, Void, Park> {
 
         @Override
         protected void onPreExecute() {
@@ -70,16 +70,15 @@ public class ParkDetailViewActivity extends BaseActivity {
         }
 
         @Override
-        protected List<Park> doInBackground(Void... params) {
+        protected Park doInBackground(Void... params) {
             return new AzureDBManager(ParkDetailViewActivity.this).getParkById(parkId);
         }
 
         @Override
-        protected void onPostExecute(List<Park> parkList) {
-            if (parkList == null) {
+        protected void onPostExecute(Park park) {
+            if (park == null) {
                 Log.e("", "LoadParkAsync.onPostExecute: parkList was null!");
             } else {
-                park = parkList.get(0);
                 Picasso.with(ParkDetailViewActivity.this).load(park.getImage()).into(parkImage);
                 parkName.setText(park.getName());
                 parkRatingAvg.setText("" + park.getAverageReview());
