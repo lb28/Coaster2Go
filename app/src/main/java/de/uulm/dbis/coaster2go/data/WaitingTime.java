@@ -91,4 +91,16 @@ public class WaitingTime {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Override
+    public String toString() {
+        return "WaitingTime{" +
+                "id='" + id + '\'' +
+                ", attractionId='" + attractionId + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", userId='" + userId + '\'' +
+                ", minutes=" + minutes +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

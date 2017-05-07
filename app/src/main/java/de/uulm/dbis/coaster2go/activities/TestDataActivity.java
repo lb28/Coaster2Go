@@ -21,6 +21,7 @@ public class TestDataActivity extends AppCompatActivity {
     Park testPark, testPark2, testPark3;
     Attraction testAttraction, testAttraction2, testAttraction3, testAttraction4;
     Review testReview, testReview2, testReview3, testReview4;
+    WaitingTime testTime, testTime2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,23 +100,10 @@ public class TestDataActivity extends AppCompatActivity {
         testReview2 = new Review("", "Peter Unlustig", "Peter Unlustig ID", 2, "Finde den Park nicht lustig.");
         testReview3 = new Review("", "Peter Lustig", "Peter Lustig ID", 5, "Finde die Attraktion lustig.");
         testReview4 = new Review("", "Peter Lustig", "Peter Unlustig ID", 1, "Finde die Attraktion nicht lustig.");
+        testTime = new WaitingTime("", "Peter Lustig", "Peter Lustig ID", 20);
+        testTime2 = new WaitingTime("", "Peter Unlustig", "Peter Unlustig ID", 40);
 
 
-
-
-
-/*
-        //Test Park in Datenbank ladem:
-        mClient.getTable(Park.class).insert(testPark, new TableOperationCallback<Park>() {
-            public void onCompleted(Park entity, Exception exception, ServiceFilterResponse response) {
-                if (exception == null) {
-                    // Insert succeeded
-                } else {
-                    exception.printStackTrace();
-                }
-            }
-        });
-*/
 
     //Thread testet die neusten Methoden des AzureDBManagers
         new Thread(new Runnable() {
@@ -145,28 +133,30 @@ public class TestDataActivity extends AppCompatActivity {
                 testAttraction2.setParkId(parkId);
                 testAttraction3.setParkId(parkId);
                 testAttraction4.setParkId(parkId);
-
                 Attraction resAtt = dbManager.createAttraction(testAttraction);
                 Attraction resAtt2 = dbManager.createAttraction(testAttraction2);
                 Attraction resAtt3 = dbManager.createAttraction(testAttraction3);
                 Attraction resAtt4 = dbManager.createAttraction(testAttraction4);
+
+                /*
                 System.out.println(testAttraction.toString());
                 resAtt2.setName("Blue Fire Megacoaster");
                 resAtt = dbManager.updateAttraction(resAtt2);
                 System.out.println(resAtt.toString());
-                resAtt = dbManager.getAttractionById(resAtt3.getId()).get(0);
+                resAtt = dbManager.getAttractionById(resAtt3.getId());
                 System.out.println(resAtt.toString());
+
+
 
                 List<Attraction> attractionList = dbManager.getParkList(parkId);
                 System.out.println(attractionList.toString());
 
-                */
 
-                List<Park> parkList = dbManager.getParkList();
-                String parkId = parkList.get(0).getId();
-                testReview.setReviewedId(parkId);
+                //List<Park> parkList = dbManager.getParkList();
+                //String parkId = parkList.get(0).getId();
+                //testReview.setReviewedId(parkId);
 
-                List<Attraction> attractionList = dbManager.getParkList(parkId);
+                //List<Attraction> attractionList = dbManager.getParkList(parkId);
                 String attractionId = attractionList.get(0).getId();
 
                 /*
@@ -190,10 +180,17 @@ public class TestDataActivity extends AppCompatActivity {
                 System.out.println(lustigReview.toString());
                 */
 
-                List<Review> reviewList1 = dbManager.getPartOfReviewList(attractionId, 0);
-                System.out.println(reviewList1.toString());
-                List<Review> reviewList2 = dbManager.getPartOfReviewList(attractionId, 1);
-                if(reviewList2.isEmpty()){System.out.println("empty List");}else{System.out.println(reviewList2.toString());}
+                List<Park> parkList = dbManager.getParkList();
+                String parkId = parkList.get(0).getId();
+                List<Attraction> attractionList = dbManager.getAttractionList(parkId);
+                String attractionId = attractionList.get(0).getId();
+
+                testTime.setAttractionId(attractionId);
+                testTime2.setAttractionId(attractionId);
+                WaitingTime resultTime = dbManager.createWaitingTime(testTime);
+                System.out.println(resultTime.toString());
+                WaitingTime resultTime2 = dbManager.createWaitingTime(testTime2);
+                System.out.println(resultTime2.toString());
 
                 System.out.println("--------------------------- AzureDBManager Test Ende");
 

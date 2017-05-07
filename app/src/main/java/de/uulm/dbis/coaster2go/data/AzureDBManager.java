@@ -10,6 +10,7 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -199,7 +200,7 @@ public class AzureDBManager {
      * @param parkId Id of the Park
      * @return List with all Attractions of the park
      */
-    public List<Attraction> getParkList(String parkId){
+    public List<Attraction> getAttractionList(String parkId){
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
         List<Attraction> attractionList = null;
@@ -215,7 +216,7 @@ public class AzureDBManager {
 
     //----------------------Reviews--------------------------------------------
 
-    /** Inserts the given Review into the Database AND UPDATES the Park or Attraction
+    /** Inserts the given Review into the Database AND UPDATES the Park or Attraction review flags
      *
      * @param review Review Object which needs to be inserted, reviewedId has to be set!
      * @param attraction BOOLEAN: TRUE if Attraction, FALSE if Park
@@ -384,7 +385,171 @@ public class AzureDBManager {
     //getSingleReview(String id) not necessary so far
 
     //----------------------WaitingTimes--------------------------------------
-    //TODO
+
+    /** Returns a List with all WaitingTimes of an Atraction.
+     * Statt der Methode kann auch getPartOfReviewList verwendet werden, welche
+     * nur jewiles die ersten 5, nächsten 5,... Elemente der Liste zurück gibt
+     *
+     * @param attractionId Id of the Attraction
+     * @return List with all WaitingTimes ordered by Date
+     */
+    public List<WaitingTime> getWaitingTimeList(String attractionId){
+        MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
+
+        List<WaitingTime> waitList = null;
+        try {
+            waitList = mWaitTable.where().field("attractionId").eq(attractionId).orderBy("createdAt", QueryOrder.Descending).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return waitList;
+    }
+
+    /** Returns the next 5 WaitingTime Elements in a List of an Attraction.
+     * Counter: Start wth Element counter*5+1 and end with Element (counter+1)*5
+     *
+     * @param attractionId Id of the Attraction
+     * @param counter, see description
+     * @return List with 5 WaitingTimes ordered by Date
+     */
+    public List<WaitingTime> getPartOfWaitingTimeList(String attractionId, int counter){
+        MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
+        int skip = counter*5;
+        int lastElement = (counter+1)*5;
+
+        List<WaitingTime> waitList = null;
+        try {
+            waitList = mWaitTable.where().field("attractionId").eq(attractionId)
+                    .orderBy("createdAt", QueryOrder.Descending)
+                    .skip(skip).top(lastElement).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return waitList;
+    }
+
+    /** Returns a List with all TodayWaitingTimes of an Attraction.
+     *
+     * @param attractionId Id of the Attraction
+     * @return List with all WaitingTimes ordered by Date
+     */
+    public List<WaitingTime> getTodaysWaitingTimeList(String attractionId){
+        MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
+
+        List<WaitingTime> waitList = null;
+        try {
+            Date todayDate = new Date(); //Maybe use something different then the Date Object later...
+            /* //TODO working with the sql Date functions seem like they do not work...
+            waitList = mWaitTable.where().field("attractionId").eq(attractionId)
+                    .and().year("due").eq(todayDate.getYear())
+                    .and().month("due").eq(todayDate.getMonth())
+                    .and().day("due").eq(todayDate.getDay())
+                    .execute().get();
+
+             */
+            //Ersatzlösung:
+            waitList = getWaitingTimeList(attractionId);
+            int counter = 0;
+            int i = 0;
+            if(waitList != null && !waitList.isEmpty()){
+                for(i = 0; i < waitList.size(); i++){
+                    if(waitList.get(i).getCreatedAt().getYear()==todayDate.getYear()
+                            && waitList.get(i).getCreatedAt().getMonth()==todayDate.getMonth()
+                            && waitList.get(i).getCreatedAt().getDay()==todayDate.getDay()){
+                        counter++;
+                    }else{
+                        i = waitList.size();
+                    }
+                }
+                if(counter >= waitList.size()){
+                    return waitList;
+                }else{
+                    waitList = waitList.subList(0, counter+1);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return waitList;
+    }
+
+    /** Inserts the given WaitingTime Object into the Database
+     * AND UPDATES all the WaitingTime flags in the Attraction.
+     * The CurrentWaitingTime is calculated by the last 3 waiting times.
+     *
+     * @param waitTime WaitingTime Object which needs to be inserted, attractionId has to be set!
+     * @return WaitingTime Object with it's id.
+     */
+    public WaitingTime createWaitingTime(WaitingTime waitTime){
+        MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
+
+        WaitingTime resultTime = null;
+        try {
+            //Get Attraction:
+            String attractionId = waitTime.getAttractionId();
+            Attraction updateAttraction = getAttractionById(attractionId);
+
+            //1. Calculate and update new AverageWaitingTime
+            int newNumberOfWaitingTimes = updateAttraction.getNumberOfWaitingTimes()+1;
+            int newAverageWaitingTime = (int)((updateAttraction.getAverageWaitingTime()*updateAttraction.getNumberOfWaitingTimes()
+                    +waitTime.getMinutes())/newNumberOfWaitingTimes);
+            updateAttraction.setNumberOfWaitingTimes(newNumberOfWaitingTimes);
+            updateAttraction.setAverageWaitingTime(newAverageWaitingTime);
+
+            //2. Calculate and update new TodayAverageWaitingTime
+            int newNumberOfTodayWaitingTimes = 0;
+            int newAverageTodayWaitingTime = 0;
+            List<WaitingTime> todayList = getTodaysWaitingTimeList(attractionId);
+
+            if((todayList == null || todayList.isEmpty())){
+                //Heute noch kein Eintrag bisher:
+                newNumberOfTodayWaitingTimes = 1;
+                newAverageTodayWaitingTime = waitTime.getMinutes();
+            }else{
+                //neuen heutigen Durchschnitt berechnen:
+                newNumberOfTodayWaitingTimes = todayList.size()+1;
+                for(WaitingTime w : todayList){
+                    newAverageTodayWaitingTime = newAverageTodayWaitingTime + w.getMinutes();
+                }
+                newAverageTodayWaitingTime = newAverageTodayWaitingTime + waitTime.getMinutes();
+                newAverageTodayWaitingTime = newAverageWaitingTime/newNumberOfTodayWaitingTimes;
+            }
+            updateAttraction.setNumberOfTodayWaitingTimes(newNumberOfTodayWaitingTimes);
+            updateAttraction.setAverageTodayWaitingTime(newAverageTodayWaitingTime);
+
+            //3. Calculate and Update new CurrentWaitingTime by the last 3 or less WaitingTimes
+            int newCurrentTime = waitTime.getMinutes();
+            List<WaitingTime> lastTwoTimes = mWaitTable.where().field("attractionId").eq(attractionId)
+                    .orderBy("createdAt", QueryOrder.Descending).top(2).execute().get();
+            if(lastTwoTimes != null && !lastTwoTimes.isEmpty()){
+                for(WaitingTime w: lastTwoTimes){
+                    newCurrentTime = newCurrentTime + w.getMinutes();
+                }
+                newCurrentTime = newCurrentTime/(lastTwoTimes.size()+1);
+            }
+            updateAttraction.setCurrentWaitingTime(newCurrentTime);
+
+            //Update Attraction
+            MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
+            mAttractionTable.update(updateAttraction);
+
+            //Insert WaitingTime
+            resultTime = mWaitTable.insert(waitTime).get();
+
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return resultTime;
+    }
 
 
 
