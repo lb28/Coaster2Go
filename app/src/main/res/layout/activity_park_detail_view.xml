@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/park_image"
+            android:id="@+id/park_detail_image"
             android:src="@mipmap/ic_launcher" />
 
     </LinearLayout>
@@ -38,12 +38,12 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_favorite_border_black_24dp"
             android:background="@color/tw__solid_white"
-            android:id="@+id/button_favorite_park"/>
+            android:id="@+id/park_detail_button_favorite"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/button_favorite_park"
+            android:layout_toRightOf="@id/park_detail_button_favorite"
             android:layout_marginLeft="5dp"
             android:textSize="20dp"
             android:id="@+id/park_detail_parkname" />
@@ -51,21 +51,20 @@
         <RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/button_favorite_park"
+            android:layout_below="@id/park_detail_button_favorite"
             style="?android:attr/ratingBarStyleSmall"
             android:numStars="5"
             android:stepSize="0.1"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:id="@+id/parkaverage_ratingbar"/>
+            android:id="@+id/park_detail_ratingbar"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/parkaverage_ratingbar"
+            android:layout_toRightOf="@id/park_detail_ratingbar"
             android:layout_below="@id/park_detail_parkname"
             android:textSize="15dp"
-            android:text="4,0"
             android:layout_marginLeft="5dp"
             android:layout_marginBottom="5dp"
             android:id="@+id/park_detail_average"/>
@@ -76,15 +75,14 @@
             android:src="@drawable/ic_map_black_24dp"
             android:layout_alignParentRight="true"
             android:background="@color/cardview_light_background"
-            android:id="@+id/park_detail_button_map"/>
+            android:id="@+id/park_detail_button_maps"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
-            android:text="Rust"
-            android:layout_toLeftOf="@id/park_detail_button_map"
+            android:layout_toLeftOf="@id/park_detail_button_maps"
             android:id="@+id/park_detail_location"/>
 
         <TextView
@@ -94,7 +92,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_below="@id/park_detail_location"
-            android:layout_toLeftOf="@id/park_detail_button_map"
+            android:layout_toLeftOf="@id/park_detail_button_maps"
             android:id="@+id/park_detail_distance"/>
 
     </RelativeLayout>
@@ -105,7 +103,7 @@
         android:layout_below="@id/park_detail_view_header_relativelayout"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
-        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."/>
+        android:id="@+id/park_detail_description"/>
 
     <Button
         android:layout_width="match_parent"

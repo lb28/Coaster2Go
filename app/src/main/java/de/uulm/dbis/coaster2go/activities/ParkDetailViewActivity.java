@@ -1,14 +1,21 @@
 package de.uulm.dbis.coaster2go.activities;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -23,10 +30,12 @@ public class ParkDetailViewActivity extends BaseActivity {
 
     private String parkId;
 
-    private List<Park> parkList;
     private Park park;
 
-    TextView parkName;
+    TextView parkName, parkLocation, parkRatingAvg, parkDescription;
+    RatingBar ratingBar;
+    ImageView parkImage;
+    ImageButton buttonFav, buttonMaps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,31 +43,52 @@ public class ParkDetailViewActivity extends BaseActivity {
         setContentView(R.layout.activity_park_detail_view);
 
         parkName = (TextView) findViewById(R.id.park_detail_parkname);
+        parkLocation = (TextView) findViewById(R.id.park_detail_location);
+        parkRatingAvg = (TextView) findViewById(R.id.park_detail_average);
+        parkDescription = (TextView) findViewById(R.id.park_detail_description);
+        ratingBar = (RatingBar) findViewById(R.id.park_detail_ratingbar);
+        parkImage = (ImageView) findViewById(R.id.park_detail_image);
+        buttonFav = (ImageButton) findViewById(R.id.park_detail_button_favorite);
+        buttonMaps = (ImageButton) findViewById(R.id.park_detail_button_maps);
 
+        //get parkID from intent (clicked list item from previous activity)
         parkId = getIntent().getStringExtra("parkId");
 
-        System.out.println("ParkID: " + parkId);
+        //get all data from db and fill in all information
+        new LoadParkAsync().execute();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AzureDBManager azureDBManager = new AzureDBManager(ParkDetailViewActivity.this);
-
-                parkList = azureDBManager.getParkById(parkId);
-            }
-        });
+        //TODO maps button, favorite button, attraction button, ratingbar clickable, image scale
 
 
-        if(parkList == null){
-            parkName.setText("leere Liste!");
-        } else {
-            park = parkList.get(0);
-            parkName.setText(park.getName());
+    }
+
+    public class LoadParkAsync extends AsyncTask<Void, Void, List<Park>> {
+
+        @Override
+        protected void onPreExecute() {
+            ParkDetailViewActivity.this.progressBar.show();
         }
 
+        @Override
+        protected List<Park> doInBackground(Void... params) {
+            return new AzureDBManager(ParkDetailViewActivity.this).getParkById(parkId);
+        }
 
-
-        Toast.makeText(this, "ParkId: " + parkId, Toast.LENGTH_SHORT).show();
+        @Override
+        protected void onPostExecute(List<Park> parkList) {
+            if (parkList == null) {
+                Log.e("", "LoadParkAsync.onPostExecute: parkList was null!");
+            } else {
+                park = parkList.get(0);
+                Picasso.with(ParkDetailViewActivity.this).load(park.getImage()).into(parkImage);
+                parkName.setText(park.getName());
+                parkRatingAvg.setText("" + park.getAverageReview());
+                ratingBar.setRating((float) park.getAverageReview());
+                parkLocation.setText(park.getLocation());
+                parkDescription.setText(park.getDescription());
+            }
+            ParkDetailViewActivity.this.progressBar.hide();
+        }
     }
 
 }
