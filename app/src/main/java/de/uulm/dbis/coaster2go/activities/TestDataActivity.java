@@ -169,6 +169,7 @@ public class TestDataActivity extends AppCompatActivity {
                 List<Attraction> attractionList = dbManager.getParkList(parkId);
                 String attractionId = attractionList.get(0).getId();
 
+                /*
                 testReview.setReviewedId(parkId);
                 testReview2.setReviewedId(parkId);
                 testReview3.setReviewedId(attractionId);
@@ -187,6 +188,12 @@ public class TestDataActivity extends AppCompatActivity {
 
                 Review lustigReview = dbManager.getReviewOfUser(attractionId, "Peter Lustig ID").get(0);
                 System.out.println(lustigReview.toString());
+                */
+
+                List<Review> reviewList1 = dbManager.getPartOfReviewList(attractionId, 0);
+                System.out.println(reviewList1.toString());
+                List<Review> reviewList2 = dbManager.getPartOfReviewList(attractionId, 1);
+                if(reviewList2.isEmpty()){System.out.println("empty List");}else{System.out.println(reviewList2.toString());}
 
                 System.out.println("--------------------------- AzureDBManager Test Ende");
 

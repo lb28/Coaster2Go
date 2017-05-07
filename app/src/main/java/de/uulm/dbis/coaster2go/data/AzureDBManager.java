@@ -89,12 +89,12 @@ public class AzureDBManager {
         return resultPark;
     }
 
-    /** Returns a List with the searched Parkobject or null
+    /** Returns the searched Parkobject or null
      *
      * @param parkId .
-     * @return List with only one Parkobject matching the given id.
+     * @return the searched Parkobject or null.
      */
-    public List<Park> getParkById(String parkId){
+    public Park getParkById(String parkId){
         MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
 
         List<Park> resultPark = null;
@@ -105,7 +105,11 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return resultPark;
+        if(resultPark == null || resultPark.isEmpty()){
+            return null;
+        }else{
+            return resultPark.get(0);
+        }
     }
 
     /** Returns a List with all Parks in the database ordered by the Parkname.
@@ -167,12 +171,12 @@ public class AzureDBManager {
         return resultAttraction;
     }
 
-    /** Returns a List with the searched Attraction object or null
+    /** Returns the Attraction object or null
      *
      * @param attractionId .
-     * @return List with only one Attraction object matching the given id.
+     * @return TheAttraction object matching the given id or null.
      */
-    public List<Attraction> getAttractionById(String attractionId){
+    public Attraction getAttractionById(String attractionId){
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
         List<Attraction> resultAttraction = null;
@@ -183,7 +187,11 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return resultAttraction;
+        if(resultAttraction == null || resultAttraction.isEmpty()){
+            return null;
+        }else{
+            return resultAttraction.get(0);
+        }
     }
 
     /** Returns a List with all Attractions in one Park ordered by the Parkname.
@@ -224,7 +232,7 @@ public class AzureDBManager {
 
             //Update Park/Attraction:
             if(attraction){
-                Attraction updateAttraction = getAttractionById(reviewedId).get(0);
+                Attraction updateAttraction = getAttractionById(reviewedId);
                 int newNumberOfReviews = updateAttraction.getNumberOfReviews()+1;
                 double newAverageReview = (updateAttraction.getAverageReview()*updateAttraction.getNumberOfReviews()
                         +resultReview.getNumberOfStars())/newNumberOfReviews;
@@ -235,7 +243,7 @@ public class AzureDBManager {
                 mAttractionTable.update(updateAttraction);
 
             }else{
-                Park updatePark = getParkById(reviewedId).get(0);
+                Park updatePark = getParkById(reviewedId);
                 int newNumberOfReviews = updatePark.getNumberOfReviews()+1;
                 double newAverageReview = (updatePark.getAverageReview()*updatePark.getNumberOfReviews()
                         +resultReview.getNumberOfStars())/newNumberOfReviews;
@@ -273,7 +281,7 @@ public class AzureDBManager {
 
             //Update Park/Attraction:
             if(attraction){
-                Attraction updateAttraction = getAttractionById(reviewedId).get(0);
+                Attraction updateAttraction = getAttractionById(reviewedId);
                 double newAverageReview = (updateAttraction.getAverageReview()*(updateAttraction.getNumberOfReviews()-1)
                         +resultReview.getNumberOfStars())/updateAttraction.getNumberOfReviews();
                 updateAttraction.setAverageReview(newAverageReview);
@@ -282,7 +290,7 @@ public class AzureDBManager {
                 mAttractionTable.update(updateAttraction);
 
             }else{
-                Park updatePark = getParkById(reviewedId).get(0);
+                Park updatePark = getParkById(reviewedId);
                 double newAverageReview = (updatePark.getAverageReview()*(updatePark.getNumberOfReviews()-1)
                         +resultReview.getNumberOfStars())/updatePark.getNumberOfReviews();
                 updatePark.setAverageReview(newAverageReview);
@@ -302,13 +310,13 @@ public class AzureDBManager {
     }
 
     /** Returns a List with all Reviews of a Park or Atraction.
+     * Statt der Methode kann auch getPartOfReviewList verwendet werden, welche
+     * nur jewiles die ersten 5, nächsten 5,... Elemente der Liste zurück gibt
      *
      * @param reviewedId Id of the Park or Attraction
      * @return List with all Reviews ordered by Date
      */
     public List<Review> getReviewList(String reviewedId){
-        //TODO ggf. könnte auch eine Methode geschrieben werden, welche nur die ersten 5, 5-10, 10-15
-        // Reviews zurück gibt geschrieben werden
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
 
         List<Review> reviewList = null;
@@ -322,14 +330,40 @@ public class AzureDBManager {
         return reviewList;
     }
 
-    /** Returns a List, where the first Object is the Review of a specific User of a Park or Attraction
-     * or an empty List/Null (??) if there is none so far
+    /** Returns the next 5 Review Elements in a List of a Park or Atraction.
+     * Counter: Start wth Element counter*5+1 and end with Element (counter+1)*5
+     *
+     * @param reviewedId Id of the Park or Attraction
+     * @param counter, see description
+     * @return List with 5 Reviews ordered by Date
+     */
+    public List<Review> getPartOfReviewList(String reviewedId, int counter){
+        MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
+        int skip = counter*5;
+        int lastElement = (counter+1)*5;
+
+        List<Review> reviewList = null;
+        try {
+            reviewList = mReviewTable
+                    .where().field("reviewedId").eq(reviewedId)
+                    .orderBy("createdAt", QueryOrder.Descending)
+                    .skip(skip).top(lastElement).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return reviewList;
+    }
+
+    /** Returns the Review Object of a specific User of a Park or Attraction
+     * or null if there is none so far
      *
      * @param reviewedId Id of the Park/Attraction
      * @param userId Id of the User
-     * @return Review Object in a List
+     * @return Review Object or null
      */
-    public List<Review> getReviewOfUser(String reviewedId, String userId){
+    public Review getReviewOfUser(String reviewedId, String userId){
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
 
         List<Review> reviewList = null;
@@ -340,7 +374,11 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return reviewList;
+        if(reviewList == null || reviewList.isEmpty()){
+            return null;
+        }else{
+            return reviewList.get(0);
+        }
     }
 
     //getSingleReview(String id) not necessary so far
