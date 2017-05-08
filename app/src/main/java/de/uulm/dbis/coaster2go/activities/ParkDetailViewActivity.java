@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -36,6 +37,7 @@ public class ParkDetailViewActivity extends BaseActivity {
     RatingBar ratingBar;
     ImageView parkImage;
     ImageButton buttonFav, buttonMaps;
+    Button buttonAttractions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class ParkDetailViewActivity extends BaseActivity {
         parkImage = (ImageView) findViewById(R.id.park_detail_image);
         buttonFav = (ImageButton) findViewById(R.id.park_detail_button_favorite);
         buttonMaps = (ImageButton) findViewById(R.id.park_detail_button_maps);
+        buttonAttractions = (Button) findViewById(R.id.park_detail_button_attractions);
 
         //get parkID from intent (clicked list item from previous activity)
         parkId = getIntent().getStringExtra("parkId");
@@ -57,7 +60,33 @@ public class ParkDetailViewActivity extends BaseActivity {
         //get all data from db and fill in all information
         new LoadParkAsync().execute();
 
-        //TODO maps button, favorite button, attraction button, ratingbar clickable, image scale
+        buttonAttractions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToAttractionOverview(null);
+            }
+        });
+
+        ratingBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO call redirect method to rating activity
+            }
+        });
+
+        buttonMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO call maps (? with your coordinates and destination?)
+            }
+        });
+
+        buttonFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO save park as favorite
+            }
+        });
 
 
     }

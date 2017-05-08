@@ -111,7 +111,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="Attraktionen"
-        android:id="@+id/button_attraactions"
+        android:id="@+id/park_detail_button_attractions"
         android:onClick="goToAttractionOverview"/>
 
 </RelativeLayout>
