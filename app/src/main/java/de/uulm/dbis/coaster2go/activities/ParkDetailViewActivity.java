@@ -32,8 +32,6 @@ public class ParkDetailViewActivity extends BaseActivity {
 
     private String parkId;
 
-    private Park park;
-
     TextView parkName, parkLocation, parkRatingAvg, parkDescription;
     RatingBar ratingBar;
     ImageView parkImage;
