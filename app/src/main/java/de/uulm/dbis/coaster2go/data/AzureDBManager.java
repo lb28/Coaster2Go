@@ -1,6 +1,7 @@
 package de.uulm.dbis.coaster2go.data;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -11,12 +12,15 @@ import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 
 import java.net.MalformedURLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import com.squareup.okhttp.OkHttpClient;
 
 /** Class handels all Connections between the App and the Azure SQL Data tables.
+ *
+ * TODO: All problems concerning the diferent time zone in Azure and azure date problems
  *
  */
 public class AzureDBManager {
@@ -172,7 +176,7 @@ public class AzureDBManager {
         return resultAttraction;
     }
 
-    /** Returns the Attraction object or null
+    /** Returns the Attraction object or null.
      *
      * @param attractionId .
      * @return TheAttraction object matching the given id or null.
@@ -216,7 +220,7 @@ public class AzureDBManager {
 
     //----------------------Reviews--------------------------------------------
 
-    /** Inserts the given Review into the Database AND UPDATES the Park or Attraction review flags
+    /** Inserts the given Review into the Database AND UPDATES the Park or Attraction review flags.
      *
      * @param review Review Object which needs to be inserted, reviewedId has to be set!
      * @param attraction BOOLEAN: TRUE if Attraction, FALSE if Park
@@ -265,7 +269,7 @@ public class AzureDBManager {
         return resultReview;
     }
 
-    /** Updates the given Review in the Database AND UPDATES the Park or Attraction
+    /** Updates the given Review in the Database AND UPDATES the Park or Attraction.
      *
      * @param review Review Object which needs to be updated, reviewedId and id has to be set!
      * @param attraction BOOLEAN: TRUE if Attraction, FALSE if Park
@@ -328,6 +332,18 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        //Update hours because the Azure Time Zone is -2 hours from ours
+        //TODO find a solution to solve this in the Azure Portal...
+        //Let's just assume that nobody posts a Review between 22:00 and 24:00
+        if(reviewList != null){
+            for(Review r: reviewList){
+                Date date = r.getCreatedAt();
+                int newHours = date.getHours()+2;
+                date.setHours(newHours);
+                r.setCreatedAt(date);
+            }
+        }
+
         return reviewList;
     }
 
@@ -354,6 +370,18 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        //Update hours because the Azure Time Zone is -2 hours from ours
+        //TODO find a solution to solve this in the Azure Portal...
+        //Let's just assume that nobody posts a Review between 22:00 and 24:00
+        if(reviewList != null){
+            for(Review r: reviewList){
+                Date date = r.getCreatedAt();
+                int newHours = date.getHours()+2;
+                date.setHours(newHours);
+                r.setCreatedAt(date);
+            }
+        }
+
         return reviewList;
     }
 
@@ -378,6 +406,16 @@ public class AzureDBManager {
         if(reviewList == null || reviewList.isEmpty()){
             return null;
         }else{
+            //Update hours because the Azure Time Zone is -2 hours from ours
+            //TODO find a solution to solve this in the Azure Portal...
+            //Let's just assume that nobody posts a Review between 22:00 and 24:00
+            for(Review r: reviewList){
+                Date date = r.getCreatedAt();
+                int newHours = date.getHours()+2;
+                date.setHours(newHours);
+                r.setCreatedAt(date);
+            }
+
             return reviewList.get(0);
         }
     }
@@ -387,7 +425,7 @@ public class AzureDBManager {
     //----------------------WaitingTimes--------------------------------------
 
     /** Returns a List with all WaitingTimes of an Atraction.
-     * Statt der Methode kann auch getPartOfReviewList verwendet werden, welche
+     * Statt der Methode kann auch getPartOfWaitingTimeList verwendet werden, welche
      * nur jewiles die ersten 5, nächsten 5,... Elemente der Liste zurück gibt
      *
      * @param attractionId Id of the Attraction
@@ -404,6 +442,18 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        //Update hours because the Azure Time Zone is -2 hours from ours
+        //TODO find a solution to solve this in the Azure Portal...
+        //Let's just assume that nobody posts a WaitingTime between 22:00 and 24:00
+        if(waitList != null){
+            for(WaitingTime w: waitList){
+                Date date = w.getCreatedAt();
+                int newHours = date.getHours()+2;
+                date.setHours(newHours);
+                w.setCreatedAt(date);
+            }
+        }
+
         return waitList;
     }
 
@@ -429,15 +479,29 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        //Update hours because the Azure Time Zone is -2 hours from ours
+        //TODO find a solution to solve this in the Azure Portal...
+        //Let's just assume that nobody posts a WaitingTime between 22:00 and 24:00
+        if(waitList != null){
+            for(WaitingTime w: waitList){
+                Date date = w.getCreatedAt();
+                int newHours = date.getHours()+2;
+                date.setHours(newHours);
+                w.setCreatedAt(date);
+            }
+        }
+
         return waitList;
     }
 
     /** Returns a List with all TodayWaitingTimes of an Attraction.
      *
+     * Note that this method does not update the createdAt hours to our timezone hours!
+     *
      * @param attractionId Id of the Attraction
      * @return List with all WaitingTimes ordered by Date
      */
-    public List<WaitingTime> getTodaysWaitingTimeList(String attractionId){
+    private List<WaitingTime> getTodaysWaitingTimeList(String attractionId){
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
 
         List<WaitingTime> waitList = null;
@@ -451,7 +515,7 @@ public class AzureDBManager {
                     .execute().get();
 
              */
-            //Ersatzlösung:
+            //Ersatzlösung, die aber genauso funktioniert:
             waitList = getWaitingTimeList(attractionId);
             int counter = 0;
             int i = 0;
@@ -517,7 +581,9 @@ public class AzureDBManager {
                     newAverageTodayWaitingTime = newAverageTodayWaitingTime + w.getMinutes();
                 }
                 newAverageTodayWaitingTime = newAverageTodayWaitingTime + waitTime.getMinutes();
-                newAverageTodayWaitingTime = newAverageWaitingTime/newNumberOfTodayWaitingTimes;
+                //System.out.println("Anzahl heute: "+todayList.size());
+                //System.out.println("Gesamtminuten heute: "+newAverageTodayWaitingTime);
+                newAverageTodayWaitingTime = newAverageTodayWaitingTime/newNumberOfTodayWaitingTimes;
             }
             updateAttraction.setNumberOfTodayWaitingTimes(newNumberOfTodayWaitingTimes);
             updateAttraction.setAverageTodayWaitingTime(newAverageTodayWaitingTime);
@@ -551,11 +617,68 @@ public class AzureDBManager {
         return resultTime;
     }
 
+    /** Method checks, if a User has already posted a WaitingTime for an Attraction in the current hour.
+     *  If so, the method responds with false. If the User is allowed to post a WaitingTime,
+     *  it responds with true.
+     *
+     * @param attractionId Id of the Attraction
+     * @param userId Id of the USer
+     * @return boolean if User can post a WaitingTime
+     */
+    public boolean isCreateWaitingTimeAllowed(String attractionId, String userId){
+        List<WaitingTime> todayList = getTodaysWaitingTimeList(attractionId);
+        if(todayList == null || todayList.isEmpty()){
+            return true;
+        }
+        Date date = new Date(); //Maybe use something different then the Date Object later...
+        int currentHour = date.getHours();
+        for(WaitingTime w : todayList){
+            //For now the method only checks if the User did already post a WaitingTime in the
+            // current hour. A better cariant would probably be to check if he did post a
+            // WaitingTime during the last 60 minutes... //TODO ?
+            if(w.getUserId().equals(userId) && w.getCreatedAt().getHours()==currentHour){
+                return false;
+            }
+        }
+        return true;
+    }
 
+    /** This method returns the statistics for the WaitingTime per Hours. It gives back a
+     * HashMap< key, value>  where the key is a hour (only between 8 and 20) (Integer) and the value
+     * is the average waiting time for this hour (Integer).
+     *
+     * @param attractionId Id of the Attraction.
+     * @return see above
+     */
+    @SuppressLint("all")
+    public HashMap<Integer, Integer> waitTimeHourStatistic(String attractionId){
+        HashMap<Integer, Integer> numbers = new HashMap<>();
+        HashMap<Integer, Integer> minutes = new HashMap<>();
+        HashMap<Integer, Integer> result = new HashMap<>();
+        for(int i = 0; i < 27; i++){
+            numbers.put(i, 0); minutes.put(i, 0);
+        }
 
-    //test methods:
-    public static void test(){
-        System.out.println("--------------test");
+        List<WaitingTime> waitList = getWaitingTimeList(attractionId);
+        if(waitList != null && !waitList.isEmpty()){
+            for(WaitingTime w: waitList){
+                int hour = w.getCreatedAt().getHours(); //Update hours to out Time Zone already in getWaitingTimeList()
+                int time = w.getMinutes();
+                numbers.put(hour, numbers.get(hour)+1);
+                minutes.put(hour, minutes.get(hour)+time);
+            }
+        }
+
+        //Let's only use the Waiting Times from 8:00 to 20:00 for the statistics
+        for(int i = 8; i < 21; i++){
+            if(numbers.get(i) > 0){
+                result.put(i, minutes.get(i)/numbers.get(i));
+            }else{
+                result.put(i, 0);
+            }
+        }
+
+        return result;
     }
 
 }

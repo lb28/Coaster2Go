@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.microsoft.windowsazure.mobileservices.*;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.uulm.dbis.coaster2go.R;
@@ -100,8 +101,8 @@ public class TestDataActivity extends AppCompatActivity {
         testReview2 = new Review("", "Peter Unlustig", "Peter Unlustig ID", 2, "Finde den Park nicht lustig.");
         testReview3 = new Review("", "Peter Lustig", "Peter Lustig ID", 5, "Finde die Attraktion lustig.");
         testReview4 = new Review("", "Peter Lustig", "Peter Unlustig ID", 1, "Finde die Attraktion nicht lustig.");
-        testTime = new WaitingTime("", "Peter Lustig", "Peter Lustig ID", 20);
-        testTime2 = new WaitingTime("", "Peter Unlustig", "Peter Unlustig ID", 40);
+        testTime = new WaitingTime("", "Peter Lustig", "Peter Lustig ID", 45);
+        testTime2 = new WaitingTime("", "Peter Unlustig", "Peter Unlustig ID", 75);
 
 
 
@@ -109,7 +110,6 @@ public class TestDataActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
                 System.out.println("--------------------------- AzureDBManager Test Start");
-                AzureDBManager.test();
 
                 AzureDBManager dbManager = new AzureDBManager(TestDataActivity.this);
 
@@ -185,12 +185,17 @@ public class TestDataActivity extends AppCompatActivity {
                 List<Attraction> attractionList = dbManager.getAttractionList(parkId);
                 String attractionId = attractionList.get(0).getId();
 
+                /*
                 testTime.setAttractionId(attractionId);
                 testTime2.setAttractionId(attractionId);
                 WaitingTime resultTime = dbManager.createWaitingTime(testTime);
                 System.out.println(resultTime.toString());
                 WaitingTime resultTime2 = dbManager.createWaitingTime(testTime2);
                 System.out.println(resultTime2.toString());
+                */
+
+                HashMap<Integer, Integer> resultStatistics = dbManager.waitTimeHourStatistic(attractionId);
+                System.out.println(resultStatistics.toString());
 
                 System.out.println("--------------------------- AzureDBManager Test Ende");
 
