@@ -126,7 +126,6 @@ public class ParkOverviewActivity extends BaseActivity {
 
     /**
      * calls the add park activity (called on click of the "add" button)
-     * @param view
      */
     public void addPark(View view) {
         Snackbar.make(view, "TODO Add Park Activity", Snackbar.LENGTH_LONG)

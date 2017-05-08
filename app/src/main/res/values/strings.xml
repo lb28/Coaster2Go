@@ -116,5 +116,10 @@
     </string>
     <string name="user_name">Benutzername</string>
     <string name="title_activity_attraction_overview">Attraktionsübersicht</string>
+    <string name="locationName">Ortsname</string>
+    <string name="description">Beschreibung</string>
+    <string name="latitude">Breitengrad</string>
+    <string name="longitude">Längengrad</string>
+    <string name="maps">Karte</string>
 
 </resources>

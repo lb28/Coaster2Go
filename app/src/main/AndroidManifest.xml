@@ -49,7 +49,8 @@
         <activity
             android:name=".activities.AttractionOverviewActivity"
             android:label="@string/title_activity_attraction_overview" />
-        <activity android:name=".activities.AttractionDetailViewActivity"></activity>
+        <activity android:name=".activities.AttractionDetailViewActivity" />
+        <activity android:name=".activities.EditParkActivity"></activity>
     </application>
 
 </manifest>
