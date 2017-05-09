@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -50,7 +52,13 @@
             android:name=".activities.AttractionOverviewActivity"
             android:label="@string/title_activity_attraction_overview" />
         <activity android:name=".activities.AttractionDetailViewActivity" />
-        <activity android:name=".activities.EditParkActivity"></activity>
+        <activity android:name=".activities.EditParkActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC-O_FFzLtUvFK2WTg8jVgjTSz9KXTxk-o"/>
     </application>
 
 </manifest>

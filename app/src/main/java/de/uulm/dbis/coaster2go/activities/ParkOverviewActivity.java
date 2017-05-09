@@ -3,12 +3,12 @@ package de.uulm.dbis.coaster2go.activities;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -108,6 +108,7 @@ public class ParkOverviewActivity extends BaseActivity {
             case R.id.action_sort_distance:
                 return  true;
             case R.id.action_refresh:
+                refreshParkList();
                 return true;
         }
 
@@ -124,13 +125,20 @@ public class ParkOverviewActivity extends BaseActivity {
         }
     }
 
+    private void refreshParkList() {
+        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        if (currentFragment != null && currentFragment.parkListAdapter != null) {
+            currentFragment.swipeRefreshLayout.setRefreshing(true);
+            currentFragment.refreshParkList();
+        }
+    }
+
     /**
      * calls the add park activity (called on click of the "add" button)
      */
     public void addPark(View view) {
-        Snackbar.make(view, "TODO Add Park Activity", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .show();
+        Intent intent = new Intent(this, EditParkActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -138,6 +146,7 @@ public class ParkOverviewActivity extends BaseActivity {
      */
     public static class ParkListFragment extends Fragment {
         ParkListAdapter parkListAdapter;
+        SwipeRefreshLayout swipeRefreshLayout;
 
         public ParkListFragment() {
         }
@@ -164,8 +173,12 @@ public class ParkOverviewActivity extends BaseActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_parklist, container, false);
+            swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(
+                    R.id.swiperefresh_parkList);
 
-            new LoadParksTask().execute();
+            swipeRefreshLayout.setRefreshing(true);
+            new RefreshParksTask().execute();
 
             List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
 
@@ -178,18 +191,29 @@ public class ParkOverviewActivity extends BaseActivity {
                 }
             });
 
-            View rootView = inflater.inflate(R.layout.fragment_parklist, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewParkList);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(
+                    R.id.recyclerViewParkList);
             textView.setText("mode: " + getArguments().getString("mode")); // for testing
             recyclerView.setAdapter(parkListAdapter);
             // Set layout manager to position the items
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
 
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                    layoutManager.getOrientation());
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                    recyclerView.getContext(),
+                    layoutManager.getOrientation()
+            );
             recyclerView.addItemDecoration(dividerItemDecoration);
+
+            // add the swipe-to-refresh functionality
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+                    refreshParkList();
+                }
+            });
 
             return rootView;
         }
@@ -199,13 +223,11 @@ public class ParkOverviewActivity extends BaseActivity {
             return super.onOptionsItemSelected(item);
         }
 
+        void refreshParkList() {
+            new RefreshParksTask().execute();
+        }
 
-        public class LoadParksTask extends AsyncTask<Void, Void, List<Park>> {
-
-            @Override
-            protected void onPreExecute() {
-                ((ParkOverviewActivity) getActivity()).progressBar.show();
-            }
+        class RefreshParksTask extends AsyncTask<Void, Void, List<Park>> {
 
             @Override
             protected List<Park> doInBackground(Void... params) {
@@ -215,12 +237,12 @@ public class ParkOverviewActivity extends BaseActivity {
             @Override
             protected void onPostExecute(List<Park> parkList) {
                 if (parkList == null) {
-                    Log.e(TAG, "LoadParksTask.onPostExecute: parkList was null!");
+                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
                 } else {
                     parkListAdapter.setParkList(parkList);
-                    parkListAdapter.notifyItemRangeInserted(0, parkList.size());
+                    parkListAdapter.notifyDataSetChanged();
                 }
-                ((ParkOverviewActivity) getActivity()).progressBar.hide();
+                swipeRefreshLayout.setRefreshing(false);
             }
         }
     }

@@ -212,7 +212,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             @Override
             protected void onPostExecute(List<Attraction> attractionList) {
                 if (attractionList == null) {
-                    Log.e(TAG, "LoadParksTask.onPostExecute: parkList was null!");
+                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
                 } else {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyItemRangeInserted(0, attractionList.size());
