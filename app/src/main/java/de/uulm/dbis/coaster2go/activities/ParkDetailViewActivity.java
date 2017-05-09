@@ -3,10 +3,12 @@ package de.uulm.dbis.coaster2go.activities;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +34,7 @@ import de.uulm.dbis.coaster2go.data.Park;
 public class ParkDetailViewActivity extends BaseActivity {
 
     private String parkId;
+    private Park park;
 
     TextView parkName, parkLocation, parkRatingAvg, parkDescription;
     RatingBar ratingBar;
@@ -77,7 +80,33 @@ public class ParkDetailViewActivity extends BaseActivity {
         buttonMaps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO call maps (? with your coordinates and destination?)
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                // creates an Intent that will load a map of the park
+                                Uri gmmIntentUri = Uri.parse("geo:" + park.getLat() + ", " + park.getLon());
+                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                mapIntent.setPackage("com.google.android.apps.maps");
+                                //check if there is a suitable app to execute
+                                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                                    startActivity(mapIntent);
+                                }
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                //dialog for forwarding to google maps
+                AlertDialog.Builder builder = new AlertDialog.Builder(ParkDetailViewActivity.this);
+                builder.setMessage("Sie werden jetzt zu Google Maps weitergeleitet").setPositiveButton("OK", dialogClickListener)
+                        .setNegativeButton("Zurück", dialogClickListener).show();
             }
         });
 
@@ -111,16 +140,17 @@ public class ParkDetailViewActivity extends BaseActivity {
         }
 
         @Override
-        protected void onPostExecute(Park park) {
-            if (park == null) {
+        protected void onPostExecute(Park park2) {
+            if (park2 == null) {
                 Log.e("", "LoadParkAsync.onPostExecute: parkList was null!");
             } else {
-                Picasso.with(ParkDetailViewActivity.this).load(park.getImage()).into(parkImage);
-                parkName.setText(park.getName());
-                parkRatingAvg.setText("" + park.getAverageReview());
-                ratingBar.setRating((float) park.getAverageReview());
-                parkLocation.setText(park.getLocation());
-                parkDescription.setText(park.getDescription());
+                park = park2;
+                Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
+                parkName.setText(park2.getName());
+                parkRatingAvg.setText("" + park2.getAverageReview());
+                ratingBar.setRating((float) park2.getAverageReview());
+                parkLocation.setText(park2.getLocation());
+                parkDescription.setText(park2.getDescription());
             }
             ParkDetailViewActivity.this.progressBar.hide();
         }
