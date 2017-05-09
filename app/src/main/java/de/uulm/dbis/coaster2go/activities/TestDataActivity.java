@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.microsoft.windowsazure.mobileservices.*;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class TestDataActivity extends AppCompatActivity {
     Park testPark, testPark2, testPark3;
     Attraction testAttraction, testAttraction2, testAttraction3, testAttraction4;
     Review testReview, testReview2, testReview3, testReview4;
-    WaitingTime testTime, testTime2;
+    WaitingTime testTime, testTime2, testTimeZone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class TestDataActivity extends AppCompatActivity {
         testReview4 = new Review("", "Peter Lustig", "Peter Unlustig ID", 1, "Finde die Attraktion nicht lustig.");
         testTime = new WaitingTime("", "Peter Lustig", "Peter Lustig ID", 45);
         testTime2 = new WaitingTime("", "Peter Unlustig", "Peter Unlustig ID", 75);
+        testTimeZone = new WaitingTime("", "Timezone test", "Timezone test", 25);
 
 
 
@@ -194,8 +196,25 @@ public class TestDataActivity extends AppCompatActivity {
                 System.out.println(resultTime2.toString());
                 */
 
+                /*
+                System.out.println(dbManager.getTodaysWaitingTimeList(attractionId).toString());
+                System.out.println("-------------------------");
+                System.out.println(dbManager.getPartOfWaitingTimeList(attractionId, 0).toString());
+
+                if(dbManager.isCreateWaitingTimeAllowed(attractionId, "Peter Lustig ID")){
+                    System.out.println("erlaubt");}else{System.out.println("nicht erlaubt");}
                 HashMap<Integer, Integer> resultStatistics = dbManager.waitTimeHourStatistic(attractionId);
                 System.out.println(resultStatistics.toString());
+                */
+
+                Date now = new Date();
+                WaitingTime resultTimeZone = dbManager.createWaitingTime(testTimeZone);
+                WaitingTime resultTimeZone2 = dbManager.getPartOfWaitingTimeList(attractionId, 0).get(0);
+                System.out.println("Current phone hour: "+now.getHours()+
+                        "\nReturned createdAt hour: "+resultTimeZone.getCreatedAt().getHours()+
+                        "\nRead createdAtHour: "+resultTimeZone2.getCreatedAt().getHours()+
+                        "\nAll the same?");
+
 
                 System.out.println("--------------------------- AzureDBManager Test Ende");
 

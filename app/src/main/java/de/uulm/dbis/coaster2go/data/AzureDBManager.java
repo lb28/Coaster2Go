@@ -20,7 +20,7 @@ import com.squareup.okhttp.OkHttpClient;
 
 /** Class handels all Connections between the App and the Azure SQL Data tables.
  *
- * TODO: All problems concerning the diferent time zone in Azure and azure date problems
+ * TODO: Find a better solution for the date problems
  *
  */
 public class AzureDBManager {
@@ -332,17 +332,6 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        //Update hours because the Azure Time Zone is -2 hours from ours
-        //TODO find a solution to solve this in the Azure Portal...
-        //Let's just assume that nobody posts a Review between 22:00 and 24:00
-        if(reviewList != null){
-            for(Review r: reviewList){
-                Date date = r.getCreatedAt();
-                int newHours = date.getHours()+2;
-                date.setHours(newHours);
-                r.setCreatedAt(date);
-            }
-        }
 
         return reviewList;
     }
@@ -370,17 +359,6 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        //Update hours because the Azure Time Zone is -2 hours from ours
-        //TODO find a solution to solve this in the Azure Portal...
-        //Let's just assume that nobody posts a Review between 22:00 and 24:00
-        if(reviewList != null){
-            for(Review r: reviewList){
-                Date date = r.getCreatedAt();
-                int newHours = date.getHours()+2;
-                date.setHours(newHours);
-                r.setCreatedAt(date);
-            }
-        }
 
         return reviewList;
     }
@@ -406,16 +384,6 @@ public class AzureDBManager {
         if(reviewList == null || reviewList.isEmpty()){
             return null;
         }else{
-            //Update hours because the Azure Time Zone is -2 hours from ours
-            //TODO find a solution to solve this in the Azure Portal...
-            //Let's just assume that nobody posts a Review between 22:00 and 24:00
-            for(Review r: reviewList){
-                Date date = r.getCreatedAt();
-                int newHours = date.getHours()+2;
-                date.setHours(newHours);
-                r.setCreatedAt(date);
-            }
-
             return reviewList.get(0);
         }
     }
@@ -441,17 +409,6 @@ public class AzureDBManager {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        }
-        //Update hours because the Azure Time Zone is -2 hours from ours
-        //TODO find a solution to solve this in the Azure Portal...
-        //Let's just assume that nobody posts a WaitingTime between 22:00 and 24:00
-        if(waitList != null){
-            for(WaitingTime w: waitList){
-                Date date = w.getCreatedAt();
-                int newHours = date.getHours()+2;
-                date.setHours(newHours);
-                w.setCreatedAt(date);
-            }
         }
 
         return waitList;
@@ -479,29 +436,17 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        //Update hours because the Azure Time Zone is -2 hours from ours
-        //TODO find a solution to solve this in the Azure Portal...
-        //Let's just assume that nobody posts a WaitingTime between 22:00 and 24:00
-        if(waitList != null){
-            for(WaitingTime w: waitList){
-                Date date = w.getCreatedAt();
-                int newHours = date.getHours()+2;
-                date.setHours(newHours);
-                w.setCreatedAt(date);
-            }
-        }
 
         return waitList;
     }
 
     /** Returns a List with all TodayWaitingTimes of an Attraction.
      *
-     * Note that this method does not update the createdAt hours to our timezone hours!
      *
      * @param attractionId Id of the Attraction
      * @return List with all WaitingTimes ordered by Date
      */
-    private List<WaitingTime> getTodaysWaitingTimeList(String attractionId){
+    public List<WaitingTime> getTodaysWaitingTimeList(String attractionId){
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
 
         List<WaitingTime> waitList = null;
@@ -532,7 +477,7 @@ public class AzureDBManager {
                 if(counter >= waitList.size()){
                     return waitList;
                 }else{
-                    waitList = waitList.subList(0, counter+1);
+                    waitList = waitList.subList(0, counter);
                 }
             }
 
@@ -632,7 +577,9 @@ public class AzureDBManager {
         }
         Date date = new Date(); //Maybe use something different then the Date Object later...
         int currentHour = date.getHours();
+        System.out.println("current hour: "+currentHour);
         for(WaitingTime w : todayList){
+            System.out.println(w.getCreatedAt().getHours());
             //For now the method only checks if the User did already post a WaitingTime in the
             // current hour. A better cariant would probably be to check if he did post a
             // WaitingTime during the last 60 minutes... //TODO ?
@@ -662,7 +609,7 @@ public class AzureDBManager {
         List<WaitingTime> waitList = getWaitingTimeList(attractionId);
         if(waitList != null && !waitList.isEmpty()){
             for(WaitingTime w: waitList){
-                int hour = w.getCreatedAt().getHours(); //Update hours to out Time Zone already in getWaitingTimeList()
+                int hour = w.getCreatedAt().getHours();
                 int time = w.getMinutes();
                 numbers.put(hour, numbers.get(hour)+1);
                 minutes.put(hour, minutes.get(hour)+time);
