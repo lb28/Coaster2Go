@@ -40,8 +40,8 @@ public class AzureDBManager {
                     @Override
                     public OkHttpClient createOkHttpClient() {
                         OkHttpClient client = new OkHttpClient();
-                        client.setReadTimeout(20, TimeUnit.SECONDS);
-                        client.setWriteTimeout(20, TimeUnit.SECONDS);
+                        client.setReadTimeout(30, TimeUnit.SECONDS);
+                        client.setWriteTimeout(30, TimeUnit.SECONDS);
                         return client;
                     }
                 });
