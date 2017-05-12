@@ -166,10 +166,16 @@
 
     </RelativeLayout>
 
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/attr_detail_barchart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/attr_detail_waitingtime_view_rellayout"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/attr_detail_waitingtime_view_rellayout"
+        android:layout_below="@id/attr_detail_barchart"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:orientation="horizontal">

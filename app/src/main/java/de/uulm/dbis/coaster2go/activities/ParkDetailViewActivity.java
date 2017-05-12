@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -147,8 +148,9 @@ public class ParkDetailViewActivity extends BaseActivity {
                 park = park2;
                 Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
                 parkName.setText(park2.getName());
-                parkRatingAvg.setText("" + park2.getAverageReview());
                 ratingBar.setRating((float) park2.getAverageReview());
+                DecimalFormat df = new DecimalFormat("#.#");
+                parkRatingAvg.setText(df.format(park2.getAverageReview()));
                 parkLocation.setText(park2.getLocation());
                 parkDescription.setText(park2.getDescription());
             }
