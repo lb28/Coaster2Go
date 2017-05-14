@@ -3,6 +3,7 @@ package de.uulm.dbis.coaster2go.activities;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -176,7 +177,32 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 todayWait.setText(df.format(attr2.getAverageTodayWaitingTime()));
                 alltimeWait.setText(df.format(attr2.getAverageWaitingTime()));
 
-                //TODO waiting times colors
+                //SUPER ALOGRITHMUS ZUR BERECHNUNG WANN WARTEZEIT GRÜN/GELB/ROT
+                //GRÜN: Zeit < 70% Gesamtdurchschnitt
+                //GELB: 70% Gesamtdurchschnitt < Zeit < 130% Gesamtdurchschnitt
+                //ROT: 130% Gesamtdurchschnitt < Zeit
+
+                //gesamtdurchschnitt immer gelb
+                alltimeWait.setBackgroundColor(Color.YELLOW);
+                //heute-durchschnitt
+                if(attr.getAverageTodayWaitingTime() < attr.getAverageWaitingTime()*0.7){
+                    todayWait.setBackgroundColor(Color.GREEN);
+                } else if(attr.getAverageTodayWaitingTime() > attr.getAverageWaitingTime()*1.3){
+                    todayWait.setBackgroundColor(Color.RED);
+                } else {
+                    todayWait.setBackgroundColor(Color.YELLOW);
+                }
+                //aktuell (letzte 3) durchschnitt
+                if(attr.getCurrentWaitingTime() < attr.getAverageWaitingTime()*0.7){
+                    currentWait.setBackgroundColor(Color.GREEN);
+                } else if(attr.getCurrentWaitingTime() > attr.getAverageWaitingTime()*1.3){
+                    currentWait.setBackgroundColor(Color.RED);
+                } else {
+                    currentWait.setBackgroundColor(Color.YELLOW);
+                }
+
+
+
 
                 //TODO barchart
 

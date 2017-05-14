@@ -15,7 +15,7 @@ public class Attraction {
     private int numberOfTodayWaitingTimes;
     private int averageTodayWaitingTime;
     //private int numberOfCurrentWaitingTimes //probably not necessary
-    private int currentWaitingTime;
+    private int currentWaitingTime; //avg from the last 3 entries
     private String parkId;
 
     /** Konstruktor ohne Id.
@@ -166,7 +166,7 @@ public class Attraction {
         this.numberOfWaitingTimes = numberOfWaitingTimes;
     }
 
-    public double getAverageWaitingTime() {
+    public int getAverageWaitingTime() {
         return averageWaitingTime;
     }
 
@@ -182,7 +182,7 @@ public class Attraction {
         this.numberOfTodayWaitingTimes = numberOfTodayWaitingTimes;
     }
 
-    public double getAverageTodayWaitingTime() {
+    public int getAverageTodayWaitingTime() {
         return averageTodayWaitingTime;
     }
 
@@ -190,7 +190,7 @@ public class Attraction {
         this.averageTodayWaitingTime = averageTodayWaitingTime;
     }
 
-    public double getCurrentWaitingTime() {
+    public int getCurrentWaitingTime() {
         return currentWaitingTime;
     }
 
