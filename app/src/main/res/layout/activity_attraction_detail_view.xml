@@ -116,7 +116,8 @@
             android:layout_below="@id/attr_detail_waitingtime"
             android:layout_alignParentLeft="true"
             android:layout_weight="1"
-            android:id="@+id/attr_detail_wait_current"/>
+            android:id="@+id/attr_detail_wait_current"
+            android:onClick="goToWaitingTimeOverview"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -124,7 +125,8 @@
             android:layout_below="@id/attr_detail_waitingtime"
             android:layout_centerHorizontal="true"
             android:layout_weight="1"
-            android:id="@+id/attr_detail_wait_today"/>
+            android:id="@+id/attr_detail_wait_today"
+            android:onClick="goToWaitingTimeOverview"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -132,7 +134,8 @@
             android:layout_below="@id/attr_detail_waitingtime"
             android:layout_alignParentRight="true"
             android:layout_weight="1"
-            android:id="@+id/attr_detail_wait_alltime"/>
+            android:id="@+id/attr_detail_wait_alltime"
+            android:onClick="goToWaitingTimeOverview"/>
 
         </LinearLayout>
 

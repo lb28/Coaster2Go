@@ -19,21 +19,29 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Attr;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.Park;
+import de.uulm.dbis.coaster2go.data.WaitingTime;
 
 public class AttractionDetailViewActivity extends BaseActivity {
 
     private String attrID;
     private Attraction attr;
+
+    private HashMap<Integer, Integer> hashMap;
 
     ImageView attrImage;
     TextView attrName, attrAvgRating;
@@ -69,6 +77,30 @@ public class AttractionDetailViewActivity extends BaseActivity {
         //TODO get attraction ID from intent
 
         new LoadAttrAsync().execute();
+
+        //bar chart
+        new LoadBarChartDataAsync().execute();
+
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<>();
+        yVals1.add(new BarEntry(0, 0));
+        for(int i=8; i<21; i++){
+            yVals1.add(new BarEntry(i-6, hashMap.get(i)));
+        }
+        yVals1.add(new BarEntry(17, 0));
+
+        BarDataSet barDataSet = new BarDataSet(yVals1, "values");
+
+        ArrayList<String> labels = new ArrayList<>();
+        for(int i=6; i<23; i++){
+            labels.add("" + i + " Uhr");
+        }
+
+        BarData barData = new BarData(barDataSet);
+
+        barChart.setData(barData);
+        barChart.setFitBars(true); // make the x-axis fit exactly all bars
+        barChart.invalidate();
 
         buttonFav.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,17 +168,16 @@ public class AttractionDetailViewActivity extends BaseActivity {
                         .setNegativeButton("Zurück", dialogClickListener).show();
             }
         });
-
-        //TODO wating time buttons onclick
-
-
-
-
-
-
-
-
     }
+
+
+    public void goToWaitingTimeOverview(View view) {
+        Intent intent = new Intent(this, WaitingTimeActivity.class);
+        intent.putExtra("attractionID", attrID);
+        startActivity(intent);
+    }
+
+
 
     public class LoadAttrAsync extends AsyncTask<Void, Void, Attraction> {
 
@@ -207,6 +238,28 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 //TODO barchart
 
 
+            }
+            AttractionDetailViewActivity.this.progressBar.hide();
+        }
+    }
+
+    public class LoadBarChartDataAsync extends AsyncTask<Void, Void, HashMap<Integer, Integer>> {
+
+        @Override
+        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.show();
+        }
+
+        @Override
+        protected HashMap<Integer, Integer> doInBackground(Void... params) {
+            return new AzureDBManager(AttractionDetailViewActivity.this).waitTimeHourStatistic(attrID);
+        }
+
+        @Override
+        protected void onPostExecute(HashMap<Integer, Integer> hMap) {
+            if (hMap == null) {
+                Log.e("", "LoadParkAsync.onPostExecute: parkList was null!");
+            } else {
+                hashMap = hMap;
             }
             AttractionDetailViewActivity.this.progressBar.hide();
         }
