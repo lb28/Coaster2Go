@@ -170,7 +170,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             attractionListAdapter = new AttractionListAdapter(getContext(), attractionList, new OnAttractionItemClickListener() {
                 @Override
                 public void onAttractionItemClick(Attraction attraction) {
-                    Intent intent = new Intent(getContext(), ParkDetailViewActivity.class);
+                    Intent intent = new Intent(getContext(), AttractionDetailViewActivity.class);
                     intent.putExtra("attrId", attraction.getId());
                     startActivity(intent);
                 }

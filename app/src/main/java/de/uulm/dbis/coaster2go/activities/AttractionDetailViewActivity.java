@@ -82,27 +82,6 @@ public class AttractionDetailViewActivity extends BaseActivity {
         //bar chart
         new LoadBarChartDataAsync().execute();
 
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<>();
-        yVals1.add(new BarEntry(0, 0));
-        for(int i=8; i<21; i++){
-            yVals1.add(new BarEntry(i-6, hashMap.get(i)));
-        }
-        yVals1.add(new BarEntry(17, 0));
-
-        BarDataSet barDataSet = new BarDataSet(yVals1, "values");
-
-        ArrayList<String> labels = new ArrayList<>();
-        for(int i=6; i<23; i++){
-            labels.add("" + i + " Uhr");
-        }
-
-        BarData barData = new BarData(barDataSet);
-
-        barChart.setData(barData);
-        barChart.setFitBars(true); // make the x-axis fit exactly all bars
-        barChart.invalidate();
-
         buttonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,6 +230,26 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 Log.e("", "LoadBarChartAsync.onPostExecute: barChartData was null!");
             } else {
                 hashMap = hMap;
+
+                ArrayList<BarEntry> yVals1 = new ArrayList<>();
+                yVals1.add(new BarEntry(0, 0));
+                for(int i=8; i<21; i++){
+                    yVals1.add(new BarEntry(i-6, hashMap.get(i)));
+                }
+                yVals1.add(new BarEntry(17, 0));
+
+                BarDataSet barDataSet = new BarDataSet(yVals1, "values");
+
+                ArrayList<String> labels = new ArrayList<>();
+                for(int i=6; i<23; i++){
+                    labels.add("" + i + " Uhr");
+                }
+
+                BarData barData = new BarData(barDataSet);
+
+                barChart.setData(barData);
+                barChart.setFitBars(true); // make the x-axis fit exactly all bars
+                barChart.invalidate();
             }
             AttractionDetailViewActivity.this.progressBar.hide();
         }

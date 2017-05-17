@@ -60,7 +60,7 @@ public class EditParkActivity extends BaseActivity {
         String lat = editTextParkLat.getText().toString();
         String lon = editTextParkLon.getText().toString();
 
-        if (parkImageUrl.isEmpty()) {
+        if (parkImageUrl == null || parkImageUrl.isEmpty()) {
             parkImageUrl = "https://cdn4.iconfinder.com/data/icons/adiante-apps-app-templates-incos-in-grey/512/app_type_theme_park_512px_GREY.png";
         }
 
