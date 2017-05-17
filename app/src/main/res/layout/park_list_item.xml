@@ -15,8 +15,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/ic_local_activity_black_24dp"
-        android:contentDescription="@string/park_image" />
+        android:contentDescription="@string/park_image"
+        android:src="@drawable/ic_local_activity_black_24dp" />
 
     <LinearLayout
         android:layout_width="0dp"

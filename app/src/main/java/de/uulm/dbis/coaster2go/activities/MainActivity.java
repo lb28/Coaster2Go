@@ -83,11 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void goToMessageActivity(View view) {
-        Intent intent = new Intent(this, MessageActivity.class);
-        startActivity(intent);
-    }
-
     private void showSnackbar(int resId) {
         Snackbar.make(
                 findViewById(R.id.coordinatorLayout_MainActivity),

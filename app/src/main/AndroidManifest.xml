@@ -25,9 +25,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MessageActivity"
-            android:label="Message Board" />
-        <activity
             android:name=".activities.TestDataActivity"
             android:theme="@style/Theme.AppCompat" />
         <activity
