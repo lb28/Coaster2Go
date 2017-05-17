@@ -170,14 +170,11 @@ public class AttractionDetailViewActivity extends BaseActivity {
         });
     }
 
-
     public void goToWaitingTimeOverview(View view) {
         Intent intent = new Intent(this, WaitingTimeActivity.class);
         intent.putExtra("attractionID", attrID);
         startActivity(intent);
     }
-
-
 
     public class LoadAttrAsync extends AsyncTask<Void, Void, Attraction> {
 
@@ -231,13 +228,6 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 } else {
                     currentWait.setBackgroundColor(Color.YELLOW);
                 }
-
-
-
-
-                //TODO barchart
-
-
             }
             AttractionDetailViewActivity.this.progressBar.hide();
         }
@@ -257,7 +247,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
         @Override
         protected void onPostExecute(HashMap<Integer, Integer> hMap) {
             if (hMap == null) {
-                Log.e("", "LoadParkAsync.onPostExecute: parkList was null!");
+                Log.e("", "LoadBarChartAsync.onPostExecute: barChartData was null!");
             } else {
                 hashMap = hMap;
             }
