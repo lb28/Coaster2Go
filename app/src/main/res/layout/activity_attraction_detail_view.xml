@@ -17,6 +17,8 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_launcher"
             android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:maxHeight="200dp"
             android:id="@+id/attr_detail_image" />
 
     </RelativeLayout>

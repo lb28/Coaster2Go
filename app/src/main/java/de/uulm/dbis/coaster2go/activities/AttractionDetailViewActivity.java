@@ -74,7 +74,8 @@ public class AttractionDetailViewActivity extends BaseActivity {
         enterTime = (EditText) findViewById(R.id.attr_detail_time_edit);
         buttonSave = (Button) findViewById(R.id.attr_detail_button_save_time);
 
-        //TODO get attraction ID from intent
+        // get attraction ID from intent
+        attrID = getIntent().getStringExtra("attrId");
 
         new LoadAttrAsync().execute();
 

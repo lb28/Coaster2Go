@@ -47,9 +47,6 @@ public class EditParkActivity extends BaseActivity {
         editTextParkLon = (EditText) findViewById(R.id.editTextParkLon);
         editTextParkDescription = (EditText) findViewById(R.id.editTextParkDescription);
         imageViewPark = (ImageView) findViewById(R.id.imageViewEditPark);
-
-        // triggers placeholder
-        Picasso.with(EditParkActivity.this).load(parkImageUrl).into(imageViewPark);
     }
 
     /**
@@ -63,8 +60,8 @@ public class EditParkActivity extends BaseActivity {
         String lat = editTextParkLat.getText().toString();
         String lon = editTextParkLon.getText().toString();
 
-        if (parkImageUrl == null) {
-            parkImageUrl = "";
+        if (parkImageUrl.isEmpty()) {
+            parkImageUrl = "https://cdn4.iconfinder.com/data/icons/adiante-apps-app-templates-incos-in-grey/512/app_type_theme_park_512px_GREY.png";
         }
 
         new SaveParkTask().execute(name, location, descr, lat, lon);
@@ -98,7 +95,7 @@ public class EditParkActivity extends BaseActivity {
             public void onClick(DialogInterface dialog, int which) {
                 parkImageUrl = editTextParkImageUrl.getText().toString();
                 if (parkImageUrl.isEmpty()) {
-                    parkImageUrl = null;
+                    parkImageUrl = "https://cdn4.iconfinder.com/data/icons/adiante-apps-app-templates-incos-in-grey/512/app_type_theme_park_512px_GREY.png";
                 }
                 Picasso.with(EditParkActivity.this).load(parkImageUrl).into(imageViewPark);
             }

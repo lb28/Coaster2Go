@@ -81,7 +81,9 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         final Park park = parkList.get(position);
 
         // fill the view based on the data
-        Picasso.with(context).load(park.getImage()).into(viewHolder.parkImage);
+        if (park.getImage() != null) {
+            Picasso.with(context).load(park.getImage()).into(viewHolder.parkImage);
+        }
         viewHolder.parkName.setText(park.getName());
         viewHolder.parkRating.setRating((float) park.getAverageReview());
         viewHolder.parkLocation.setText(park.getLocation());

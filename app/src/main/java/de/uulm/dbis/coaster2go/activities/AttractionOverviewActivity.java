@@ -170,7 +170,9 @@ public class AttractionOverviewActivity extends BaseActivity {
             attractionListAdapter = new AttractionListAdapter(getContext(), attractionList, new OnAttractionItemClickListener() {
                 @Override
                 public void onAttractionItemClick(Attraction attraction) {
-                    Snackbar.make(getView(), "TODO", Snackbar.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), ParkDetailViewActivity.class);
+                    intent.putExtra("attrId", attraction.getId());
+                    startActivity(intent);
                 }
             });
 
