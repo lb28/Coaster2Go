@@ -25,7 +25,7 @@ import de.uulm.dbis.coaster2go.data.Park;
 public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHolder> {
 
     public static final String SORT_MODE_RATING = "SORT_MODE_RATING";
-    public static final String SORT_MODE_ABC = "SORT_MODE_ABC";
+    public static final String SORT_MODE_NAME = "SORT_MODE_NAME";
 
     // TODO implement SortedList?
     // private SortedList<Park> parkList;
@@ -108,7 +108,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
 
     public void changeSort(String mode) {
         switch (mode) {
-            case SORT_MODE_ABC:
+            case SORT_MODE_NAME:
                 Collections.sort(parkList, new AbcComparator());
                 notifyDataSetChanged();
                 break;

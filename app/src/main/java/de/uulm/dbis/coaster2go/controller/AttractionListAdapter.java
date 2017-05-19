@@ -25,7 +25,7 @@ import de.uulm.dbis.coaster2go.data.Park;
 public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAdapter.ViewHolder> {
 
     public static final String SORT_MODE_RATING = "SORT_MODE_RATING";
-    public static final String SORT_MODE_ABC = "SORT_MODE_ABC";
+    public static final String SORT_MODE_ABC = "SORT_MODE_NAME";
 
     // TODO implement SortedList?
     // private SortedList<Park> parkList;

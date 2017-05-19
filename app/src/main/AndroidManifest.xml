@@ -56,7 +56,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC-O_FFzLtUvFK2WTg8jVgjTSz9KXTxk-o" />
 
-        <activity android:name=".activities.WaitingTimeActivity"></activity>
+        <activity android:name=".activities.WaitingTimeActivity" />
+        <activity android:name=".activities.RatingActivity"
+            android:label="@string/ratings"
+            android:windowSoftInputMode="stateHidden"
+            />
     </application>
 
 </manifest>

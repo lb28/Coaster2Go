@@ -36,14 +36,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_favorite_border_black_24dp"
-            android:background="@color/tw__solid_white"
+            android:background="@color/tw__transparent"
             android:id="@+id/attr_detail_button_fav"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:textSize="20dp"
+            android:textSize="22sp"
             android:layout_toRightOf="@+id/attr_detail_button_fav"
             android:text="EURO MIR"
             android:id="@+id/attr_detail_name"
@@ -57,35 +57,41 @@
             android:numStars="5"
             android:stepSize="0.1"
             android:layout_marginTop="5dp"
-            android:id="@+id/attr_detail_ratingbar"/>
+            android:id="@+id/attr_detail_ratingbar"
+            android:onClick="showAttrRatings"
+            android:clickable="true"
+            android:isIndicator="false"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/attr_detail_ratingbar"
             android:layout_below="@id/attr_detail_name"
-            android:textSize="15dp"
+            android:textColor="@color/linkColor"
+            android:textSize="18sp"
             android:text="4.1"
             android:layout_marginLeft="5dp"
-            android:layout_marginBottom="5dp"
-            android:id="@+id/attr_detail_ratingavg"/>
+            android:layout_marginTop="5dp"
+            android:layout_alignBaseline="@id/attr_detail_ratingbar"
+            android:id="@+id/attr_detail_ratingavg"
+            android:onClick="showAttrRatings"
+            android:clickable="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:src="@drawable/ic_place_black_24dp"
+            android:id="@+id/attr_detail_button_map"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/attr_detail_button_map"
             android:src="@drawable/ic_info_outline_black_24dp"
-            android:background="@color/tw__solid_white"
             android:id="@+id/attr_detail_button_info"/>
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/attr_detail_button_info"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_map_black_24dp"
-            android:background="@color/tw__solid_white"
-            android:id="@+id/attr_detail_button_map"/>
+
 
     </RelativeLayout>
 
@@ -98,24 +104,15 @@
         android:layout_marginBottom="10dp"
         android:id="@+id/attr_detail_waitingtime_view_rellayout">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Wartezeiten:"
-            android:id="@+id/attr_detail_waitingtime"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/attr_detail_waitingtime"
             android:orientation="horizontal"
             android:id="@+id/attr_detail_button_linlayout">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/attr_detail_waitingtime"
             android:layout_alignParentLeft="true"
             android:layout_weight="1"
             android:id="@+id/attr_detail_wait_current"
@@ -124,7 +121,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/attr_detail_waitingtime"
             android:layout_centerHorizontal="true"
             android:layout_weight="1"
             android:id="@+id/attr_detail_wait_today"
@@ -133,7 +129,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/attr_detail_waitingtime"
             android:layout_alignParentRight="true"
             android:layout_weight="1"
             android:id="@+id/attr_detail_wait_alltime"

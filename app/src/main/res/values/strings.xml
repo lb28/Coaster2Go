@@ -124,5 +124,7 @@
     <string name="add_park_image">Park-Bild hinzufügen</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">Ok</string>
+    <string name="ratings">Bewertungen</string>
+    <string name="date">Datum</string>
 
 </resources>

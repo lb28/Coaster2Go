@@ -9,6 +9,7 @@ package de.uulm.dbis.coaster2go.activities;
         import android.support.v4.app.FragmentManager;
         import android.support.v4.app.FragmentPagerAdapter;
         import android.support.v4.view.ViewPager;
+        import android.support.v4.widget.SwipeRefreshLayout;
         import android.support.v7.widget.DividerItemDecoration;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
@@ -128,13 +129,15 @@ public class AttractionOverviewActivity extends BaseActivity {
     public void addAttraction(View view) {
         Snackbar.make(view, "TODO Add Attraction Activity", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
-                .show();    }
+                .show();
+    }
 
     /**
      * A fragment containing a list of parks
      */
     public static class AttractionListFragment extends Fragment {
         AttractionListAdapter attractionListAdapter;
+        SwipeRefreshLayout swipeRefresh;
 
         public AttractionListFragment() {
         }
@@ -163,7 +166,12 @@ public class AttractionOverviewActivity extends BaseActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            new LoadAttractionsTask().execute();
+            View rootView = inflater.inflate(R.layout.fragment_parklist, container, false);
+
+            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh_parkList);
+
+            swipeRefresh.setRefreshing(true);
+            new RefreshAttractionsTask().execute();
 
             List<Attraction> attractionList = new ArrayList<>(); // empty list before it is loaded
 
@@ -176,7 +184,6 @@ public class AttractionOverviewActivity extends BaseActivity {
                 }
             });
 
-            View rootView = inflater.inflate(R.layout.fragment_parklist, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewParkList);
             textView.setText("mode: " + getArguments().getString("mode")); // for testing
@@ -189,6 +196,15 @@ public class AttractionOverviewActivity extends BaseActivity {
                     layoutManager.getOrientation());
             recyclerView.addItemDecoration(dividerItemDecoration);
 
+            // add the swipe-to-refresh functionality
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+                    refreshAttrList();
+                }
+            });
+
             return rootView;
         }
 
@@ -197,13 +213,11 @@ public class AttractionOverviewActivity extends BaseActivity {
             return super.onOptionsItemSelected(item);
         }
 
+        void refreshAttrList() {
+            new RefreshAttractionsTask().execute();
+        }
 
-        public class LoadAttractionsTask extends AsyncTask<Void, Void, List<Attraction>> {
-
-            @Override
-            protected void onPreExecute() {
-                ((AttractionOverviewActivity) getActivity()).progressBar.show();
-            }
+        public class RefreshAttractionsTask extends AsyncTask<Void, Void, List<Attraction>> {
 
             @Override
             protected List<Attraction> doInBackground(Void... params) {
@@ -217,10 +231,9 @@ public class AttractionOverviewActivity extends BaseActivity {
                     Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
                 } else {
                     attractionListAdapter.setAttractionList(attractionList);
-                    attractionListAdapter.notifyItemRangeInserted(0, attractionList.size());
+                    attractionListAdapter.notifyDataSetChanged();
                 }
-                ((AttractionOverviewActivity) getActivity()).progressBar.hide();
-                ((AttractionOverviewActivity) getActivity()).progressBar.hide();
+                swipeRefresh.setRefreshing(false);
             }
         }
     }

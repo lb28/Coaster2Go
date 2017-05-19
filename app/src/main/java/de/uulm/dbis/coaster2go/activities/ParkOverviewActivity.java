@@ -100,7 +100,7 @@ public class ParkOverviewActivity extends BaseActivity {
 
         switch (id) {
             case R.id.action_sort_abc:
-                changeParkListSort(ParkListAdapter.SORT_MODE_ABC);
+                changeParkListSort(ParkListAdapter.SORT_MODE_NAME);
                 return true;
             case R.id.action_sort_rating:
                 changeParkListSort(ParkListAdapter.SORT_MODE_RATING);
