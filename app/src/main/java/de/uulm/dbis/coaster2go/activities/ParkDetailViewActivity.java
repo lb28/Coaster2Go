@@ -127,6 +127,13 @@ public class ParkDetailViewActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    public void showParkRatings(View view) {
+        Intent intent = new Intent(this, RatingActivity.class);
+        intent.putExtra("reviewedId", parkId);
+        intent.putExtra("reviewedName", park.getName());
+        startActivity(intent);
+    }
+
 
     public class LoadParkAsync extends AsyncTask<Void, Void, Park> {
 

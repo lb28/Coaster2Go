@@ -158,10 +158,10 @@ public class AttractionDetailViewActivity extends BaseActivity {
     }
 
     public void showAttrRatings(View view) {
-        Log.i(TAG, "showAttrRatings called");
         Intent intent = new Intent(this, RatingActivity.class);
         intent.putExtra("reviewedId", attrID);
         intent.putExtra("reviewedName", attr.getName());
+        intent.putExtra("isAttraction", true);
         startActivity(intent);
     }
 
