@@ -57,10 +57,11 @@
             android:value="AIzaSyC-O_FFzLtUvFK2WTg8jVgjTSz9KXTxk-o" />
 
         <activity android:name=".activities.WaitingTimeActivity" />
-        <activity android:name=".activities.RatingActivity"
+        <activity
+            android:name=".activities.RatingActivity"
             android:label="@string/ratings"
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".activities.MapViewActivity"></activity>
     </application>
 
 </manifest>

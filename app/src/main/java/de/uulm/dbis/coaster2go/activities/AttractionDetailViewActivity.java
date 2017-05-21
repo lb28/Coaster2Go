@@ -126,6 +126,13 @@ public class AttractionDetailViewActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
+
+                                Intent intent = new Intent(getBaseContext(), MapViewActivity.class);
+                                intent.putExtra("lon", attr.getLon());
+                                intent.putExtra("lat", attr.getLon());
+                                startActivity(intent);
+
+                                /*
                                 // creates an Intent that will load a map of the park
                                 Uri gmmIntentUri = Uri.parse("geo:" + attr.getLat() + ", " + attr.getLon());
                                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -134,6 +141,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
                                 if (mapIntent.resolveActivity(getPackageManager()) != null) {
                                     startActivity(mapIntent);
                                 }
+                                */
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
