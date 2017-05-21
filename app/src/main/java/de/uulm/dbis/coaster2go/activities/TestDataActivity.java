@@ -31,6 +31,9 @@ public class TestDataActivity extends AppCompatActivity {
                 AzureDBManager dbManager = new AzureDBManager(TestDataActivity.this);
                 AzureExampleData dbExample = new AzureExampleData(TestDataActivity.this);
 
+
+
+
                 //Fill Database with example Data:
                 //dbExample.fillDatabase();
 
@@ -39,6 +42,7 @@ public class TestDataActivity extends AppCompatActivity {
                 dbExample.fillDatabaseWaitingTimes();
 
 
+                /*
                 //Date Test
                 List<Park> parkList = dbManager.getParkList();
                 String parkId = "";
@@ -47,6 +51,7 @@ public class TestDataActivity extends AppCompatActivity {
                         parkId = p.getId();
                     }
                 }
+
                 List<Attraction> attractionList = dbManager.getAttractionList(parkId);
                 String attractionId = attractionList.get(0).getId();
                 Date now = new Date();
@@ -57,6 +62,13 @@ public class TestDataActivity extends AppCompatActivity {
                         "\nRead createdAtHour: "+resultTimeZone2.getCreatedAt().getHours()+
                         "\nAll the same?");
 
+
+                 */
+                if(dbManager.hasActiveInternetConnection()){
+                    System.out.println("Internet connection");
+                }else{
+                    System.out.println("NO Internet connection");
+                }
 
                 System.out.println("--------------------------- AzureDBManager Test Ende");
 

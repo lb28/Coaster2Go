@@ -1,5 +1,8 @@
 package de.uulm.dbis.coaster2go.data;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Park {
     private String id;
     private String name;
@@ -69,6 +72,32 @@ public class Park {
                 ", averageReview=" + averageReview +
                 ", admin='" + admin + '\'' +
                 '}';
+    }
+
+    /** Makes a JSONObject out of the current Park Object
+     *
+     * @return JSONObjecxt
+     */
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", id);
+            jsonObject.put("name", name);
+            jsonObject.put("location", location);
+            jsonObject.put("description", description);
+            jsonObject.put("lat", lat);
+            jsonObject.put("lon", lon);
+            jsonObject.put("image", image);
+            jsonObject.put("numberOfReviews", numberOfReviews);
+            jsonObject.put("averageReview", averageReview);
+            jsonObject.put("admin", admin);
+
+            return jsonObject;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public String getId() {

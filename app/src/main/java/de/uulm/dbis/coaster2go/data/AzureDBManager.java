@@ -3,6 +3,9 @@ package de.uulm.dbis.coaster2go.data;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceException;
@@ -10,13 +13,18 @@ import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import com.squareup.okhttp.OkHttpClient;
+
+import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
 
 /** Class handels all Connections between the App and the Azure SQL Data tables.
  *
@@ -25,9 +33,13 @@ import com.squareup.okhttp.OkHttpClient;
  */
 public class AzureDBManager {
 
+    private Context context;
+
     private MobileServiceClient mClient;
 
     public AzureDBManager(Context context) {
+        this.context = context;
+
         if (mClient == null) {
             try {
                 mClient = new MobileServiceClient(
@@ -35,7 +47,7 @@ public class AzureDBManager {
                         context
                 );
 
-                // Extend timeout from default of 10s to 20s
+                // Extend timeout from default of 10s to 30s
                 mClient.setAndroidHttpClientFactory(new OkHttpClientFactory() {
                     @Override
                     public OkHttpClient createOkHttpClient() {
@@ -52,6 +64,38 @@ public class AzureDBManager {
         }
     }
 
+    /** Method checks, if the device has an internet connection
+     *
+     * @return true if davice is connected
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
+
+    /** Method checks, if there is an internet connection and if Azure can be accessed
+     *
+     * @return true if Azure Website can get accessed
+     */
+    public boolean hasActiveInternetConnection() {
+        if (isNetworkAvailable()) {
+            try {
+                HttpURLConnection urlc = (HttpURLConnection) (new URL("https://coaster2go.azurewebsites.net").openConnection());
+                urlc.setRequestProperty("Connection", "close");
+                urlc.setConnectTimeout(1500);
+                urlc.connect();
+                return (urlc.getResponseCode() == 200);
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error checking internet connection", e);
+            }
+        } else {
+            Log.d(LOG_TAG, "No network available!");
+        }
+        return false;
+    }
+
 
     //--------------------------Parks---------------------------------------------
 
@@ -61,6 +105,9 @@ public class AzureDBManager {
      * @return created Park.
      */
     public Park createPark(Park park){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
 
         Park resultPark = null;
@@ -83,6 +130,9 @@ public class AzureDBManager {
      * @return updated Park.
      */
     public Park updatePark(Park park){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
 
         Park resultPark = null;
@@ -102,6 +152,9 @@ public class AzureDBManager {
      * @return the searched Parkobject or null.
      */
     public Park getParkById(String parkId){
+        if(!hasActiveInternetConnection()){
+            //TODO read from JSON
+        }
         MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
 
         List<Park> resultPark = null;
@@ -124,6 +177,9 @@ public class AzureDBManager {
      * @return List with all Parks
      */
     public List<Park> getParkList(){
+        if(!hasActiveInternetConnection()){
+            //TODO read from JSON
+        }
         MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
 
         List<Park> parkList = null;
@@ -145,6 +201,9 @@ public class AzureDBManager {
      * @return created Park.
      */
     public Attraction createAttraction(Attraction attraction){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
         Attraction resultAttraction = null;
@@ -165,6 +224,9 @@ public class AzureDBManager {
      * @return updated Attraction.
      */
     public Attraction updateAttraction(Attraction attraction){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
         Attraction resultAttraction = null;
@@ -184,6 +246,9 @@ public class AzureDBManager {
      * @return TheAttraction object matching the given id or null.
      */
     public Attraction getAttractionById(String attractionId){
+        if(!hasActiveInternetConnection()){
+            //TODO read from JSON
+        }
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
         List<Attraction> resultAttraction = null;
@@ -207,6 +272,9 @@ public class AzureDBManager {
      * @return List with all Attractions of the park
      */
     public List<Attraction> getAttractionList(String parkId){
+        if(!hasActiveInternetConnection()){
+            //TODO read from JSON
+        }
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
         List<Attraction> attractionList = null;
@@ -229,6 +297,9 @@ public class AzureDBManager {
      * @return Review Object with it's id.
      */
     public Review createReview(Review review, boolean attraction){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
 
         Review resultReview = null;
@@ -240,6 +311,9 @@ public class AzureDBManager {
             //Update Park/Attraction:
             if(attraction){
                 Attraction updateAttraction = getAttractionById(reviewedId);
+                if(updateAttraction == null){
+                    return null;
+                }
                 int newNumberOfReviews = updateAttraction.getNumberOfReviews()+1;
                 double newAverageReview = (updateAttraction.getAverageReview()*updateAttraction.getNumberOfReviews()
                         +resultReview.getNumberOfStars())/newNumberOfReviews;
@@ -251,6 +325,9 @@ public class AzureDBManager {
 
             }else{
                 Park updatePark = getParkById(reviewedId);
+                if(updatePark == null){
+                    return null;
+                }
                 int newNumberOfReviews = updatePark.getNumberOfReviews()+1;
                 double newAverageReview = (updatePark.getAverageReview()*updatePark.getNumberOfReviews()
                         +resultReview.getNumberOfStars())/newNumberOfReviews;
@@ -278,6 +355,9 @@ public class AzureDBManager {
      * @return Review Object with it's id.
      */
     public Review updateReview(Review review, boolean attraction){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
 
         Review resultReview = null;
@@ -289,6 +369,9 @@ public class AzureDBManager {
             //Update Park/Attraction:
             if(attraction){
                 Attraction updateAttraction = getAttractionById(reviewedId);
+                if(updateAttraction == null){
+                    return null;
+                }
                 double newAverageReview = (updateAttraction.getAverageReview()*(updateAttraction.getNumberOfReviews()-1)
                         +resultReview.getNumberOfStars())/updateAttraction.getNumberOfReviews();
                 updateAttraction.setAverageReview(newAverageReview);
@@ -298,6 +381,9 @@ public class AzureDBManager {
 
             }else{
                 Park updatePark = getParkById(reviewedId);
+                if(updatePark == null){
+                    return null;
+                }
                 double newAverageReview = (updatePark.getAverageReview()*(updatePark.getNumberOfReviews()-1)
                         +resultReview.getNumberOfStars())/updatePark.getNumberOfReviews();
                 updatePark.setAverageReview(newAverageReview);
@@ -324,6 +410,9 @@ public class AzureDBManager {
      * @return List with all Reviews ordered by Date
      */
     public List<Review> getReviewList(String reviewedId){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
 
         List<Review> reviewList = null;
@@ -346,6 +435,9 @@ public class AzureDBManager {
      * @return List with 5 Reviews ordered by Date
      */
     public List<Review> getPartOfReviewList(String reviewedId, int counter){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
         int skip = counter*5;
         int lastElement = (counter+1)*5;
@@ -373,6 +465,9 @@ public class AzureDBManager {
      * @return Review Object or null
      */
     public Review getReviewOfUser(String reviewedId, String userId){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
 
         List<Review> reviewList = null;
@@ -402,6 +497,9 @@ public class AzureDBManager {
      * @return List with all WaitingTimes ordered by Date
      */
     public List<WaitingTime> getWaitingTimeList(String attractionId){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
 
         List<WaitingTime> waitList = null;
@@ -424,6 +522,9 @@ public class AzureDBManager {
      * @return List with 5 WaitingTimes ordered by Date
      */
     public List<WaitingTime> getPartOfWaitingTimeList(String attractionId, int counter){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
         int skip = counter*5;
         int lastElement = (counter+1)*5;
@@ -449,6 +550,9 @@ public class AzureDBManager {
      * @return List with all WaitingTimes ordered by Date
      */
     public List<WaitingTime> getTodaysWaitingTimeList(String attractionId){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
 
         List<WaitingTime> waitList = null;
@@ -497,6 +601,9 @@ public class AzureDBManager {
      * @return WaitingTime Object with it's id.
      */
     public WaitingTime createWaitingTime(WaitingTime waitTime){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
 
         WaitingTime resultTime = null;
@@ -504,6 +611,9 @@ public class AzureDBManager {
             //Get Attraction:
             String attractionId = waitTime.getAttractionId();
             Attraction updateAttraction = getAttractionById(attractionId);
+            if(updateAttraction == null){
+                return null;
+            }
 
             //1. Calculate and update new AverageWaitingTime
             int newNumberOfWaitingTimes = updateAttraction.getNumberOfWaitingTimes()+1;
@@ -573,6 +683,9 @@ public class AzureDBManager {
      * @return boolean if User can post a WaitingTime
      */
     public boolean isCreateWaitingTimeAllowed(String attractionId, String userId){
+        if(!hasActiveInternetConnection()){
+            return false;
+        }
         List<WaitingTime> todayList = getTodaysWaitingTimeList(attractionId);
         if(todayList == null || todayList.isEmpty()){
             return true;
@@ -601,6 +714,9 @@ public class AzureDBManager {
      */
     @SuppressLint("all")
     public HashMap<Integer, Integer> waitTimeHourStatistic(String attractionId){
+        if(!hasActiveInternetConnection()){
+            return null;
+        }
         HashMap<Integer, Integer> numbers = new HashMap<>();
         HashMap<Integer, Integer> minutes = new HashMap<>();
         HashMap<Integer, Integer> result = new HashMap<>();
