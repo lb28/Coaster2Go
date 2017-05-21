@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <!-- TODO these are not used, are they? -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -59,10 +60,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC-O_FFzLtUvFK2WTg8jVgjTSz9KXTxk-o" />
 
-        <activity android:name=".activities.WaitingTimeActivity" />
         <activity
             android:name=".activities.RatingActivity"
             android:label="@string/ratings"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".activities.WaitingTimesActivity"></activity>
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.MapViewActivity"></activity>
     </application>

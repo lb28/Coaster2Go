@@ -395,8 +395,10 @@ public class AzureDBManager {
 
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return null;
         } catch (ExecutionException e) {
             e.printStackTrace();
+            return null;
         }
 
         return resultReview;

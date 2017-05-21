@@ -100,7 +100,6 @@
     <string name="progress_dialog_sending">Senden…</string>
     <string name="error_email_does_not_exist">Diese E-Mail-Adresse stimmt mit keinem vorhandenen
         Konto überein</string>
-    <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -126,5 +125,7 @@
     <string name="ok">Ok</string>
     <string name="ratings">Bewertungen</string>
     <string name="date">Datum</string>
+    <string name="distanceMeters">%1$f m</string>
+    <string name="wait_time">Wartezeit</string>
 
 </resources>

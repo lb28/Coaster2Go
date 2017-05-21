@@ -1,9 +1,16 @@
 package de.uulm.dbis.coaster2go.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,6 +28,10 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +41,12 @@ import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.Park;
 
-public class ParkOverviewActivity extends BaseActivity {
+public class ParkOverviewActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "ParkOverviewActivity";
     public static final String MODE_ALL = "all";
     public static final String MODE_FAVS = "favs";
+    private static final int RC_PERM_GPS = 502;
 
     private SectionsPagerAdapter tabsPagerAdapter;
 
@@ -44,6 +56,7 @@ public class ParkOverviewActivity extends BaseActivity {
     private ViewPager tabsViewPager;
 
     private int currentFragmentIndex;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +96,27 @@ public class ParkOverviewActivity extends BaseActivity {
 
             }
         });
+
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -96,16 +130,15 @@ public class ParkOverviewActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        // TODO handle menu item clicks
-
         switch (id) {
             case R.id.action_sort_abc:
-                changeParkListSort(ParkListAdapter.SORT_MODE_NAME);
+                changeParkListSort(ParkListAdapter.SortMode.NAME);
                 return true;
             case R.id.action_sort_rating:
-                changeParkListSort(ParkListAdapter.SORT_MODE_RATING);
+                changeParkListSort(ParkListAdapter.SortMode.RATING);
                 return true;
             case R.id.action_sort_distance:
+                changeParkListSort(ParkListAdapter.SortMode.DISTANCE);
                 return  true;
             case R.id.action_refresh:
                 refreshParkList();
@@ -118,7 +151,7 @@ public class ParkOverviewActivity extends BaseActivity {
     /**
      * @param sortMode one of the sort modes available in {@link ParkListAdapter}
      */
-    public void changeParkListSort(String sortMode) {
+    public void changeParkListSort(ParkListAdapter.SortMode sortMode) {
         ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
         if (currentFragment != null && currentFragment.parkListAdapter != null) {
             currentFragment.parkListAdapter.changeSort(sortMode);
@@ -133,6 +166,14 @@ public class ParkOverviewActivity extends BaseActivity {
         }
     }
 
+    private void updateDistances(Location lastLocation) {
+        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        if (currentFragment != null && currentFragment.parkListAdapter != null) {
+            currentFragment.parkListAdapter.setLastLocation(lastLocation);
+            currentFragment.parkListAdapter.notifyDataSetChanged();
+        }
+    }
+
     /**
      * calls the add park activity (called on click of the "add" button)
      */
@@ -141,8 +182,58 @@ public class ParkOverviewActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    // LOCATION STUFF
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
+                    "Standortberechtigung nicht erteilt",
+                    Snackbar.LENGTH_LONG);
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RC_PERM_GPS);
+
+            return;
+        }
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (lastLocation != null) {
+            // use the location
+            updateDistances(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // TODO what does the parameter do?
+        Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
+                "Standort: Verbindung unterbrochen",
+                Snackbar.LENGTH_LONG);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
+                "Standort konnte nicht ermittelt werden",
+                Snackbar.LENGTH_LONG);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if(requestCode == RC_PERM_GPS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission granted
+                onConnected(null);
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
     /**
-     * A fragment containing a list of parks
+     * PARK LIST FRAGMENT (there is one for each tab)
      */
     public static class ParkListFragment extends Fragment {
         ParkListAdapter parkListAdapter;
@@ -195,6 +286,7 @@ public class ParkOverviewActivity extends BaseActivity {
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(
                     R.id.recyclerViewParkList);
             textView.setText("mode: " + getArguments().getString("mode")); // for testing
+            // TODO use mode to load different list
             recyclerView.setAdapter(parkListAdapter);
             // Set layout manager to position the items
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -245,6 +337,7 @@ public class ParkOverviewActivity extends BaseActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         }
+
     }
 
     /**

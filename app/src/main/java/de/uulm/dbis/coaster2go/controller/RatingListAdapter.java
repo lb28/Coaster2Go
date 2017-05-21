@@ -27,12 +27,10 @@ import de.uulm.dbis.coaster2go.data.Review;
  */
 public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.ViewHolder> implements Filterable {
 
-    public static final String SORT_MODE_RATING = "SORT_MODE_RATING";
-    public static final String SORT_MODE_NAME = "SORT_MODE_NAME";
-    public static final String SORT_MODE_DATE = "SORT_MODE_DATE";
-
+    public enum SortMode {
+        NAME, DATE, RATING
+    }
     private List<Review> ratingsList;
-    private Context context;
 
     @Override
     public Filter getFilter() {
@@ -59,8 +57,7 @@ public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.Vi
 
     }
 
-    public RatingListAdapter(Context context, List<Review> ratingsList) {
-        this.context = context;
+    public RatingListAdapter(List<Review> ratingsList) {
         this.ratingsList = ratingsList;
     }
 
@@ -96,17 +93,17 @@ public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.Vi
         return ratingsList == null ? 0 : ratingsList.size();
     }
 
-    public void changeSort(String mode) {
+    public void changeSort(SortMode mode) {
         switch (mode) {
-            case SORT_MODE_NAME:
+            case NAME:
                 Collections.sort(ratingsList, new NameComparator());
                 notifyDataSetChanged();
                 break;
-            case SORT_MODE_RATING:
+            case RATING:
                 Collections.sort(ratingsList, new RatingComparator());
                 notifyDataSetChanged();
                 break;
-            case SORT_MODE_DATE:
+            case DATE:
                 Collections.sort(ratingsList, new DateComparator());
                 notifyDataSetChanged();
             default:
@@ -137,25 +134,18 @@ public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.Vi
     }
 
     // GETTERS & SETTERS
-
-    public Context getContext() {
-        return context;
-    }
-
     public void setRatingsList(List<Review> ratingsList) {
         this.ratingsList = ratingsList;
     }
 
-    private class RatingFilter extends Filter {
 
-        // TODO remove the adapter field?
-        private final RatingListAdapter adapter;
+    // TODO add a search bar for filtering?
+    private class RatingFilter extends Filter {
         private final List<Review> originalList;
         private final List<Review> filteredList;
 
-        private RatingFilter(RatingListAdapter adapter, List<Review> originalList) {
+        private RatingFilter(List<Review> originalList) {
             super();
-            this.adapter= adapter;
             this.originalList = originalList;
             filteredList = new ArrayList<>();
         }

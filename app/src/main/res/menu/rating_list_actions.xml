@@ -15,15 +15,15 @@
             <item
                 android:id="@+id/action_sort_abc"
                 android:icon="@drawable/ic_sort_by_alpha_black_24dp"
-                android:title="@string/alphabetically" />
+                android:title="@string/name" />
             <item
                 android:id="@+id/action_sort_rating"
                 android:icon="@drawable/ic_stars_black_24dp"
                 android:title="@string/rating" />
             <item
-                android:id="@+id/action_sort_waittime"
+                android:id="@+id/action_sort_date"
                 android:icon="@drawable/ic_access_time_black_24dp"
-                android:title="@string/wait_time"/>
+                android:title="@string/date"/>
 
         </menu>
     </item>

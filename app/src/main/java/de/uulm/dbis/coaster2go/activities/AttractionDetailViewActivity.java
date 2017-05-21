@@ -160,8 +160,8 @@ public class AttractionDetailViewActivity extends BaseActivity {
     }
 
     public void goToWaitingTimeOverview(View view) {
-        Intent intent = new Intent(this, WaitingTimeActivity.class);
-        intent.putExtra("attractionID", attrID);
+        Intent intent = new Intent(this, WaitingTimesActivity.class);
+        intent.putExtra("attrId", attrID);
         startActivity(intent);
     }
 
@@ -177,7 +177,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            AttractionDetailViewActivity.this.progressBar.show();
+            progressBar.show();
         }
 
         @Override
@@ -268,7 +268,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 barChart.setFitBars(true); // make the x-axis fit exactly all bars
                 barChart.invalidate();
             }
-            AttractionDetailViewActivity.this.progressBar.hide();
+            progressBar.hide();
         }
     }
 

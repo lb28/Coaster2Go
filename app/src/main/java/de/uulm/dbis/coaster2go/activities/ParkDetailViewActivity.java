@@ -139,7 +139,7 @@ public class ParkDetailViewActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            ParkDetailViewActivity.this.progressBar.show();
+            progressBar.show();
         }
 
         @Override
@@ -150,7 +150,8 @@ public class ParkDetailViewActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Park park2) {
             if (park2 == null) {
-                Log.e("", "LoadParkAsync.onPostExecute: parkList was null!");
+                Log.e("", "LoadParkAsync.onPostExecute: park was null!");
+                // TODO show snackbar "park laden fehlgeschlagen"
             } else {
                 park = park2;
                 Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
@@ -161,7 +162,7 @@ public class ParkDetailViewActivity extends BaseActivity {
                 parkLocation.setText(park2.getLocation());
                 parkDescription.setText(park2.getDescription());
             }
-            ParkDetailViewActivity.this.progressBar.hide();
+            progressBar.hide();
         }
     }
 

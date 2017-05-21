@@ -75,21 +75,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void verifyLogin(View view) {
-
-    }
-
-    public void goToRegisterActivity(View view) {
-
-    }
-
-    private void showSnackbar(int resId) {
-        Snackbar.make(
-                findViewById(R.id.coordinatorLayout_MainActivity),
-                resId,
-                Snackbar.LENGTH_LONG
-        );
-    }
 
     public void goToParkOverview(View view) {
         Intent intent = new Intent(this, ParkOverviewActivity.class);

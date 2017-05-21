@@ -102,12 +102,13 @@ public class AttractionOverviewActivity extends BaseActivity {
 
         switch (id) {
             case R.id.action_sort_abc:
-                changeAttractionListSort(AttractionListAdapter.SORT_MODE_ABC);
+                changeAttractionListSort(AttractionListAdapter.SortMode.NAME);
                 return true;
             case R.id.action_sort_rating:
-                changeAttractionListSort(AttractionListAdapter.SORT_MODE_RATING);
+                changeAttractionListSort(AttractionListAdapter.SortMode.RATING);
                 return true;
-            case R.id.action_sort_distance:
+            case R.id.action_sort_waittime:
+                changeAttractionListSort(AttractionListAdapter.SortMode.WAIT_TIME);
                 return  true;
             case R.id.action_refresh:
                 return true;
@@ -119,7 +120,7 @@ public class AttractionOverviewActivity extends BaseActivity {
     /**
      * @param sortMode one of the sort modes available in {@link AttractionListAdapter}
      */
-    public void changeAttractionListSort(String sortMode) {
+    public void changeAttractionListSort(AttractionListAdapter.SortMode sortMode) {
         AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
         if (currentFragment != null && currentFragment.attractionListAdapter != null) {
             currentFragment.attractionListAdapter.changeSort(sortMode);

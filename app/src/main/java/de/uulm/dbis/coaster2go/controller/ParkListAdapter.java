@@ -24,8 +24,9 @@ import de.uulm.dbis.coaster2go.data.Park;
  */
 public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHolder> {
 
-    public static final String SORT_MODE_RATING = "SORT_MODE_RATING";
-    public static final String SORT_MODE_NAME = "SORT_MODE_NAME";
+    public enum SortMode {
+        RATING, NAME, DISTANCE
+    }
 
     // TODO implement SortedList?
     // private SortedList<Park> parkList;
@@ -33,6 +34,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
     private List<Park> parkList;
     private Context context;
     private final OnParkItemClickListener clickListener;
+    private Location lastLocation;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -90,8 +92,18 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         Location parkLocationLatLng = new Location("");
         parkLocationLatLng.setLatitude(park.getLat());
         parkLocationLatLng.setLongitude(park.getLon());
-        viewHolder.parkDistance.setText(parkLocationLatLng.getLatitude() + ", "
-                + parkLocationLatLng.getLongitude());
+        if (lastLocation == null) {
+            viewHolder.parkDistance.setVisibility(View.INVISIBLE);
+        } else {
+            Location parkLoc = new Location("");
+            parkLoc.setLongitude(park.getLon());
+            parkLoc.setLatitude(park.getLat());
+
+            float distance = lastLocation.distanceTo(parkLoc);
+
+            viewHolder.parkDistance.setText(buildDistanceString(distance));
+
+        }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,21 +113,38 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         });
     }
 
+    /**
+     * builds an appropriate string based on the distance
+     * @param distanceMeters the distance in meters
+     * @return a string showing the distance in m or km
+     */
+    private String buildDistanceString(float distanceMeters) {
+        if (distanceMeters > 1000) {
+            int distanceKm = Math.round(distanceMeters/1000);
+            return distanceKm + " km";
+        } else {
+            return Math.round(distanceMeters) + " m";
+        }
+    }
+
     @Override
     public int getItemCount() {
         return parkList == null ? 0 : parkList.size();
     }
 
-    public void changeSort(String mode) {
+    public void changeSort(SortMode mode) {
         switch (mode) {
-            case SORT_MODE_NAME:
+            case NAME:
                 Collections.sort(parkList, new AbcComparator());
                 notifyDataSetChanged();
                 break;
-            case SORT_MODE_RATING:
+            case RATING:
                 Collections.sort(parkList, new RatingComparator());
                 notifyDataSetChanged();
                 break;
+            case DISTANCE:
+                Collections.sort(parkList, new DistanceComparator());
+                notifyDataSetChanged();
             default:
                 break;
         }
@@ -132,8 +161,23 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
     private class AbcComparator implements Comparator<Park> {
         @Override
         public int compare(Park park1, Park park2) {
-            // park1 and park2 are reversed so the highest rating is on top
             return park1.getName().compareTo(park2.getName());
+        }
+    }
+
+    private class DistanceComparator implements Comparator<Park> {
+        @Override
+        public int compare(Park park1, Park park2) {
+            if (lastLocation == null) return 0;
+            Location locPark1 = new Location("");
+            locPark1.setLatitude(park1.getLat());
+            locPark1.setLongitude(park1.getLon());
+            Location locPark2 = new Location("");
+            locPark2.setLatitude(park2.getLat());
+            locPark2.setLongitude(park2.getLon());
+
+            return Float.compare(lastLocation.distanceTo(locPark1),
+                    lastLocation.distanceTo(locPark2));
         }
     }
 
@@ -146,4 +190,9 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
     public void setParkList(List<Park> parkList) {
         this.parkList = parkList;
     }
+
+    public void setLastLocation(Location lastLocation) {
+        this.lastLocation = lastLocation;
+    }
+
 }

@@ -17,15 +17,15 @@ import java.util.List;
 
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
-import de.uulm.dbis.coaster2go.data.Park;
 
 /**
  * Created by Luis on 06.05.2017.
  */
 public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAdapter.ViewHolder> {
 
-    public static final String SORT_MODE_RATING = "SORT_MODE_RATING";
-    public static final String SORT_MODE_ABC = "SORT_MODE_NAME";
+    public enum SortMode {
+        NAME, RATING, WAIT_TIME
+    }
 
     // TODO implement SortedList?
     // private SortedList<Park> parkList;
@@ -37,13 +37,13 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView attractionImage;
-        public TextView attractionName;
-        public RatingBar attractionRating;
-        public TextView attractionWaitingTime;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView attractionImage;
+        TextView attractionName;
+        RatingBar attractionRating;
+        TextView attractionWaitingTime;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             attractionImage = (ImageView) itemView.findViewById(R.id.attrList_image);
@@ -97,14 +97,18 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         return attractionList == null ? 0 : attractionList.size();
     }
 
-    public void changeSort(String mode) {
+    public void changeSort(SortMode mode) {
         switch (mode) {
-            case SORT_MODE_ABC:
-                Collections.sort(attractionList, new AbcComparator());
+            case NAME:
+                Collections.sort(attractionList, new NameComparator());
                 notifyDataSetChanged();
                 break;
-            case SORT_MODE_RATING:
+            case RATING:
                 Collections.sort(attractionList, new RatingComparator());
+                notifyDataSetChanged();
+                break;
+            case WAIT_TIME:
+                Collections.sort(attractionList, new WaitTimeComparator());
                 notifyDataSetChanged();
                 break;
             default:
@@ -120,11 +124,18 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         }
     }
 
-    private class AbcComparator implements Comparator<Attraction> {
+    private class NameComparator implements Comparator<Attraction> {
         @Override
         public int compare(Attraction attraction1, Attraction attraction2) {
             // park1 and park2 are reversed so the highest rating is on top
             return attraction1.getName().compareTo(attraction2.getName());
+        }
+    }
+
+    private class WaitTimeComparator implements Comparator<Attraction> {
+        @Override
+        public int compare(Attraction a1, Attraction a2) {
+            return Double.compare(a1.getCurrentWaitingTime(), a2.getCurrentWaitingTime());
         }
     }
 
