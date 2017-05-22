@@ -1,5 +1,8 @@
 package de.uulm.dbis.coaster2go.data;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Attraction {
     private String id;
     private String name;
@@ -92,6 +95,37 @@ public class Attraction {
         this.averageTodayWaitingTime = averageTodayWaitingTime;
         this.currentWaitingTime = currentWaitingTime;
         this.parkId = parkId;
+    }
+
+    /** Makes a JSONObject out of the current Attraction Object
+     *
+     * @return JSONObjecxt
+     */
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", id);
+            jsonObject.put("name", name);
+            jsonObject.put("type", type);
+            jsonObject.put("description", description);
+            jsonObject.put("lat", lat);
+            jsonObject.put("lon", lon);
+            jsonObject.put("image", image);
+            jsonObject.put("numberOfReviews", numberOfReviews);
+            jsonObject.put("averageReview", averageReview);
+            jsonObject.put("numberOfWaitingTimes", numberOfWaitingTimes);
+            jsonObject.put("averageWaitingTime", averageWaitingTime);
+            jsonObject.put("numberOfTodayWaitingTimes", numberOfTodayWaitingTimes);
+            jsonObject.put("averageTodayWaitingTime", averageTodayWaitingTime);
+            jsonObject.put("currentWaitingTime", currentWaitingTime);
+            //jsonObject.put("parkId", parkId);
+
+            return jsonObject;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public String getId() {

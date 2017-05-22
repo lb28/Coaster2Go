@@ -3,8 +3,10 @@ package de.uulm.dbis.coaster2go.data;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -24,8 +26,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import com.squareup.okhttp.OkHttpClient;
 
-import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
-
 /** Class handels all Connections between the App and the Azure SQL Data tables.
  *
  * TODO: Find a better solution for the date problems
@@ -33,12 +33,19 @@ import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
  */
 public class AzureDBManager {
 
-    private Context context;
+    private static final int CACHE_MINUTES = 5;
+    private static final String SHARED_PARKS_DATE_KEY = "parks_date";
+    private static final String SHARED_ATTRACTIONS_DATE_KEY = "_attractions_date";
 
+    private Context context;
+    private SharedPreferences sharedPref;
+    private JsonManager jsonManager;
     private MobileServiceClient mClient;
 
     public AzureDBManager(Context context) {
         this.context = context;
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        jsonManager = new JsonManager(context);
 
         if (mClient == null) {
             try {
@@ -84,18 +91,18 @@ public class AzureDBManager {
             try {
                 HttpURLConnection urlc = (HttpURLConnection) (new URL("https://coaster2go.azurewebsites.net").openConnection());
                 urlc.setRequestProperty("Connection", "close");
-                urlc.setConnectTimeout(1500);
+                urlc.setConnectTimeout(3000);
                 urlc.connect();
                 return (urlc.getResponseCode() == 200);
             } catch (IOException e) {
-                Log.e(LOG_TAG, "Error checking internet connection", e);
+                Log.e("Internet Connection", "Error checking internet connection", e);
+                e.printStackTrace();
             }
         } else {
-            Log.d(LOG_TAG, "No network available!");
+            Log.d("Internet Connection", "No network available!");
         }
         return false;
     }
-
 
     //--------------------------Parks---------------------------------------------
 
@@ -113,6 +120,8 @@ public class AzureDBManager {
         Park resultPark = null;
         try {
             resultPark = mParkTable.insert(park).get();
+            //Write new ParkList into Internal Storage:
+            getParkListOnline();
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;
@@ -138,6 +147,8 @@ public class AzureDBManager {
         Park resultPark = null;
         try {
             resultPark = mParkTable.update(park).get();
+            //Write new ParkList into Internal Storage:
+            getParkListOnline();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -152,9 +163,38 @@ public class AzureDBManager {
      * @return the searched Parkobject or null.
      */
     public Park getParkById(String parkId){
-        if(!hasActiveInternetConnection()){
-            //TODO read from JSON
+        //Try to load the Park of the Internal Storage first:
+        try{
+            Date lastUpdated = new Date(sharedPref.getString(SHARED_PARKS_DATE_KEY, "Mon May 01 00:00:00 GMT+02:00 2000"));
+            Date now = new Date();
+            long difference = now.getTime() - lastUpdated.getTime();
+            //If the Data did already got Updated in the Last Minutes then return the saved Data
+            if(difference < 60000*CACHE_MINUTES){
+                return jsonManager.getParkById(parkId);
+            }
+        }catch(Exception e){
+            //Probably no Data in the Internal Storage
+            e.printStackTrace();
         }
+
+        if(!hasActiveInternetConnection()){
+            //If there is no Internet Connection then return the saved DATA
+            return jsonManager.getParkById(parkId);
+        }
+
+        //Else return real online data
+        //return getParkByIdOnline(parkId);
+        //Download all Parks again and load the one local
+        getParkListOnline();
+        return jsonManager.getParkById(parkId);
+    }
+
+    /** Returns the searched Parkobject or null
+     *
+     * @param parkId .
+     * @return the searched Parkobject or null.
+     */
+    private Park getParkByIdOnline(String parkId){
         MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
 
         List<Park> resultPark = null;
@@ -166,7 +206,7 @@ public class AzureDBManager {
             e.printStackTrace();
         }
         if(resultPark == null || resultPark.isEmpty()){
-            return null;
+            return jsonManager.getParkById(parkId);
         }else{
             return resultPark.get(0);
         }
@@ -177,9 +217,38 @@ public class AzureDBManager {
      * @return List with all Parks
      */
     public List<Park> getParkList(){
-        if(!hasActiveInternetConnection()){
-            //TODO read from JSON
+        //Try to load the Parklist of the Internal Storage first:
+        try{
+            System.out.println("Parks: Check Time Difference");
+            Date lastUpdated = new Date(sharedPref.getString(SHARED_PARKS_DATE_KEY, "Mon May 01 00:00:00 GMT+02:00 2000"));
+            Date now = new Date();
+            long difference = now.getTime() - lastUpdated.getTime();
+            //If the Data did already get Updated in the Last Minutes then return the saved Data
+            System.out.println("TIME DIFFERENCE: "+difference);
+            if(difference < 60000*CACHE_MINUTES){
+                return jsonManager.getParkList();
+            }
+        }catch(Exception e){
+            //Probably no Data in the Internal Storage
+            e.printStackTrace();
         }
+
+        System.out.println("Parks: Check internet connection");
+        if(!hasActiveInternetConnection()){
+            //If there is no Internet Connection then return the saved DATA
+            return jsonManager.getParkList();
+        }
+
+        //Else return real online data
+        System.out.println("Parks: Load Online Data");
+        return getParkListOnline();
+    }
+
+    /** Returns a List with all Parks in the database ordered by the Parkname.
+     *
+     * @return List with all Parks
+     */
+    private List<Park> getParkListOnline(){
         MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
 
         List<Park> parkList = null;
@@ -190,6 +259,17 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        if(parkList == null || parkList.isEmpty()){
+            return jsonManager.getParkList();
+        }
+        //Load New ParkList into Internal Storage:
+        jsonManager.writeParkList(parkList);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Date now = new Date();
+        editor.putString(SHARED_PARKS_DATE_KEY, now.toString());
+        System.out.println("Trying to save new Date "+now.toString());
+        editor.commit();
+
         return parkList;
     }
 
@@ -209,6 +289,8 @@ public class AzureDBManager {
         Attraction resultAttraction = null;
         try {
             resultAttraction = mAttractionTable.insert(attraction).get();
+            //Update the Attractions in the Internal Storage:
+            getAttractionListOnline(resultAttraction.getParkId());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -232,6 +314,8 @@ public class AzureDBManager {
         Attraction resultAttraction = null;
         try {
             resultAttraction = mAttractionTable.update(attraction).get();
+            //Update the Attractions in the Internal Storage:
+            getAttractionListOnline(resultAttraction.getParkId());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -247,8 +331,12 @@ public class AzureDBManager {
      */
     public Attraction getAttractionById(String attractionId){
         if(!hasActiveInternetConnection()){
-            //TODO read from JSON
+            //If there is no internet Connection, read the Park from the Internal Storage
+            return jsonManager.getAttractionById(attractionId);
         }
+        //TODO Find a solution to always load the Attraction out of the Internal Storage
+        //The Park Id is needed to find out if the Attraction is already cached
+
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
         List<Attraction> resultAttraction = null;
@@ -260,7 +348,7 @@ public class AzureDBManager {
             e.printStackTrace();
         }
         if(resultAttraction == null || resultAttraction.isEmpty()){
-            return null;
+            return jsonManager.getAttractionById(attractionId);
         }else{
             return resultAttraction.get(0);
         }
@@ -272,11 +360,37 @@ public class AzureDBManager {
      * @return List with all Attractions of the park
      */
     public List<Attraction> getAttractionList(String parkId){
-        if(!hasActiveInternetConnection()){
-            //TODO read from JSON
+        //Try to load the Attractionlist of the Internal Storage first:
+        try{
+            Date lastUpdated = new Date(sharedPref.getString(parkId+SHARED_ATTRACTIONS_DATE_KEY, "Mon May 01 00:00:00 GMT+02:00 2000"));
+            Date now = new Date();
+            long difference = now.getTime() - lastUpdated.getTime();
+            //If the Data did already get Updated in the Last Minutes then return the saved Data
+            System.out.println("TIME DIFFERENCE: "+difference);
+            if(difference < 60000*CACHE_MINUTES){
+                return jsonManager.getAttractionList(parkId);
+            }
+        }catch(Exception e){
+            //Probably no Data in the Internal Storage
+            e.printStackTrace();
         }
-        MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
+        if(!hasActiveInternetConnection()){
+            //If there is no Internet Connection then return the saved DATA
+            return jsonManager.getAttractionList(parkId);
+        }
+        //Else return real Online Data
+        return getAttractionListOnline(parkId);
+    }
+
+    /** Returns a List with all Attractions in one Park ordered by the Parkname.
+     *
+     * @param parkId Id of the Park
+     * @return List with all Attractions of the park
+     */
+    private List<Attraction> getAttractionListOnline(String parkId){
+        MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
+        System.out.println("LADE ATTRACTION DATEN ONLINE");
         List<Attraction> attractionList = null;
         try {
             attractionList = mAttractionTable.where().field("parkId").eq(parkId).orderBy("name", QueryOrder.Ascending).execute().get();
@@ -285,6 +399,16 @@ public class AzureDBManager {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        if(attractionList == null || attractionList.isEmpty()){
+            return jsonManager.getAttractionList(parkId);
+        }
+        //Load New AttractionList into Internal Storage:
+        jsonManager.writeAttractionList(attractionList, parkId);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Date now = new Date();
+        editor.putString(parkId+SHARED_ATTRACTIONS_DATE_KEY, now.toString());
+        editor.commit();
+        System.out.println("Trying to save new Date "+now.toString());
         return attractionList;
     }
 
@@ -322,9 +446,11 @@ public class AzureDBManager {
 
                 MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
                 mAttractionTable.update(updateAttraction);
+                //Update the Attractions in the Internal Storage:
+                getAttractionListOnline(updateAttraction.getParkId());
 
             }else{
-                Park updatePark = getParkById(reviewedId);
+                Park updatePark = getParkByIdOnline(reviewedId);
                 if(updatePark == null){
                     return null;
                 }
@@ -336,6 +462,8 @@ public class AzureDBManager {
 
                 MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
                 mParkTable.update(updatePark);
+                //Write new ParkList into Internal Storage:
+                getParkListOnline();
             }
 
 
@@ -378,9 +506,11 @@ public class AzureDBManager {
 
                 MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
                 mAttractionTable.update(updateAttraction);
+                //Update the Attractions in the Internal Storage:
+                getAttractionListOnline(updateAttraction.getParkId());
 
             }else{
-                Park updatePark = getParkById(reviewedId);
+                Park updatePark = getParkByIdOnline(reviewedId);
                 if(updatePark == null){
                     return null;
                 }
@@ -390,6 +520,8 @@ public class AzureDBManager {
 
                 MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
                 mParkTable.update(updatePark);
+                //Write new ParkList into Internal Storage:
+                getParkListOnline();
             }
 
 
@@ -665,6 +797,9 @@ public class AzureDBManager {
 
             //Insert WaitingTime
             resultTime = mWaitTable.insert(waitTime).get();
+
+            //Update the Attractions in the Internal Storage:
+            getAttractionListOnline(updateAttraction.getParkId());
 
 
         } catch (InterruptedException e) {

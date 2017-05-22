@@ -5,6 +5,7 @@ import android.content.Context;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Attr;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -20,17 +21,17 @@ import java.util.List;
 
 public class JsonManager {
     private static final String JSON_FILENAME_PARKS = "parks.json";
-    private static final String JSON_FILENAME_ATTRACTIONS = "attractions.json";
+    private static final String JSON_FILENAME_ATTRACTIONS = "_attractions.json";
     private Context context;
 
     public JsonManager(Context context){
         this.context = context;
     }
 
-    /**
+    /** Writes the ParkList into as a JSON File
      *
      * @param parkList ParkList
-     * @return true if sucessfull
+     * @return true if successful
      */
     public boolean writeParkList(List<Park> parkList){
         try {
@@ -46,25 +47,6 @@ public class JsonManager {
             e.printStackTrace();
             return false;
         }
-    }
-
-    /** Returns the searched Parkobject or null
-     *
-     * @param parkId .
-     * @return the searched Parkobject or null.
-     */
-    public Park getParkById(String parkId){
-        Park resultPark = null;
-        List<Park> parkList = getParkList();
-        if(parkList == null || parkList.isEmpty()){
-            return null;
-        }
-        for(Park p : parkList){
-            if(p.getId().equals(parkId)){
-                return p;
-            }
-        }
-        return resultPark;
     }
 
     /** Returns a List with all Parks in the database ordered by the Parkname.
@@ -104,7 +86,114 @@ public class JsonManager {
         return parkList;
     }
 
-    //TODO Attraction JSON Methods
+    /** Returns the searched Parkobject or null
+     *
+     * @param parkId .
+     * @return the searched Parkobject or null.
+     */
+    public Park getParkById(String parkId){
+        List<Park> parkList = getParkList();
+        if(parkList == null || parkList.isEmpty()){
+            return null;
+        }
+        for(Park p : parkList){
+            if(p.getId().equals(parkId)){
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /** Writes the AttractionList into as a JSON File
+     *
+     * @param attractionList AttractionList
+     * @param parkId parkId
+     * @return true if successful
+     */
+    public boolean writeAttractionList(List<Attraction> attractionList, String parkId){
+        try {
+            JSONObject jsonObj = new JSONObject();
+            JSONArray attractions = new JSONArray();
+            for (Attraction a : attractionList) {
+                attractions.put(a.toJSON());
+            }
+            jsonObj.put("attractions", attractions);
+            // save the created json object
+            return saveJSONToFile(jsonObj, parkId+JSON_FILENAME_ATTRACTIONS);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /** Returns a List with all Attractions of an Park in the database ordered by the Parkname.
+     *
+     * @param parkId Id of the park
+     * @return List with all Attractions of the Park
+     */
+    public List<Attraction> getAttractionList(String parkId) {
+        List<Attraction> attractionList = new ArrayList<Attraction>();
+        JSONObject jsonObj;
+        JSONArray attractions;
+
+        try {
+            jsonObj = readParkJSONFromFile(parkId+JSON_FILENAME_ATTRACTIONS);
+            if (jsonObj == null) return null;
+            attractions = jsonObj.getJSONArray("attractions");
+
+            for (int i = 0; i < attractions.length(); i++) {
+                JSONObject tmpAttraction = attractions.getJSONObject(i);
+                String id = tmpAttraction.getString("id");
+                String name = tmpAttraction.getString("name");
+                String type = tmpAttraction.getString("type");
+                String description = tmpAttraction.getString("description");
+                double lat = tmpAttraction.getDouble("lat");
+                double lon = tmpAttraction.getDouble("lon");
+                String image = tmpAttraction.getString("image");
+                int numberOfReviews = tmpAttraction.getInt("numberOfReviews");
+                double averageReview = tmpAttraction.getDouble("averageReview");
+                int numberOfWaitingTimes = tmpAttraction.getInt("numberOfWaitingTimes");
+                int averageWaitingTime = tmpAttraction.getInt("averageWaitingTime");
+                int numberOfTodayWaitingTimes = tmpAttraction.getInt("numberOfTodayWaitingTimes");
+                int averageTodayWaitingTime = tmpAttraction.getInt("averageTodayWaitingTime");
+                int currentWaitingTime = tmpAttraction.getInt("currentWaitingTime");
+                //String parkId = tmpAttraction.getString("parkId");
+
+                Attraction newAttraction = new Attraction(id, name, type, description, lat, lon,
+                        image, numberOfReviews, averageReview, numberOfWaitingTimes,
+                        averageWaitingTime, numberOfTodayWaitingTimes, averageTodayWaitingTime,
+                        currentWaitingTime, parkId);
+                attractionList.add(newAttraction);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return attractionList;
+    }
+
+    /** Returns the searched Attraction Object or null.
+     * Method has a lot of overhead so far (reading through all Parks and all Attractions)
+     * So it might be better to only use it
+     * if there is really no internet connection
+     *
+     * @param attractionId .
+     * @return the searched Attraction Object or null.
+     */
+    public Attraction getAttractionById(String attractionId){
+        List<Park> parkList = getParkList();
+        for(int i = 0; i < parkList.size(); i++){
+            List<Attraction> attractionList = getAttractionList(parkList.get(i).getId());
+            for(Attraction a : attractionList){
+                if(a.getId().equals(attractionId)){
+                    return a;
+                }
+            }
+        }
+
+        return null;
+    }
+
+
 
     /** Reads the JSON File from the internal Storage and returns it as JSON-Object
      *
