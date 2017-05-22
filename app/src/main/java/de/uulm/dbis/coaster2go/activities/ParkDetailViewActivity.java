@@ -85,6 +85,14 @@ public class ParkDetailViewActivity extends BaseActivity {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        Intent intent = new Intent(getBaseContext(), MapViewActivity.class);
+                        intent.putExtra("lon", park.getLon());
+                        intent.putExtra("lat", park.getLat());
+                        intent.putExtra("name", park.getName());
+                        startActivity(intent);
+
+                        /*
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 // creates an Intent that will load a map of the park
@@ -101,13 +109,16 @@ public class ParkDetailViewActivity extends BaseActivity {
                                 //No button clicked
                                 break;
                         }
+                        */
                     }
                 };
 
+                /*
                 //dialog for forwarding to google maps
                 AlertDialog.Builder builder = new AlertDialog.Builder(ParkDetailViewActivity.this);
                 builder.setMessage("Sie werden jetzt zu Google Maps weitergeleitet").setPositiveButton("OK", dialogClickListener)
                         .setNegativeButton("Zurück", dialogClickListener).show();
+                */
             }
         });
 
