@@ -129,7 +129,7 @@ public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.Vi
     private class DateComparator implements Comparator<Review> {
         @Override
         public int compare(Review review1, Review review2) {
-            return review1.getCreatedAt().compareTo(review2.getCreatedAt());
+            return review2.getCreatedAt().compareTo(review1.getCreatedAt());
         }
     }
 

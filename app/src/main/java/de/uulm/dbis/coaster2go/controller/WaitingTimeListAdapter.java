@@ -111,7 +111,7 @@ public class WaitingTimeListAdapter extends RecyclerView.Adapter<WaitingTimeList
     private class DateComparator implements Comparator<WaitingTime> {
         @Override
         public int compare(WaitingTime w1, WaitingTime w2) {
-            return w1.getCreatedAt().compareTo(w2.getCreatedAt());
+            return w2.getCreatedAt().compareTo(w1.getCreatedAt());
         }
     }
 

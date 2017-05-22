@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context="de.uulm.dbis.coaster2go.activities.MapViewActivity">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/map_view_mapview"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        />
 
 
 </LinearLayout>

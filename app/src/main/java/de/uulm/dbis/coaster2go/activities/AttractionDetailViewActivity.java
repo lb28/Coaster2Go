@@ -121,6 +121,14 @@ public class AttractionDetailViewActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                Intent intent = new Intent(getBaseContext(), MapViewActivity.class);
+                intent.putExtra("lon", attr.getLon());
+                intent.putExtra("lat", attr.getLat());
+                intent.putExtra("name", attr.getName());
+                startActivity(intent);
+
+                /* das hier würde ich weg lassen, weil wir jetzt ja nicht weiterleiten
+
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -129,19 +137,11 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
                                 Intent intent = new Intent(getBaseContext(), MapViewActivity.class);
                                 intent.putExtra("lon", attr.getLon());
-                                intent.putExtra("lat", attr.getLon());
+                                intent.putExtra("lat", attr.getLat());
+                                intent.putExtra("name", attr.getName());
                                 startActivity(intent);
 
-                                /*
-                                // creates an Intent that will load a map of the park
-                                Uri gmmIntentUri = Uri.parse("geo:" + attr.getLat() + ", " + attr.getLon());
-                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                                mapIntent.setPackage("com.google.android.apps.maps");
-                                //check if there is a suitable app to execute
-                                if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                                    startActivity(mapIntent);
-                                }
-                                */
+
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -155,6 +155,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(AttractionDetailViewActivity.this);
                 builder.setMessage("Sie werden jetzt zu Google Maps weitergeleitet").setPositiveButton("OK", dialogClickListener)
                         .setNegativeButton("Zurück", dialogClickListener).show();
+                */
             }
         });
     }

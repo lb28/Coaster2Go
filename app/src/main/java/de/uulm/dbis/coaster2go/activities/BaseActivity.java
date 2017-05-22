@@ -47,7 +47,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     protected DrawerLayout baseLayout;
     protected FrameLayout actContent;
 
-    private ActionBarDrawerToggle drawerToggle;
+    protected ActionBarDrawerToggle drawerToggle;
     Toolbar toolbar;
     ContentLoadingProgressBar progressBar;
     TextView textViewUserName;
