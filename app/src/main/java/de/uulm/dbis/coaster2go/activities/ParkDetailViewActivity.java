@@ -58,6 +58,10 @@ public class ParkDetailViewActivity extends BaseActivity {
         buttonMaps = (ImageButton) findViewById(R.id.park_detail_button_maps);
         buttonAttractions = (Button) findViewById(R.id.park_detail_button_attractions);
 
+        // enable buttons
+        buttonMaps.setEnabled(false);
+        buttonFav.setEnabled(false);
+
         //get parkID from intent (clicked list item from previous activity)
         parkId = getIntent().getStringExtra("parkId");
 
@@ -81,44 +85,11 @@ public class ParkDetailViewActivity extends BaseActivity {
         buttonMaps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Intent intent = new Intent(getBaseContext(), MapViewActivity.class);
-                        intent.putExtra("lon", park.getLon());
-                        intent.putExtra("lat", park.getLat());
-                        intent.putExtra("name", park.getName());
-                        startActivity(intent);
-
-                        /*
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                // creates an Intent that will load a map of the park
-                                Uri gmmIntentUri = Uri.parse("geo:" + park.getLat() + ", " + park.getLon());
-                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                                mapIntent.setPackage("com.google.android.apps.maps");
-                                //check if there is a suitable app to execute
-                                if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                                    startActivity(mapIntent);
-                                }
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
-                                break;
-                        }
-                        */
-                    }
-                };
-
-                /*
-                //dialog for forwarding to google maps
-                AlertDialog.Builder builder = new AlertDialog.Builder(ParkDetailViewActivity.this);
-                builder.setMessage("Sie werden jetzt zu Google Maps weitergeleitet").setPositiveButton("OK", dialogClickListener)
-                        .setNegativeButton("Zurück", dialogClickListener).show();
-                */
+                Intent intent = new Intent(ParkDetailViewActivity.this, MapViewActivity.class);
+                intent.putExtra("lon", park.getLon());
+                intent.putExtra("lat", park.getLat());
+                intent.putExtra("name", park.getName());
+                startActivity(intent);
             }
         });
 
@@ -172,6 +143,10 @@ public class ParkDetailViewActivity extends BaseActivity {
                 parkRatingAvg.setText(df.format(park2.getAverageReview()));
                 parkLocation.setText(park2.getLocation());
                 parkDescription.setText(park2.getDescription());
+
+                // enable buttons
+                buttonMaps.setEnabled(true);
+                buttonFav.setEnabled(true);
             }
             progressBar.hide();
         }

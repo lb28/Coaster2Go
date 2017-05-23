@@ -75,6 +75,11 @@ public class AttractionDetailViewActivity extends BaseActivity {
         enterTime = (EditText) findViewById(R.id.attr_detail_time_edit);
         buttonSave = (Button) findViewById(R.id.attr_detail_button_save_time);
 
+        // disable buttons
+        buttonInfo.setEnabled(false);
+        buttonMap.setEnabled(false);
+        buttonFav.setEnabled(false);
+
         // get attraction ID from intent
         attrID = getIntent().getStringExtra("attrId");
 
@@ -120,8 +125,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
         buttonMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(getBaseContext(), MapViewActivity.class);
+                Intent intent = new Intent(AttractionDetailViewActivity.this, MapViewActivity.class);
                 intent.putExtra("lon", attr.getLon());
                 intent.putExtra("lat", attr.getLat());
                 intent.putExtra("name", attr.getName());
@@ -197,6 +201,11 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 attrRatingbar.setRating((float) attr2.getAverageReview());
                 DecimalFormat df = new DecimalFormat("#.#");
                 attrAvgRating.setText(df.format(attr2.getAverageReview()));
+
+                // enable buttons
+                buttonInfo.setEnabled(true);
+                buttonMap.setEnabled(true);
+                buttonFav.setEnabled(true);
 
                 //waiting times text
                 currentWait.setText(df.format(attr2.getCurrentWaitingTime()));
