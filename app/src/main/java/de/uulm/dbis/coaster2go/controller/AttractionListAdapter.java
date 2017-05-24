@@ -1,6 +1,9 @@
 package de.uulm.dbis.coaster2go.controller;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +45,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         TextView attractionName;
         RatingBar attractionRating;
         TextView attractionWaitingTime;
+        FloatingActionButton attractionWaitingBackground;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -50,6 +54,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
             attractionName = (TextView) itemView.findViewById(R.id.attrList_name);
             attractionRating = (RatingBar) itemView.findViewById(R.id.attrList_rating);
             attractionWaitingTime = (TextView) itemView.findViewById(R.id.attrList_waitingTime);
+            attractionWaitingBackground = (FloatingActionButton) itemView.findViewById(R.id.attrList_waitingBackground);
         }
 
     }
@@ -82,7 +87,18 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         Picasso.with(context).load(attraction.getImage()).into(viewHolder.attractionImage);
         viewHolder.attractionName.setText(attraction.getName());
         viewHolder.attractionRating.setRating((float) attraction.getAverageReview());
-        viewHolder.attractionWaitingTime.setText(attraction.getCurrentWaitingTime() + " min");
+        viewHolder.attractionWaitingTime.setText(attraction.getCurrentWaitingTime()+"");
+
+        if(attraction.getCurrentWaitingTime() < attraction.getAverageWaitingTime()*0.7 || attraction.getCurrentWaitingTime() <= 10){
+            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            viewHolder.attractionWaitingTime.setTextColor(Color.WHITE); //Black or white text color for green background?
+        } else if(attraction.getCurrentWaitingTime() > attraction.getAverageWaitingTime()*1.3 || attraction.getCurrentWaitingTime() >= 90){
+            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+            viewHolder.attractionWaitingTime.setTextColor(Color.WHITE);
+        } else {
+            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+            viewHolder.attractionWaitingTime.setTextColor(Color.BLACK);
+        }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

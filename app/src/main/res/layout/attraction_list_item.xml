@@ -49,14 +49,35 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/attrList_waitingTime"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.8"
-        android:gravity="right|center"
-        android:layout_marginLeft="5dp"
-        android:text="Wartezeit"/>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_weight="1">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/attrList_waitingBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:color/transparent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:onClick="goToWaitingTimeOverview"/>
+
+        <TextView
+            android:id="@+id/attrList_waitingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:elevation="16dp"
+            android:text="000"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"
+            android:onClick="goToWaitingTimeOverview"/>
+    </FrameLayout>
 
 
 </LinearLayout>

@@ -26,8 +26,6 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Attr;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +36,6 @@ import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.Park;
 import de.uulm.dbis.coaster2go.data.WaitingTime;
 
-import static android.graphics.Color.GREEN;
-import static android.graphics.Color.YELLOW;
 
 public class AttractionDetailViewActivity extends BaseActivity {
 
@@ -231,20 +227,20 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 //gesamtdurchschnitt immer gelb
                 buttonAlltimeWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
                 //heute-durchschnitt
-                if(attr.getAverageTodayWaitingTime() < attr.getAverageWaitingTime()*0.7){
+                if(attr.getAverageTodayWaitingTime() < attr.getAverageWaitingTime()*0.7 || attr.getAverageTodayWaitingTime() <= 10){
                     buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                     todayWait.setTextColor(Color.WHITE); //Black or white text color for green background?
-                } else if(attr.getAverageTodayWaitingTime() > attr.getAverageWaitingTime()*1.3){
+                } else if(attr.getAverageTodayWaitingTime() > attr.getAverageWaitingTime()*1.3 || attr.getAverageTodayWaitingTime() >= 90){
                     buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                     todayWait.setTextColor(Color.WHITE);
                 } else {
                     buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
                 }
                 //aktuell (letzte 3) durchschnitt
-                if(attr.getCurrentWaitingTime() < attr.getAverageWaitingTime()*0.7){
+                if(attr.getCurrentWaitingTime() < attr.getAverageWaitingTime()*0.7 || attr.getCurrentWaitingTime() <= 10){
                     buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                     currentWait.setTextColor(Color.WHITE); //Black or white text color for green background?
-                } else if(attr.getCurrentWaitingTime() > attr.getAverageWaitingTime()*1.3){
+                } else if(attr.getCurrentWaitingTime() > attr.getAverageWaitingTime()*1.3 || attr.getCurrentWaitingTime() >= 90){
                     buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                     currentWait.setTextColor(Color.WHITE);
                 } else {
