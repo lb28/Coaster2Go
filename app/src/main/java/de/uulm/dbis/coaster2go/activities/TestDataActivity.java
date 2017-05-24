@@ -5,7 +5,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +28,11 @@ public class TestDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_data);
 
-        testTimeZone = new WaitingTime("", "Timezone test", "Timezone test", 25);
+        //Test if Animated Gif does get shown
+        ImageView imageView = (ImageView) findViewById(R.id.gifView);
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
+        Glide.with(this).load(R.raw.small_loader).into(imageViewTarget);
+
 
     //Thread testet die neusten Methoden des AzureDBManagers
         new Thread(new Runnable() {
@@ -35,38 +43,13 @@ public class TestDataActivity extends AppCompatActivity {
                 AzureExampleData dbExample = new AzureExampleData(TestDataActivity.this);
 
 
-
-
                 //Fill Database with example Data:
                 //dbExample.fillDatabase();
 
                 //Fill Database with new WaitingTimes
                 //Important for different Hours in the Statistics
-                dbExample.fillDatabaseWaitingTimes();
+                //dbExample.fillDatabaseWaitingTimes();
 
-
-                /*
-                //Date Test
-                List<Park> parkList = dbManager.getParkList();
-                String parkId = "";
-                for(Park p : parkList){
-                    if(p.getLocation().equals("Rust")){
-                        parkId = p.getId();
-                    }
-                }
-
-                List<Attraction> attractionList = dbManager.getAttractionList(parkId);
-                String attractionId = attractionList.get(0).getId();
-                Date now = new Date();
-                WaitingTime resultTimeZone = dbManager.createWaitingTime(testTimeZone);
-                WaitingTime resultTimeZone2 = dbManager.getPartOfWaitingTimeList(attractionId, 0).get(0);
-                System.out.println("Current phone hour: "+now.getHours()+
-                        "\nReturned createdAt hour: "+resultTimeZone.getCreatedAt().getHours()+
-                        "\nRead createdAtHour: "+resultTimeZone2.getCreatedAt().getHours()+
-                        "\nAll the same?");
-
-
-                 */
                 if(dbManager.hasActiveInternetConnection()){
                     System.out.println("Internet connection");
                 }else{

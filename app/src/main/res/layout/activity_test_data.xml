@@ -13,4 +13,12 @@
         android:text="Ausgabe in Konsole..."
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp" />
+
+    <ImageView
+        android:id="@+id/gifView"
+        android:layout_width="111dp"
+        android:layout_height="106dp"
+        app:srcCompat="@drawable/tw__transparent"
+        tools:layout_editor_absoluteX="137dp"
+        tools:layout_editor_absoluteY="202dp" />
 </android.support.constraint.ConstraintLayout>
