@@ -3,9 +3,11 @@ package de.uulm.dbis.coaster2go.activities;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +38,9 @@ import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.Park;
 import de.uulm.dbis.coaster2go.data.WaitingTime;
 
+import static android.graphics.Color.GREEN;
+import static android.graphics.Color.YELLOW;
+
 public class AttractionDetailViewActivity extends BaseActivity {
 
     private static final String TAG = AttractionDetailViewActivity.class.getSimpleName();
@@ -49,9 +54,11 @@ public class AttractionDetailViewActivity extends BaseActivity {
     EditText enterTime;
     RatingBar attrRatingbar;
     ImageButton buttonFav, buttonInfo, buttonMap;
-    Button buttonSave, currentWait, todayWait, alltimeWait;
+    Button buttonSave;
     BarChart barChart;
 
+    TextView currentWait, todayWait, alltimeWait;
+    FloatingActionButton buttonCurrentWait, buttonTodayWait, buttonAlltimeWait;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +73,13 @@ public class AttractionDetailViewActivity extends BaseActivity {
         buttonInfo = (ImageButton) findViewById(R.id.attr_detail_button_info);
         buttonMap = (ImageButton) findViewById(R.id.attr_detail_button_map);
 
-        currentWait = (Button) findViewById(R.id.attr_detail_wait_current);
-        todayWait = (Button) findViewById(R.id.attr_detail_wait_today);
-        alltimeWait = (Button) findViewById(R.id.attr_detail_wait_alltime);
+        currentWait = (TextView) findViewById(R.id.attr_detail_wait_current);
+        todayWait = (TextView) findViewById(R.id.attr_detail_wait_today);
+        alltimeWait = (TextView) findViewById(R.id.attr_detail_wait_alltime);
+
+        buttonCurrentWait = (FloatingActionButton) findViewById(R.id.button_detail_wait_current);
+        buttonTodayWait = (FloatingActionButton) findViewById(R.id.button_detail_wait_today);
+        buttonAlltimeWait = (FloatingActionButton) findViewById(R.id.button_detail_wait_alltime);
 
         barChart = (BarChart) findViewById(R.id.attr_detail_barchart);
 
@@ -218,22 +229,26 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 //ROT: 130% Gesamtdurchschnitt < Zeit
 
                 //gesamtdurchschnitt immer gelb
-                alltimeWait.setBackgroundColor(Color.YELLOW);
+                buttonAlltimeWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
                 //heute-durchschnitt
                 if(attr.getAverageTodayWaitingTime() < attr.getAverageWaitingTime()*0.7){
-                    todayWait.setBackgroundColor(Color.GREEN);
+                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                    todayWait.setTextColor(Color.WHITE); //Black or white text color for green background?
                 } else if(attr.getAverageTodayWaitingTime() > attr.getAverageWaitingTime()*1.3){
-                    todayWait.setBackgroundColor(Color.RED);
+                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+                    todayWait.setTextColor(Color.WHITE);
                 } else {
-                    todayWait.setBackgroundColor(Color.YELLOW);
+                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
                 }
                 //aktuell (letzte 3) durchschnitt
                 if(attr.getCurrentWaitingTime() < attr.getAverageWaitingTime()*0.7){
-                    currentWait.setBackgroundColor(Color.GREEN);
+                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                    currentWait.setTextColor(Color.WHITE); //Black or white text color for green background?
                 } else if(attr.getCurrentWaitingTime() > attr.getAverageWaitingTime()*1.3){
-                    currentWait.setBackgroundColor(Color.RED);
+                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+                    currentWait.setTextColor(Color.WHITE);
                 } else {
-                    currentWait.setBackgroundColor(Color.YELLOW);
+                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
                 }
             }
             AttractionDetailViewActivity.this.progressBar.hide();

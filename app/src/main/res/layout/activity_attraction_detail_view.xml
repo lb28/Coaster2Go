@@ -106,29 +106,95 @@
             android:orientation="horizontal"
             android:id="@+id/attr_detail_button_linlayout">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_weight="1"
-            android:id="@+id/attr_detail_wait_current"
-            android:onClick="goToWaitingTimeOverview"/>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_weight="1"
-            android:id="@+id/attr_detail_wait_today"
-            android:onClick="goToWaitingTimeOverview"/>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/button_detail_wait_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:onClick="goToWaitingTimeOverview"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_weight="1"
-            android:id="@+id/attr_detail_wait_alltime"
-            android:onClick="goToWaitingTimeOverview"/>
+                <TextView
+                    android:id="@+id/attr_detail_wait_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:elevation="16dp"
+                    android:text="000"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black"
+                    android:onClick="goToWaitingTimeOverview"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/button_detail_wait_today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:onClick="goToWaitingTimeOverview"/>
+
+                <TextView
+                    android:id="@+id/attr_detail_wait_today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:elevation="16dp"
+                    android:text="000"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black"
+                    android:onClick="goToWaitingTimeOverview"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/button_detail_wait_alltime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:onClick="goToWaitingTimeOverview"/>
+
+                <TextView
+                    android:id="@+id/attr_detail_wait_alltime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:elevation="16dp"
+                    android:text="000"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black"
+                    android:onClick="goToWaitingTimeOverview"/>
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -199,5 +265,6 @@
             android:id="@+id/attr_detail_button_save_time"/>
 
     </LinearLayout>
+
 
 </RelativeLayout>
