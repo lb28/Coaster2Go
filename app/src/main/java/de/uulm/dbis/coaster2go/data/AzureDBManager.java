@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -89,11 +90,16 @@ public class AzureDBManager {
     public boolean hasActiveInternetConnection() {
         if (isNetworkAvailable()) {
             try {
-                HttpURLConnection urlc = (HttpURLConnection) (new URL("https://coaster2go.azurewebsites.net").openConnection());
+                //Rather check to connect with faster Google Website
+                //Problem: No false Response Message, if Azure is down
+                //HttpURLConnection urlc = (HttpURLConnection) (new URL("https://coaster2go.azurewebsites.net").openConnection()); //Azure Website
+                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://clients3.google.com/generate_204").openConnection()); //TEst Website
+                urlc.setRequestProperty("User-Agent", "Test");
                 urlc.setRequestProperty("Connection", "close");
-                urlc.setConnectTimeout(3000);
+                urlc.setConnectTimeout(1500); //Time until the Method decides, that there is no reliable internet connection
                 urlc.connect();
-                return (urlc.getResponseCode() == 200);
+                return (urlc.getResponseCode() == 204); //Check for no content status
+                //return (urlc.getResponseCode() == 200); //check for ok status
             } catch (IOException e) {
                 Log.e("Internet Connection", "Error checking internet connection", e);
                 e.printStackTrace();
@@ -155,6 +161,28 @@ public class AzureDBManager {
             e.printStackTrace();
         }
         return resultPark;
+    }
+
+    /** Deletes the Park of the given Id
+     *
+     * @param parkId Id of the Park
+     * @return true if successful.
+     */
+    public boolean deletePark(String parkId){
+        if(!hasActiveInternetConnection()){
+            return false;
+        }
+        MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
+
+        try {
+            mParkTable.delete(parkId);
+            //Write new ParkList into Internal Storage:
+            getParkListOnline();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     /** Returns the searched Parkobject or null
@@ -251,7 +279,7 @@ public class AzureDBManager {
     private List<Park> getParkListOnline(){
         MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
 
-        List<Park> parkList = null;
+        List<Park> parkList = new ArrayList<Park>();
         try {
             parkList = mParkTable.orderBy("name", QueryOrder.Ascending).execute().get();
         } catch (InterruptedException e) {
@@ -324,6 +352,29 @@ public class AzureDBManager {
         return resultAttraction;
     }
 
+    /** Deletes the Attraction of the given Id
+     *
+     * @param attractionId Id of the Attraction
+     * @return true if successful.
+     */
+    public boolean deleteAttraction(String attractionId){
+        if(!hasActiveInternetConnection()){
+            return false;
+        }
+        Attraction toDelete = getAttractionById(attractionId);
+        MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
+
+        try {
+            mAttractionTable.delete(attractionId);
+            //Write new AttractionList into Internal Storage:
+            getAttractionListOnline(toDelete.getParkId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     /** Returns the Attraction object or null.
      *
      * @param attractionId .
@@ -391,7 +442,7 @@ public class AzureDBManager {
     private List<Attraction> getAttractionListOnline(String parkId){
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
         System.out.println("LADE ATTRACTION DATEN ONLINE");
-        List<Attraction> attractionList = null;
+        List<Attraction> attractionList = new ArrayList<Attraction>();;
         try {
             attractionList = mAttractionTable.where().field("parkId").eq(parkId).orderBy("name", QueryOrder.Ascending).execute().get();
         } catch (InterruptedException e) {
@@ -544,12 +595,12 @@ public class AzureDBManager {
      * @return List with all Reviews ordered by Date
      */
     public List<Review> getReviewList(String reviewedId){
+        List<Review> reviewList = new ArrayList<Review>();
         if(!hasActiveInternetConnection()){
-            return null;
+            return reviewList;
         }
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
 
-        List<Review> reviewList = null;
         try {
             reviewList = mReviewTable.where().field("reviewedId").eq(reviewedId).orderBy("createdAt", QueryOrder.Descending).execute().get();
         } catch (InterruptedException e) {
@@ -569,14 +620,14 @@ public class AzureDBManager {
      * @return List with 5 Reviews ordered by Date
      */
     public List<Review> getPartOfReviewList(String reviewedId, int counter){
+        List<Review> reviewList = new ArrayList<Review>();
         if(!hasActiveInternetConnection()){
-            return null;
+            return reviewList;
         }
         MobileServiceTable<Review> mReviewTable = mClient.getTable(Review.class);
         int skip = counter*5;
         int lastElement = (counter+1)*5;
 
-        List<Review> reviewList = null;
         try {
             reviewList = mReviewTable
                     .where().field("reviewedId").eq(reviewedId)
@@ -631,12 +682,12 @@ public class AzureDBManager {
      * @return List with all WaitingTimes ordered by Date
      */
     public List<WaitingTime> getWaitingTimeList(String attractionId){
+        List<WaitingTime> waitList = new ArrayList<WaitingTime>();
         if(!hasActiveInternetConnection()){
-            return null;
+            return waitList;
         }
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
 
-        List<WaitingTime> waitList = null;
         try {
             waitList = mWaitTable.where().field("attractionId").eq(attractionId).orderBy("createdAt", QueryOrder.Descending).execute().get();
         } catch (InterruptedException e) {
@@ -656,14 +707,14 @@ public class AzureDBManager {
      * @return List with 5 WaitingTimes ordered by Date
      */
     public List<WaitingTime> getPartOfWaitingTimeList(String attractionId, int counter){
+        List<WaitingTime> waitList = new ArrayList<WaitingTime>();
         if(!hasActiveInternetConnection()){
-            return null;
+            return waitList;
         }
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
         int skip = counter*5;
         int lastElement = (counter+1)*5;
 
-        List<WaitingTime> waitList = null;
         try {
             waitList = mWaitTable.where().field("attractionId").eq(attractionId)
                     .orderBy("createdAt", QueryOrder.Descending)
@@ -684,12 +735,12 @@ public class AzureDBManager {
      * @return List with all WaitingTimes ordered by Date
      */
     public List<WaitingTime> getTodaysWaitingTimeList(String attractionId){
+        List<WaitingTime> waitList = new ArrayList<WaitingTime>();
         if(!hasActiveInternetConnection()){
-            return null;
+            return waitList;
         }
         MobileServiceTable<WaitingTime> mWaitTable = mClient.getTable(WaitingTime.class);
 
-        List<WaitingTime> waitList = null;
         try {
             Date todayDate = new Date(); //Maybe use something different then the Date Object later...
             /* //TODO working with the sql Date functions seem like they do not work...

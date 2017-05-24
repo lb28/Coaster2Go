@@ -60,7 +60,7 @@ public class JsonManager {
 
         try {
             jsonObj = readParkJSONFromFile(JSON_FILENAME_PARKS);
-            if (jsonObj == null) return null;
+            if (jsonObj == null) return parkList;
             parks = jsonObj.getJSONArray("parks");
 
             for (int i = 0; i < parks.length(); i++) {
@@ -138,7 +138,7 @@ public class JsonManager {
 
         try {
             jsonObj = readParkJSONFromFile(parkId+JSON_FILENAME_ATTRACTIONS);
-            if (jsonObj == null) return null;
+            if (jsonObj == null) return attractionList;
             attractions = jsonObj.getJSONArray("attractions");
 
             for (int i = 0; i < attractions.length(); i++) {
