@@ -179,4 +179,24 @@ public class Park {
     public void setAdmin(String admin) {
         this.admin = admin;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Park park = (Park) o;
+
+        if (Double.compare(park.lat, lat) != 0) return false;
+        if (Double.compare(park.lon, lon) != 0) return false;
+        if (numberOfReviews != park.numberOfReviews) return false;
+        if (Double.compare(park.averageReview, averageReview) != 0) return false;
+        if (!id.equals(park.id)) return false;
+        if (!name.equals(park.name)) return false;
+        if (!location.equals(park.location)) return false;
+        if (!description.equals(park.description)) return false;
+        if (image != null ? !image.equals(park.image) : park.image != null) return false;
+        return admin.equals(park.admin);
+
+    }
 }

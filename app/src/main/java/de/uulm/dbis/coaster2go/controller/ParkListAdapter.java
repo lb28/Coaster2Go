@@ -83,9 +83,13 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         final Park park = parkList.get(position);
 
         // fill the view based on the data
-        if (park.getImage() != null) {
+        if (park.getImage() == null || park.getImage().isEmpty()) {
+            Picasso.with(context).load(R.mipmap.ic_launcher).
+                    into(viewHolder.parkImage);
+        } else {
             Picasso.with(context).load(park.getImage()).into(viewHolder.parkImage);
         }
+
         viewHolder.parkName.setText(park.getName());
         viewHolder.parkRating.setRating((float) park.getAverageReview());
         viewHolder.parkLocation.setText(park.getLocation());
@@ -95,6 +99,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         if (lastLocation == null) {
             viewHolder.parkDistance.setVisibility(View.INVISIBLE);
         } else {
+            viewHolder.parkDistance.setVisibility(View.VISIBLE);
             Location parkLoc = new Location("");
             parkLoc.setLongitude(park.getLon());
             parkLoc.setLatitude(park.getLat());
@@ -109,6 +114,12 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 clickListener.onParkItemClick(park);
+            }
+        });
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return clickListener.onParkItemLongClick(park);
             }
         });
     }
@@ -180,6 +191,12 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
                     lastLocation.distanceTo(locPark2));
         }
     }
+    
+    public void removeAt(int pos) {
+        parkList.remove(pos);
+        notifyItemRemoved(pos);
+    }
+
 
     // GETTERS & SETTERS
 
@@ -191,8 +208,16 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         this.parkList = parkList;
     }
 
+    public Location getLastLocation() {
+        return lastLocation;
+    }
+
     public void setLastLocation(Location lastLocation) {
         this.lastLocation = lastLocation;
+    }
+
+    public int getPositionOf(Park park) {
+        return parkList.indexOf(park);
     }
 
 }

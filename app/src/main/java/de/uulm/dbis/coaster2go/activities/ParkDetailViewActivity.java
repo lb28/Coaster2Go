@@ -1,15 +1,7 @@
 package de.uulm.dbis.coaster2go.activities;
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,15 +10,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
@@ -136,13 +123,19 @@ public class ParkDetailViewActivity extends BaseActivity {
                 // TODO show snackbar "park laden fehlgeschlagen"
             } else {
                 park = park2;
-                Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
+                if (park2.getImage() == null || park2.getImage().isEmpty()) {
+                    Picasso.with(ParkDetailViewActivity.this)
+                            .load(R.mipmap.ic_launcher).into(parkImage);
+                } else {
+                    Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
+                }
                 parkName.setText(park2.getName());
                 ratingBar.setRating((float) park2.getAverageReview());
                 DecimalFormat df = new DecimalFormat("#.#");
                 parkRatingAvg.setText(df.format(park2.getAverageReview()));
                 parkLocation.setText(park2.getLocation());
                 parkDescription.setText(park2.getDescription());
+
 
                 // enable buttons
                 buttonMaps.setEnabled(true);

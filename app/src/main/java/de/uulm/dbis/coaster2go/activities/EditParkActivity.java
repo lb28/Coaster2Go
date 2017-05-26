@@ -3,7 +3,6 @@ package de.uulm.dbis.coaster2go.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,7 +10,6 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -35,11 +33,14 @@ public class EditParkActivity extends BaseActivity {
     ImageView imageViewPark;
 
     String parkImageUrl;
+    String parkId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_park);
+
+        parkId = getIntent().getStringExtra("parkId");
 
         editTextParkName = (EditText) findViewById(R.id.editTextParkName);
         editTextParkLocationName = (EditText) findViewById(R.id.editTextParkLocationName);
@@ -47,6 +48,10 @@ public class EditParkActivity extends BaseActivity {
         editTextParkLon = (EditText) findViewById(R.id.editTextParkLon);
         editTextParkDescription = (EditText) findViewById(R.id.editTextParkDescription);
         imageViewPark = (ImageView) findViewById(R.id.imageViewEditPark);
+
+        if (parkId != null) {
+            new LoadParkTask().execute();
+        }
     }
 
     /**
@@ -59,10 +64,6 @@ public class EditParkActivity extends BaseActivity {
         String descr = editTextParkDescription.getText().toString();
         String lat = editTextParkLat.getText().toString();
         String lon = editTextParkLon.getText().toString();
-
-        if (parkImageUrl == null || parkImageUrl.isEmpty()) {
-            parkImageUrl = "https://cdn4.iconfinder.com/data/icons/adiante-apps-app-templates-incos-in-grey/512/app_type_theme_park_512px_GREY.png";
-        }
 
         new SaveParkTask().execute(name, location, descr, lat, lon);
     }
@@ -95,9 +96,11 @@ public class EditParkActivity extends BaseActivity {
             public void onClick(DialogInterface dialog, int which) {
                 parkImageUrl = editTextParkImageUrl.getText().toString();
                 if (parkImageUrl.isEmpty()) {
-                    parkImageUrl = "https://cdn4.iconfinder.com/data/icons/adiante-apps-app-templates-incos-in-grey/512/app_type_theme_park_512px_GREY.png";
+                    Picasso.with(EditParkActivity.this)
+                            .load(R.mipmap.ic_launcher).into(imageViewPark);
+                } else {
+                    Picasso.with(EditParkActivity.this).load(parkImageUrl).into(imageViewPark);
                 }
-                Picasso.with(EditParkActivity.this).load(parkImageUrl).into(imageViewPark);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -115,8 +118,6 @@ public class EditParkActivity extends BaseActivity {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
 
                 editTextParkLat.setText(String.valueOf(place.getLatLng().latitude));
                 editTextParkLon.setText(String.valueOf(place.getLatLng().longitude));
@@ -125,6 +126,39 @@ public class EditParkActivity extends BaseActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private class LoadParkTask extends AsyncTask<Void, Void, Park> {
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.show();
+        }
+
+        @Override
+        protected Park doInBackground(Void... params) {
+            if (parkId == null) return null;
+            return new AzureDBManager(EditParkActivity.this).getParkById(parkId);
+        }
+
+        @Override
+        protected void onPostExecute(Park park) {
+            if (park != null) {
+                if (!(park.getImage() == null || park.getImage().isEmpty())) {
+                    Picasso.with(EditParkActivity.this).load(park.getImage()).into(imageViewPark);
+                    parkImageUrl = park.getImage();
+                } else {
+                    Picasso.with(EditParkActivity.this).load(R.mipmap.ic_launcher).into(imageViewPark);
+                    parkImageUrl = "";
+                }
+                editTextParkName.setText(park.getName());
+                editTextParkLocationName.setText(park.getLocation());
+                editTextParkLat.setText(String.valueOf(park.getLat()));
+                editTextParkLon.setText(String.valueOf(park.getLon()));
+                editTextParkDescription.setText(park.getDescription());
+            }
+            progressBar.hide();
+        }
     }
 
     private class SaveParkTask extends AsyncTask<String, Void, Park> {
@@ -143,13 +177,36 @@ public class EditParkActivity extends BaseActivity {
             String name = params[0];
             String location = params[1];
             String descr = params[2];
-            double lat = Double.parseDouble(params[3]);
-            double lon = Double.parseDouble(params[4]);
+            double lat = 0;
+            double lon = 0;
+            try {
+                lat = Double.parseDouble(params[3]);
+                lon = Double.parseDouble(params[4]);
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+                Snackbar.make(findViewById(R.id.coordinatorLayout_EditPark),
+                        "Überprüfen Sie die Koordinaten", Snackbar.LENGTH_SHORT).show();
+                cancel(true);
+            }
+
+            AzureDBManager dbManager = new AzureDBManager(EditParkActivity.this);
 
             Park park = new Park(name, location, descr, lat, lon, parkImageUrl, 0, 0, user.getUid());
 
-            AzureDBManager dbManager = new AzureDBManager(EditParkActivity.this);
-            return dbManager.createPark(park);
+            // did the park already exist?
+            if (parkId == null) {
+                return dbManager.createPark(park);
+            } else {
+                park.setId(parkId);
+                return dbManager.updatePark(park);
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            progressBar.hide();
         }
 
         @Override
@@ -158,10 +215,9 @@ public class EditParkActivity extends BaseActivity {
             if (resultPark == null) {
                 Snackbar.make(findViewById(R.id.coordinatorLayout_EditPark),
                         "Park konnte nicht gespeichert werden",
-                        Snackbar.LENGTH_SHORT);
+                        Snackbar.LENGTH_SHORT).show();
             } else {
-                Intent intent = new Intent(EditParkActivity.this, ParkDetailViewActivity.class);
-                intent.putExtra("parkId", resultPark.getId());
+                Intent intent = new Intent(EditParkActivity.this, ParkOverviewActivity.class);
                 startActivity(intent);
             }
         }

@@ -5,7 +5,6 @@ import android.content.Context;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Attr;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -71,7 +70,7 @@ public class JsonManager {
                 String description = tmpPark.getString("description");
                 double lat = tmpPark.getDouble("lat");
                 double lon = tmpPark.getDouble("lon");
-                String image = tmpPark.getString("image");
+                String image = tmpPark.has("image")? tmpPark.getString("image") : "";
                 int numberOfReviews = tmpPark.getInt("numberOfReviews");
                 double averageReview = tmpPark.getDouble("averageReview");
                 String admin = tmpPark.getString("admin");
@@ -241,4 +240,21 @@ public class JsonManager {
         }
     }
 
+    public Park deletePark(String parkId) {
+        List<Park> parkList = getParkList();
+        if(parkList == null || parkList.isEmpty()){
+            return null;
+        }
+        for(Park p : parkList){
+            if(p.getId().equals(parkId)){
+                parkList.remove(p);
+                if (writeParkList(parkList)) {
+                    return p;
+                }
+                return null;
+            }
+        }
+
+        return null;
+    }
 }

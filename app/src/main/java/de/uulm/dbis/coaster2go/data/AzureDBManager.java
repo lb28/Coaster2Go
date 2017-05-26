@@ -10,10 +10,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.MobileServiceException;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import com.squareup.okhttp.OkHttpClient;
 
 /** Class handels all Connections between the App and the Azure SQL Data tables.
  *
@@ -163,26 +162,27 @@ public class AzureDBManager {
         return resultPark;
     }
 
-    /** Deletes the Park of the given Id
-     *
-     * @param parkId Id of the Park
-     * @return true if successful.
+    /**
+     * Deletes the park with the given id
+     * TODO - should the park also be deleted from the offline storage?
+     * @param parkId
+     * @return
      */
-    public boolean deletePark(String parkId){
-        if(!hasActiveInternetConnection()){
-            return false;
-        }
-        MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
+    public boolean deleteParkOnline(String parkId) {
+        if (!hasActiveInternetConnection()) return false;
 
-        try {
-            mParkTable.delete(parkId);
-            //Write new ParkList into Internal Storage:
-            getParkListOnline();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        MobileServiceTable<Park> mParkTable = mClient.getTable(Park.class);
+        mParkTable.delete(parkId);
+
         return true;
+    }
+
+    public Park deletePark(String parkId) {
+        // try to delete the online park
+        if (!deleteParkOnline(parkId)) return null;
+
+        // if successful, delete the offline park
+        return new JsonManager(context).deletePark(parkId);
     }
 
     /** Returns the searched Parkobject or null

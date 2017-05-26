@@ -1,6 +1,9 @@
 package de.uulm.dbis.coaster2go.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,25 +22,26 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.controller.OnParkItemClickListener;
 import de.uulm.dbis.coaster2go.controller.ParkListAdapter;
-import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.Park;
 
@@ -57,7 +61,6 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
     private int currentFragmentIndex;
     private GoogleApiClient mGoogleApiClient;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,6 +166,16 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         if (currentFragment != null && currentFragment.parkListAdapter != null) {
             currentFragment.swipeRefreshLayout.setRefreshing(true);
             currentFragment.refreshParkList();
+        }
+    }
+
+    private void notifyParkDeleted(Park park) {
+        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        if (currentFragment != null && currentFragment.parkListAdapter != null) {
+            int pos = currentFragment.parkListAdapter.getPositionOf(park);
+            if (pos != -1) {
+                currentFragment.parkListAdapter.removeAt(pos);
+            }
         }
     }
 
@@ -280,6 +293,42 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     intent.putExtra("parkId", park.getId());
                     startActivity(intent);
                 }
+
+                @Override
+                public boolean onParkItemLongClick(final Park park) {
+                    // open context menu for edit, delete, ...
+                    final Park p = park;
+
+                    FirebaseUser user = ((ParkOverviewActivity) getActivity()).user;
+
+                    if (user != null && park.getAdmin().equals(user.getUid())) {
+                        String[] menuOptions = {
+                                "Park bearbeiten",
+                                "Park löschen"};
+                        android.app.AlertDialog.Builder builder =
+                                new android.app.AlertDialog.Builder(getContext());
+                        builder.setTitle(park.getName())
+                                .setItems(menuOptions, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        switch (which) {
+                                            case 0:
+                                                Intent intent = new Intent(getContext(),
+                                                        EditParkActivity.class);
+                                                intent.putExtra("parkId", p.getId());
+                                                startActivity(intent);
+                                                break;
+                                            case 1:
+                                                showDeleteDialog(park);
+                                                break;
+                                        }
+                                    }
+                                });
+                        Dialog d = builder.create();
+                        d.show();
+                    }
+
+                    return true;
+                }
             });
 
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
@@ -338,6 +387,25 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             }
         }
 
+        void showDeleteDialog(final Park park) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Park löschen");
+            builder.setMessage("Wollen Sie den Park \"" + park.getName() + "\" wirklich löschen?");
+            builder.setPositiveButton("Löschen", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ((ParkOverviewActivity) getActivity()).new DeleteParkTask().execute(park.getId());
+                }
+            });
+            builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        }
+
     }
 
     /**
@@ -381,5 +449,36 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         }
     }
 
+
+    private class DeleteParkTask extends AsyncTask<String, Void, Park> {
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.show();
+        }
+
+        @Override
+        protected Park doInBackground(String... params) {
+            String parkId = params[0];
+            if (parkId == null || parkId.isEmpty()) {
+                return null;
+            }
+            return new AzureDBManager(ParkOverviewActivity.this).deletePark(parkId);
+        }
+
+        @Override
+        protected void onPostExecute(Park deletedPark) {
+            progressBar.hide();
+
+            if (deletedPark == null) {
+                Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
+                        "Löschen Fehlgeschlagen", Snackbar.LENGTH_SHORT).show();
+            } else {
+                // update the view
+                notifyParkDeleted(deletedPark);
+            }
+
+        }
+    }
 
 }
