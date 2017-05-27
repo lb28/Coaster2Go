@@ -357,8 +357,9 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 buttonSave.setEnabled(false);
             }
 
-
             progressBar.hide();
+
+            recreate();
         }
     }
 
