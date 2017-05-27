@@ -104,8 +104,8 @@ public class AttractionDetailViewActivity extends BaseActivity {
         new LoadBarChartDataAsync().execute();
 
         //check if a user is signed in
-        //if so he is allowed to enter a waitingtime
-        //else not -> view elements are set to invisible
+        //if so -> allowed to enter a waitingtime
+        //if not -> view elements are set to invisible
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
@@ -114,6 +114,8 @@ public class AttractionDetailViewActivity extends BaseActivity {
             buttonSave.setVisibility(View.VISIBLE);
 
             //checks if user is allowed to enter a new waitingtime
+            //if so -> gui elements enabled
+            //if not -> gui elements disabled
             new CheckWaitingtimeAllowedAsync().execute();
 
         } else {
@@ -166,6 +168,8 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 wt = new WaitingTime(attrID, user.getDisplayName(), user.getUid(),
                         Integer.parseInt(enterTime.getText().toString()));
 
+                //create a new waiting time with the entered minutes
+                //then set the gui elements disabled
                 new CreateWaitingTimeAsync().execute();
             }
         });
@@ -322,7 +326,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
             if (b == true){
                 //allowed to enter a waiting time
             } else {
-                enterTime.setText("Gerade nicht möglich...");
+                enterTime.setText("Letzter Eintrag vor unter 1h");
                 enterTime.setEnabled(false);
                 buttonSave.setEnabled(false);
             }
@@ -348,6 +352,9 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 Log.e("", "CreateWaitingTimeAsync.onPostExecute: w was null!");
             } else {
                 Toast.makeText(AttractionDetailViewActivity.this, "Wartezeit eingetragen", Toast.LENGTH_SHORT).show();
+
+                enterTime.setEnabled(false);
+                buttonSave.setEnabled(false);
             }
 
 
