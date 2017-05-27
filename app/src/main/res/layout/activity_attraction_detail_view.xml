@@ -242,6 +242,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <EditText
@@ -255,6 +256,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:id="@+id/attr_detail_label_minutes"
             android:text=" Min."/>
 
         <Button

@@ -19,11 +19,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.ui.User;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -42,11 +46,14 @@ public class AttractionDetailViewActivity extends BaseActivity {
     private static final String TAG = AttractionDetailViewActivity.class.getSimpleName();
     private String attrID;
     private Attraction attr;
+    private FirebaseUser user;
+
+    private WaitingTime wt;
 
     private HashMap<Integer, Integer> hashMap;
 
     ImageView attrImage;
-    TextView attrName, attrAvgRating;
+    TextView attrName, attrAvgRating, labelMinutes;
     EditText enterTime;
     RatingBar attrRatingbar;
     ImageButton buttonFav, buttonInfo, buttonMap;
@@ -80,6 +87,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
         barChart = (BarChart) findViewById(R.id.attr_detail_barchart);
 
         enterTime = (EditText) findViewById(R.id.attr_detail_time_edit);
+        labelMinutes = (TextView) findViewById(R.id.attr_detail_label_minutes);
         buttonSave = (Button) findViewById(R.id.attr_detail_button_save_time);
 
         // disable buttons
@@ -94,6 +102,27 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
         //bar chart
         new LoadBarChartDataAsync().execute();
+
+        //check if a user is signed in
+        //if so he is allowed to enter a waitingtime
+        //else not -> view elements are set to invisible
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            enterTime.setVisibility(View.VISIBLE);
+            labelMinutes.setVisibility(View.VISIBLE);
+            buttonSave.setVisibility(View.VISIBLE);
+
+            //checks if user is allowed to enter a new waitingtime
+            new CheckWaitingtimeAllowedAsync().execute();
+
+        } else {
+            // No user is signed in
+            enterTime.setVisibility(View.INVISIBLE);
+            labelMinutes.setVisibility(View.INVISIBLE);
+            buttonSave.setVisibility(View.INVISIBLE);
+        }
+
 
         buttonFav.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +158,18 @@ public class AttractionDetailViewActivity extends BaseActivity {
             }
         });
 
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO check for illegal character in entered time
+
+                wt = new WaitingTime(attrID, user.getDisplayName(), user.getUid(),
+                        Integer.parseInt(enterTime.getText().toString()));
+
+                new CreateWaitingTimeAsync().execute();
+            }
+        });
+
         buttonMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,36 +178,6 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 intent.putExtra("lat", attr.getLat());
                 intent.putExtra("name", attr.getName());
                 startActivity(intent);
-
-                /* das hier würde ich weg lassen, weil wir jetzt ja nicht weiterleiten
-
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-
-                                Intent intent = new Intent(getBaseContext(), MapViewActivity.class);
-                                intent.putExtra("lon", attr.getLon());
-                                intent.putExtra("lat", attr.getLat());
-                                intent.putExtra("name", attr.getName());
-                                startActivity(intent);
-
-
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
-                                break;
-                        }
-                    }
-                };
-
-                //dialog for forwarding to google maps
-                AlertDialog.Builder builder = new AlertDialog.Builder(AttractionDetailViewActivity.this);
-                builder.setMessage("Sie werden jetzt zu Google Maps weitergeleitet").setPositiveButton("OK", dialogClickListener)
-                        .setNegativeButton("Zurück", dialogClickListener).show();
-                */
             }
         });
     }
@@ -292,6 +303,59 @@ public class AttractionDetailViewActivity extends BaseActivity {
             progressBar.hide();
         }
     }
+
+    public class CheckWaitingtimeAllowedAsync extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return new AzureDBManager(AttractionDetailViewActivity.this).isCreateWaitingTimeAllowed(attrID, user.getUid());
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            // check if user has not entered a waiting time within the last our
+
+            if (b == true){
+                //allowed to enter a waiting time
+            } else {
+                enterTime.setText("Gerade nicht möglich...");
+                enterTime.setEnabled(false);
+                buttonSave.setEnabled(false);
+            }
+
+            progressBar.hide();
+        }
+    }
+
+    public class CreateWaitingTimeAsync extends AsyncTask<Void, Void, WaitingTime> {
+
+        @Override
+        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.show();
+        }
+
+        @Override
+        protected WaitingTime doInBackground(Void... params) {
+            return new AzureDBManager(AttractionDetailViewActivity.this).createWaitingTime(wt);
+        }
+
+        @Override
+        protected void onPostExecute(WaitingTime w) {
+            if (w == null) {
+                Log.e("", "CreateWaitingTimeAsync.onPostExecute: w was null!");
+            } else {
+                Toast.makeText(AttractionDetailViewActivity.this, "Wartezeit eingetragen", Toast.LENGTH_SHORT).show();
+            }
+
+
+            progressBar.hide();
+        }
+    }
+
+
 
 
 }
