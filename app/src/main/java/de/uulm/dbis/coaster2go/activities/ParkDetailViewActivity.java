@@ -1,6 +1,7 @@
 package de.uulm.dbis.coaster2go.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,12 +18,14 @@ import java.text.DecimalFormat;
 
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
+import de.uulm.dbis.coaster2go.data.JsonManager;
 import de.uulm.dbis.coaster2go.data.Park;
 
 public class ParkDetailViewActivity extends BaseActivity {
 
     private String parkId;
     private Park park;
+    private boolean isFave = false;
 
     TextView parkName, parkLocation, parkRatingAvg, parkDescription;
     RatingBar ratingBar;
@@ -55,6 +58,9 @@ public class ParkDetailViewActivity extends BaseActivity {
         //get all data from db and fill in all information
         new LoadParkAsync().execute();
 
+        //get favorite information and set the button
+        new LoadFaveAsync().execute();
+
         buttonAttractions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +89,7 @@ public class ParkDetailViewActivity extends BaseActivity {
         buttonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO save park as favorite
+                new SetFaveAsync().execute();
             }
         });
 
@@ -142,6 +148,51 @@ public class ParkDetailViewActivity extends BaseActivity {
                 buttonFav.setEnabled(true);
             }
             progressBar.hide();
+        }
+    }
+
+    public class LoadFaveAsync extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return new JsonManager(ParkDetailViewActivity.this).isParkFavorite(parkId);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            if(b){
+                buttonFav.setBackgroundColor(Color.RED);
+                isFave = true;
+            }else{
+                buttonFav.setBackgroundColor(Color.TRANSPARENT);
+                isFave = false;
+            }
+        }
+    }
+
+    public class SetFaveAsync extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            if(isFave){
+                return new JsonManager(ParkDetailViewActivity.this).deleteParkFromFavorites(parkId);
+            }else{
+                return new JsonManager(ParkDetailViewActivity.this).putIntoParkFavorites(parkId);
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            if(b){
+                if(!isFave){
+                    buttonFav.setBackgroundColor(Color.RED);
+                    isFave = true;
+                }else{
+                    buttonFav.setBackgroundColor(Color.TRANSPARENT);
+                    isFave = false;
+                }
+            }else{
+                Log.e("", "Put Park into favorites didn't work!");
+            }
         }
     }
 

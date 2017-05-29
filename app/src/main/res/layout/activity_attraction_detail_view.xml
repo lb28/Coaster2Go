@@ -121,6 +121,7 @@
                     android:src="@android:color/transparent"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:elevation="0dp"
                     android:onClick="goToWaitingTimeOverview"/>
 
                 <TextView
@@ -151,6 +152,7 @@
                     android:src="@android:color/transparent"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:elevation="0dp"
                     android:onClick="goToWaitingTimeOverview"/>
 
                 <TextView
@@ -181,6 +183,7 @@
                     android:src="@android:color/transparent"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:elevation="0dp"
                     android:onClick="goToWaitingTimeOverview"/>
 
                 <TextView

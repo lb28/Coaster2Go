@@ -10,6 +10,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +22,128 @@ import java.util.List;
 public class JsonManager {
     private static final String JSON_FILENAME_PARKS = "parks.json";
     private static final String JSON_FILENAME_ATTRACTIONS = "_attractions.json";
+    private static final String JSON_FILENAME_PARKS_FAVORITES ="parks_favorites.json";
+    private static final String JSON_FILENAME_ATTRACTIONS_FAVORITES ="attractions_favorites.json";
     private Context context;
 
     public JsonManager(Context context){
         this.context = context;
+    }
+
+    /**Returns true if the Park with the given Id is in the Favorites
+     *
+     * @param parkId .
+     * @return true if Park is favorite.
+     */
+    public boolean isParkFavorite(String parkId){
+        JSONObject jsonObj;
+        JSONArray parks;
+        try {
+            jsonObj = readParkJSONFromFile(JSON_FILENAME_PARKS_FAVORITES);
+            if (jsonObj == null) return false;
+            parks = jsonObj.getJSONArray("parks");
+            for (int i = 0; i < parks.length(); i++) {
+                String id = parks.getString(i);
+                if(id.equals(parkId)) return true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /** Puts a Park into the Fave List
+     *
+     * @param parkId .
+     * @return true if successful
+     */
+    public boolean putIntoParkFavorites(String parkId){
+        if(isParkFavorite(parkId)) return false;
+        JSONObject jsonObj, resultObj;
+        JSONArray parks;
+        jsonObj = readParkJSONFromFile(JSON_FILENAME_PARKS_FAVORITES);
+        try{
+            if(jsonObj == null){
+                jsonObj = new JSONObject();
+                parks = new JSONArray();
+                parks.put(parkId);
+                jsonObj.put("parks", parks);
+                return saveJSONToFile(jsonObj, JSON_FILENAME_PARKS_FAVORITES);
+            }else{
+                parks = jsonObj.getJSONArray("parks");
+                parks.put(parkId);
+                resultObj = new JSONObject();
+                resultObj.put("parks", parks);
+                return saveJSONToFile(resultObj, JSON_FILENAME_PARKS_FAVORITES);
+            }
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+
+
+        return false;
+    }
+
+    /** Deletes a Park from the Fave List
+     *
+     * @param parkId .
+     * @return true if successful
+     */
+    public boolean deleteParkFromFavorites(String parkId){
+        JSONObject jsonObj, resultObj;
+        JSONArray parks, resultParks;
+        jsonObj = readParkJSONFromFile(JSON_FILENAME_PARKS_FAVORITES);
+        try{
+            if(jsonObj == null){
+                return false;
+            }else{
+                parks = jsonObj.getJSONArray("parks");
+                resultObj = new JSONObject();
+                resultParks = new JSONArray();
+                for(int i = 0; i < parks.length(); i++){
+                    String id = parks.getString(i);
+                    if(!id.equals((parkId))){
+                        resultParks.put(id);
+                    }
+                }
+                resultObj.put("parks", resultParks);
+                return saveJSONToFile(resultObj, JSON_FILENAME_PARKS_FAVORITES);
+            }
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /** Gives back a List with all Park Favorites of the User.
+     *
+     * @param parkList current ParkList
+     * @return parkList of Favorites
+     */
+    public List<Park> getFavoriteParks(List<Park> parkList){
+        List<Park> resultList = new ArrayList<Park>();
+        if(parkList == null || parkList.isEmpty()){
+            return resultList;
+        }
+        JSONObject jsonObj;
+        JSONArray parks;
+        try{
+            jsonObj = readParkJSONFromFile(JSON_FILENAME_PARKS_FAVORITES);
+            if(jsonObj == null) return resultList;
+            parks = jsonObj.getJSONArray("parks");
+            for(int i = 0; i < parks.length(); i++){
+                String parkId = parks.getString(i);
+                for(Park p : parkList){
+                    if(p.getId().equals(parkId)){
+                        resultList.add(p);
+                    }
+                }
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return resultList;
     }
 
     /** Writes the ParkList into as a JSON File

@@ -43,6 +43,7 @@ import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.controller.OnParkItemClickListener;
 import de.uulm.dbis.coaster2go.controller.ParkListAdapter;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
+import de.uulm.dbis.coaster2go.data.JsonManager;
 import de.uulm.dbis.coaster2go.data.Park;
 
 public class ParkOverviewActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -282,7 +283,11 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     R.id.swiperefresh_parkList);
 
             swipeRefreshLayout.setRefreshing(true);
-            new RefreshParksTask().execute();
+            if(getArguments().getString("mode").equals(MODE_FAVS)){
+                new RefreshFaveParksTask().execute();
+            }else{
+                new RefreshParksTask().execute();
+            }
 
             List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
 
@@ -335,7 +340,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(
                     R.id.recyclerViewParkList);
             textView.setText("mode: " + getArguments().getString("mode")); // for testing
-            // TODO use mode to load different list
+
             recyclerView.setAdapter(parkListAdapter);
             // Set layout manager to position the items
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -352,7 +357,11 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                 @Override
                 public void onRefresh() {
                     Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
-                    refreshParkList();
+                    if(getArguments().getString("mode").equals(MODE_FAVS)){
+                        refreshParkListFaves();
+                    }else{
+                        refreshParkList();
+                    }
                 }
             });
 
@@ -379,6 +388,29 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             protected void onPostExecute(List<Park> parkList) {
                 if (parkList == null) {
                     Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                } else {
+                    parkListAdapter.setParkList(parkList);
+                    parkListAdapter.notifyDataSetChanged();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }
+
+        void refreshParkListFaves(){
+            new RefreshFaveParksTask().execute();
+        }
+
+        class RefreshFaveParksTask extends AsyncTask<Void, Void, List<Park>> {
+
+            @Override
+            protected List<Park> doInBackground(Void... params) {
+                return new JsonManager(getContext()).getFavoriteParks(new AzureDBManager(getContext()).getParkList());
+            }
+
+            @Override
+            protected void onPostExecute(List<Park> parkList) {
+                if (parkList == null) {
+                    Log.e(TAG, "RefreshFavesParksTask.onPostExecute: parkList was null!");
                 } else {
                     parkListAdapter.setParkList(parkList);
                     parkListAdapter.notifyDataSetChanged();
