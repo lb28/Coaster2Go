@@ -184,10 +184,10 @@ public class ParkDetailViewActivity extends BaseActivity {
         protected void onPostExecute(Boolean b) {
             if(b){
                 if(!isFave){
-                    buttonFav.setBackgroundColor(Color.RED);
+                    buttonFav.setImageResource(R.drawable.ic_favorite_red_24dp);
                     isFave = true;
                 }else{
-                    buttonFav.setBackgroundColor(Color.TRANSPARENT);
+                    buttonFav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     isFave = false;
                 }
             }else{
