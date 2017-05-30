@@ -146,6 +146,192 @@ public class JsonManager {
         return resultList;
     }
 
+    /**Returns true if the Attraction with the given Id is in the Favorites
+     *
+     * @param parkId .
+     * @param attractionId .
+     * @return true if Attraction is favorite.
+     */
+    public boolean isAttractionFavorite(String parkId, String attractionId){
+        JSONObject jsonObj;
+        JSONArray parks;
+        try {
+            jsonObj = readParkJSONFromFile(JSON_FILENAME_ATTRACTIONS_FAVORITES);
+            if (jsonObj == null) return false;
+            parks = jsonObj.getJSONArray("parks");
+            for (int i = 0; i < parks.length(); i++) {
+                JSONObject park = parks.getJSONObject(i);
+                String id = park.getString("parkId");
+                if(id.equals(parkId)){
+                    JSONArray favorites = park.getJSONArray("favorites");
+                    for(int j = 0; j < favorites.length(); j++){
+                        if(favorites.getString(j).equals(attractionId)){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /** Puts an Attraction into the Fave List
+     *
+     * @param parkId .
+     * @param attractionId .
+     * @return true if successful
+     */
+    public boolean putIntoAttractionFavorites(String parkId, String attractionId){
+        if(isAttractionFavorite(parkId, attractionId)) return false;
+        JSONObject jsonObj;
+        JSONArray parks;
+        jsonObj = readParkJSONFromFile(JSON_FILENAME_ATTRACTIONS_FAVORITES);
+        try{
+            if(jsonObj == null){
+                //No Favorite so far
+                jsonObj = new JSONObject();
+                parks = new JSONArray();
+                JSONObject park = new JSONObject();
+                park.put("parkId", parkId);
+                JSONArray favorites = new JSONArray();
+                favorites.put(attractionId);
+                park.put("favorites", favorites);
+                parks.put(park);
+                jsonObj.put("parks", parks);
+                return saveJSONToFile(jsonObj, JSON_FILENAME_ATTRACTIONS_FAVORITES);
+            }else{
+                //Favoritess of this park already there
+                parks = jsonObj.getJSONArray("parks");
+                for(int i = 0; i < parks.length(); i++){
+                    JSONObject park = parks.getJSONObject(i);
+                    if(park.getString("parkId").equals(parkId)){
+                        JSONArray favorites = park.getJSONArray("favorites");
+                        favorites.put(parkId);
+
+                        park.remove("favorites");
+                        park.put("favorites", favorites);
+                        JSONArray resultParks = new JSONArray();
+                        for(int j = 0; j < parks.length(); j++){
+                            if(i == j){
+                                resultParks.put(park);
+                            }else{
+                                resultParks.put(parks.get(i));
+                            }
+                        }
+                        jsonObj.remove("parks");
+                        jsonObj.put("parks", parks);
+
+                        return saveJSONToFile(jsonObj, JSON_FILENAME_ATTRACTIONS_FAVORITES);
+                    }
+                }
+                //Favorites already there but not for this Park
+                JSONObject resultPark = new JSONObject();
+                resultPark.put("parkId", parkId);
+                JSONArray favorites = new JSONArray();
+                favorites.put(attractionId);
+                resultPark.put("favorites", favorites);
+                parks.put(resultPark);
+                jsonObj.remove("parks");
+                jsonObj.put("parks", parks);
+                return saveJSONToFile(jsonObj, JSON_FILENAME_ATTRACTIONS_FAVORITES);
+            }
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /** Deletes an Attraction from the Fave List
+     *
+     * @param parkId .
+     * @param attractionId .
+     * @return true if successful
+     */
+    public boolean deleteAttractionFromFavorites(String parkId, String attractionId){
+        JSONObject jsonObj, resultObj;
+        JSONArray parks, resultParks;
+        jsonObj = readParkJSONFromFile(JSON_FILENAME_ATTRACTIONS_FAVORITES);
+        try{
+            if(jsonObj == null){
+                return false;
+            }else{
+                parks = jsonObj.getJSONArray("parks");
+                resultObj = new JSONObject();
+                resultParks = new JSONArray();
+                for(int i = 0; i < parks.length(); i++){
+                    JSONObject park = parks.getJSONObject(i);
+                    if(park.getString("parkId").equals(parkId)){
+                        JSONArray favorites = park.getJSONArray("favorites");
+                        JSONArray resultFavorites = new JSONArray();
+                        for(int j = 0; j < favorites.length(); j++){
+                            if(!favorites.getString(i).equals(attractionId)){
+                                resultFavorites.put(favorites.getString(i));
+                            }
+                        }
+                        park.remove("favorites");
+                        park.put("favorites", resultFavorites);
+
+                        resultParks = new JSONArray();
+                        for(int j = 0; j < parks.length(); j++){
+                            if(i == j){
+                                resultParks.put(park);
+                            }else{
+                                resultParks.put(parks.get(i));
+                            }
+                        }
+                        jsonObj.remove("parks");
+                        jsonObj.put("parks", parks);
+
+                        return saveJSONToFile(jsonObj, JSON_FILENAME_ATTRACTIONS_FAVORITES);
+                    }
+
+
+                }
+            }
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /** Gives back a List with all Attraction Favorites of the User.
+     *
+     * @param parkId .
+     * @param attractionList current attractionList
+     * @return parkList of Favorites
+     */
+    public List<Attraction> getFavoriteAttractions(String parkId, List<Attraction> attractionList){
+        List<Attraction> resultList = new ArrayList<Attraction>();
+        if(attractionList == null || attractionList.isEmpty()){
+            return resultList;
+        }
+        JSONObject jsonObj;
+        JSONArray parks;
+        try{
+            jsonObj = readParkJSONFromFile(JSON_FILENAME_ATTRACTIONS_FAVORITES);
+            if(jsonObj == null) return resultList;
+            parks = jsonObj.getJSONArray("parks");
+            for(int i = 0; i < parks.length(); i++){
+                if(parks.getJSONObject(i).getString("parkId").equals(parkId)){
+                    JSONArray favorites = parks.getJSONObject(i).getJSONArray("favorites");
+                    for(int j = 0; j < favorites.length(); j++){
+                        for(Attraction att : attractionList){
+                            if(att.getId().equals(favorites.getString(j))){
+                                resultList.add(att);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return resultList;
+    }
+
     /** Writes the ParkList into as a JSON File
      *
      * @param parkList ParkList

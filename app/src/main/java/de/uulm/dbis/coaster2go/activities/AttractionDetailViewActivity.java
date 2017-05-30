@@ -37,6 +37,7 @@ import java.util.HashMap;
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
+import de.uulm.dbis.coaster2go.data.JsonManager;
 import de.uulm.dbis.coaster2go.data.Park;
 import de.uulm.dbis.coaster2go.data.WaitingTime;
 
@@ -45,12 +46,15 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
     private static final String TAG = AttractionDetailViewActivity.class.getSimpleName();
     private String attrID;
+    private String parkId;
     private Attraction attr;
     private FirebaseUser user;
 
     private WaitingTime wt;
 
     private HashMap<Integer, Integer> hashMap;
+
+    private boolean isFave = false;
 
     ImageView attrImage;
     TextView attrName, attrAvgRating, labelMinutes;
@@ -129,7 +133,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
         buttonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO favorites
+                new SetFaveAsync().execute();
             }
         });
 
@@ -209,7 +213,9 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
         @Override
         protected Attraction doInBackground(Void... params) {
-            return new AzureDBManager(AttractionDetailViewActivity.this).getAttractionById(attrID);
+            //Load offline data because it got updated right before in the Attraction Overview:
+            //return new AzureDBManager(AttractionDetailViewActivity.this).getAttractionById(attrID);
+            return new JsonManager(AttractionDetailViewActivity.this).getAttractionById(attrID);
         }
 
         @Override
@@ -218,6 +224,8 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 Log.e("", "LoadAttrAsync.onPostExecute: Attraction was null!");
             } else {
                 attr = attr2;
+                parkId = attr.getParkId();
+                new LoadFaveAsync().execute();
                 Picasso.with(AttractionDetailViewActivity.this).load(attr2.getImage()).into(attrImage);
                 attrName.setText(attr2.getName());
                 attrRatingbar.setRating((float) attr2.getAverageReview());
@@ -363,7 +371,50 @@ public class AttractionDetailViewActivity extends BaseActivity {
         }
     }
 
+    public class LoadFaveAsync extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return new JsonManager(AttractionDetailViewActivity.this).isAttractionFavorite(parkId, attrID);
+        }
 
+        @Override
+        protected void onPostExecute(Boolean b) {
+            if(b){
+                buttonFav.setBackgroundColor(Color.RED);
+                isFave = true;
+            }else{
+                buttonFav.setBackgroundColor(Color.TRANSPARENT);
+                isFave = false;
+            }
+        }
+    }
+
+    public class SetFaveAsync extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            if(isFave){
+                return new JsonManager(AttractionDetailViewActivity.this).deleteAttractionFromFavorites(parkId, attrID);
+            }else{
+                return new JsonManager(AttractionDetailViewActivity.this).putIntoAttractionFavorites(parkId, attrID);
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            if(b){
+                if(!isFave){
+                    buttonFav.setBackgroundColor(Color.RED);
+                    isFave = true;
+                }else{
+                    buttonFav.setBackgroundColor(Color.TRANSPARENT);
+                    isFave = false;
+                }
+            }else{
+                Log.e("", "Put Attraction into favorites didn't work!");
+            }
+        }
+    }
 
 
 }

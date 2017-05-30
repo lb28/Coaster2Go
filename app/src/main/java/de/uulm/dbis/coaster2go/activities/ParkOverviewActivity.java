@@ -284,9 +284,9 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
             swipeRefreshLayout.setRefreshing(true);
             if(getArguments().getString("mode").equals(MODE_FAVS)){
-                new RefreshFaveParksTask().execute();
+                refreshParkListFaves();
             }else{
-                new RefreshParksTask().execute();
+                refreshParkList();
             }
 
             List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
@@ -374,7 +374,28 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         }
 
         void refreshParkList() {
+            //Load offline data first because it is faster, then online data
+            new RefreshParksOfflineTask().execute();
             new RefreshParksTask().execute();
+        }
+
+        class RefreshParksOfflineTask extends AsyncTask<Void, Void, List<Park>> {
+
+            @Override
+            protected List<Park> doInBackground(Void... params) {
+                return new JsonManager((getContext())).getParkList();
+            }
+
+            @Override
+            protected void onPostExecute(List<Park> parkList) {
+                if (parkList == null) {
+                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                } else {
+                    parkListAdapter.setParkList(parkList);
+                    parkListAdapter.notifyDataSetChanged();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
 
         class RefreshParksTask extends AsyncTask<Void, Void, List<Park>> {
@@ -397,7 +418,28 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         }
 
         void refreshParkListFaves(){
+            //Load offline data first because it is faster, then online data
+            new RefreshFaveParksOfflineTask().execute();
             new RefreshFaveParksTask().execute();
+        }
+
+        class RefreshFaveParksOfflineTask extends AsyncTask<Void, Void, List<Park>> {
+
+            @Override
+            protected List<Park> doInBackground(Void... params) {
+                return new JsonManager(getContext()).getFavoriteParks(new JsonManager(getContext()).getParkList());
+            }
+
+            @Override
+            protected void onPostExecute(List<Park> parkList) {
+                if (parkList == null) {
+                    Log.e(TAG, "RefreshFavesParksTask.onPostExecute: parkList was null!");
+                } else {
+                    parkListAdapter.setParkList(parkList);
+                    parkListAdapter.notifyDataSetChanged();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
 
         class RefreshFaveParksTask extends AsyncTask<Void, Void, List<Park>> {
