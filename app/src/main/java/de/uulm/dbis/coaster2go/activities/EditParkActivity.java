@@ -88,6 +88,11 @@ public class EditParkActivity extends BaseActivity {
         builder.setTitle(R.string.add_park_image);
         final EditText editTextParkImageUrl = new EditText(this);
         editTextParkImageUrl.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
+
+        if (parkImageUrl != null) {
+            editTextParkImageUrl.setText(parkImageUrl);
+        }
+
         builder.setView(editTextParkImageUrl);
 
         // Set up the buttons

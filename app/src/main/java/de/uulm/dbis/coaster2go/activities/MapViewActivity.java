@@ -2,10 +2,10 @@ package de.uulm.dbis.coaster2go.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,9 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.uulm.dbis.coaster2go.R;
@@ -25,6 +23,7 @@ public class MapViewActivity extends BaseActivity
         implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int RC_PERM_GPS = 502;
+    private static final String TAG = "MapViewActivity";
     MapView mapView;
     LatLng latLngMarker;
     String name;
@@ -37,6 +36,14 @@ public class MapViewActivity extends BaseActivity
         setContentView(R.layout.activity_map_view);
 
         drawerToggle.setDrawerIndicatorEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSupportNavigateUp();
+            }
+        });
 
         progressBar.setVisibility(View.VISIBLE);
         progressBar.show();
@@ -56,6 +63,11 @@ public class MapViewActivity extends BaseActivity
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        Log.i(TAG, "onSupportNavigateUp: button pressed");
+        return super.onSupportNavigateUp();
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

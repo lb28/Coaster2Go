@@ -28,6 +28,8 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         RATING, NAME, DISTANCE
     }
 
+    private SortMode currentSortMode;
+
     // TODO implement SortedList?
     // private SortedList<Park> parkList;
 
@@ -159,6 +161,9 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
             default:
                 break;
         }
+
+        // remember the new sort mode
+        currentSortMode = mode;
     }
 
     private class RatingComparator implements Comparator<Park> {
@@ -206,6 +211,9 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
 
     public void setParkList(List<Park> parkList) {
         this.parkList = parkList;
+        if (currentSortMode != null) {
+            changeSort(currentSortMode);
+        }
     }
 
     public Location getLastLocation() {

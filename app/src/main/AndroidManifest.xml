@@ -55,8 +55,7 @@
             android:parentActivityName=".activities.ParkOverviewActivity" />
         <activity
             android:name=".activities.MyAccountActivity"
-            android:label="@string/my_account"
-            android:parentActivityName=".activities.ParkOverviewActivity" />
+            android:label="@string/my_account" />
         <activity
             android:name=".activities.AttractionOverviewActivity"
             android:label="@string/title_activity_attraction_overview" />
@@ -70,7 +69,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.WaitingTimesActivity"></activity>
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.MapViewActivity"></activity>
+        <activity android:name=".activities.MapViewActivity"
+            android:parentActivityName=".activities.EditParkActivity"/>
     </application>
 
 </manifest>

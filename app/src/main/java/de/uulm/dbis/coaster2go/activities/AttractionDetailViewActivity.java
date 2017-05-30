@@ -1,16 +1,13 @@
 package de.uulm.dbis.coaster2go.activities;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +18,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.ui.User;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -38,7 +34,6 @@ import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.JsonManager;
-import de.uulm.dbis.coaster2go.data.Park;
 import de.uulm.dbis.coaster2go.data.WaitingTime;
 
 
@@ -380,10 +375,10 @@ public class AttractionDetailViewActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Boolean b) {
             if(b){
-                buttonFav.setBackgroundColor(Color.RED);
+                buttonFav.setImageResource(R.drawable.ic_favorite_red_24dp);
                 isFave = true;
             }else{
-                buttonFav.setBackgroundColor(Color.TRANSPARENT);
+                buttonFav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                 isFave = false;
             }
         }
@@ -404,10 +399,10 @@ public class AttractionDetailViewActivity extends BaseActivity {
         protected void onPostExecute(Boolean b) {
             if(b){
                 if(!isFave){
-                    buttonFav.setBackgroundColor(Color.RED);
+                    buttonFav.setImageResource(R.drawable.ic_favorite_red_24dp);
                     isFave = true;
                 }else{
-                    buttonFav.setBackgroundColor(Color.TRANSPARENT);
+                    buttonFav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     isFave = false;
                 }
             }else{

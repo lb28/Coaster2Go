@@ -1,7 +1,6 @@
 package de.uulm.dbis.coaster2go.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +16,6 @@ import com.squareup.picasso.Picasso;
 import java.text.DecimalFormat;
 
 import de.uulm.dbis.coaster2go.R;
-import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.JsonManager;
 import de.uulm.dbis.coaster2go.data.Park;
 
@@ -162,10 +160,10 @@ public class ParkDetailViewActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Boolean b) {
             if(b){
-                buttonFav.setBackgroundColor(Color.RED);
+                buttonFav.setImageResource(R.drawable.ic_favorite_red_24dp);
                 isFave = true;
             }else{
-                buttonFav.setBackgroundColor(Color.TRANSPARENT);
+                buttonFav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                 isFave = false;
             }
         }

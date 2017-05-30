@@ -1,36 +1,36 @@
 package de.uulm.dbis.coaster2go.activities;
 
-        import android.content.Intent;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
-        import android.support.design.widget.Snackbar;
-        import android.support.design.widget.TabLayout;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentManager;
-        import android.support.v4.app.FragmentPagerAdapter;
-        import android.support.v4.view.ViewPager;
-        import android.support.v4.widget.SwipeRefreshLayout;
-        import android.support.v7.widget.DividerItemDecoration;
-        import android.support.v7.widget.LinearLayoutManager;
-        import android.support.v7.widget.RecyclerView;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.support.v7.widget.Toolbar;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.ViewGroup;
-        import android.widget.TextView;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-        import de.uulm.dbis.coaster2go.controller.AttractionListAdapter;
-        import de.uulm.dbis.coaster2go.controller.OnAttractionItemClickListener;
-        import de.uulm.dbis.coaster2go.R;
-        import de.uulm.dbis.coaster2go.data.Attraction;
-        import de.uulm.dbis.coaster2go.data.AzureDBManager;
-        import de.uulm.dbis.coaster2go.data.JsonManager;
+import de.uulm.dbis.coaster2go.R;
+import de.uulm.dbis.coaster2go.controller.AttractionListAdapter;
+import de.uulm.dbis.coaster2go.controller.OnAttractionItemClickListener;
+import de.uulm.dbis.coaster2go.data.Attraction;
+import de.uulm.dbis.coaster2go.data.AzureDBManager;
+import de.uulm.dbis.coaster2go.data.JsonManager;
 
 public class AttractionOverviewActivity extends BaseActivity {
 
@@ -112,6 +112,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                 changeAttractionListSort(AttractionListAdapter.SortMode.WAIT_TIME);
                 return  true;
             case R.id.action_refresh:
+                refreshAttractionList();
                 return true;
         }
 
@@ -125,6 +126,13 @@ public class AttractionOverviewActivity extends BaseActivity {
         AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
         if (currentFragment != null && currentFragment.attractionListAdapter != null) {
             currentFragment.attractionListAdapter.changeSort(sortMode);
+        }
+    }
+
+    public void refreshAttractionList() {
+        AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        if (currentFragment != null && currentFragment.attractionListAdapter != null) {
+            currentFragment.refreshAttrList();
         }
     }
 
@@ -173,11 +181,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh_parkList);
 
             swipeRefresh.setRefreshing(true);
-            if(getArguments().getString("mode").equals(MODE_FAVS)){
-                refreshAttrListFaves();
-            }else{
-                refreshAttrList();
-            }
+            refreshAttrList();
 
             List<Attraction> attractionList = new ArrayList<>(); // empty list before it is loaded
 
@@ -206,7 +210,6 @@ public class AttractionOverviewActivity extends BaseActivity {
             swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
                     refreshAttrList();
                 }
             });
@@ -214,12 +217,15 @@ public class AttractionOverviewActivity extends BaseActivity {
             return rootView;
         }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            return super.onOptionsItemSelected(item);
+        void refreshAttrList() {
+            if(getArguments().getString("mode").equals(MODE_FAVS)){
+                refreshAttrListFaves();
+            }else{
+                refreshAttrListAll();
+            }
         }
 
-        void refreshAttrList() {
+        void refreshAttrListAll() {
             //Load offline data first because it is faster, then online data
             new RefreshAttractionsOfflineTask().execute();
             new RefreshAttractionsTask().execute();

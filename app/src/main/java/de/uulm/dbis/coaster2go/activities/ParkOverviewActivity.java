@@ -49,8 +49,8 @@ import de.uulm.dbis.coaster2go.data.Park;
 public class ParkOverviewActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "ParkOverviewActivity";
-    public static final String MODE_ALL = "all";
-    public static final String MODE_FAVS = "favs";
+    public static final String MODE_ALL = "MODE_ALL";
+    public static final String MODE_FAVS = "MODE_FAVS";
     private static final int RC_PERM_GPS = 502;
 
     private SectionsPagerAdapter tabsPagerAdapter;
@@ -170,12 +170,14 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         }
     }
 
-    private void notifyParkDeleted(Park park) {
+    private void deleteParkGui(Park park) {
         ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
         if (currentFragment != null && currentFragment.parkListAdapter != null) {
             int pos = currentFragment.parkListAdapter.getPositionOf(park);
             if (pos != -1) {
                 currentFragment.parkListAdapter.removeAt(pos);
+            } else {
+                Log.e(TAG, "deleteParkGui: park not in list = -1");
             }
         }
     }
@@ -283,11 +285,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     R.id.swiperefresh_parkList);
 
             swipeRefreshLayout.setRefreshing(true);
-            if(getArguments().getString("mode").equals(MODE_FAVS)){
-                refreshParkListFaves();
-            }else{
-                refreshParkList();
-            }
+            refreshParkList();
 
             List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
 
@@ -357,26 +355,31 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                 @Override
                 public void onRefresh() {
                     Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
-                    if(getArguments().getString("mode").equals(MODE_FAVS)){
-                        refreshParkListFaves();
-                    }else{
-                        refreshParkList();
-                    }
+                    refreshParkList();
                 }
             });
 
             return rootView;
         }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            return super.onOptionsItemSelected(item);
+        void refreshParkList() {
+            if(getArguments().getString("mode").equals(MODE_FAVS)){
+                refreshParkListFaves();
+            }else{
+                refreshParkListAll();
+            }
         }
 
-        void refreshParkList() {
+        void refreshParkListAll() {
             //Load offline data first because it is faster, then online data
             new RefreshParksOfflineTask().execute();
             new RefreshParksTask().execute();
+        }
+
+        void refreshParkListFaves(){
+            //Load offline data first because it is faster, then online data
+            new RefreshFaveParksOfflineTask().execute();
+            new RefreshFaveParksTask().execute();
         }
 
         class RefreshParksOfflineTask extends AsyncTask<Void, Void, List<Park>> {
@@ -415,12 +418,6 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
-        }
-
-        void refreshParkListFaves(){
-            //Load offline data first because it is faster, then online data
-            new RefreshFaveParksOfflineTask().execute();
-            new RefreshFaveParksTask().execute();
         }
 
         class RefreshFaveParksOfflineTask extends AsyncTask<Void, Void, List<Park>> {
@@ -549,7 +546,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                         "Löschen Fehlgeschlagen", Snackbar.LENGTH_SHORT).show();
             } else {
                 // update the view
-                notifyParkDeleted(deletedPark);
+                deleteParkGui(deletedPark);
             }
 
         }
