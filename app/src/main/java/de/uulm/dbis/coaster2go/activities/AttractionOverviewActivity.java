@@ -30,6 +30,7 @@ package de.uulm.dbis.coaster2go.activities;
         import de.uulm.dbis.coaster2go.R;
         import de.uulm.dbis.coaster2go.data.Attraction;
         import de.uulm.dbis.coaster2go.data.AzureDBManager;
+        import de.uulm.dbis.coaster2go.data.JsonManager;
 
 public class AttractionOverviewActivity extends BaseActivity {
 
@@ -172,7 +173,11 @@ public class AttractionOverviewActivity extends BaseActivity {
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh_parkList);
 
             swipeRefresh.setRefreshing(true);
-            new RefreshAttractionsTask().execute();
+            if(getArguments().getString("mode").equals(MODE_FAVS)){
+                refreshAttrListFaves();
+            }else{
+                refreshAttrList();
+            }
 
             List<Attraction> attractionList = new ArrayList<>(); // empty list before it is loaded
 
@@ -215,7 +220,29 @@ public class AttractionOverviewActivity extends BaseActivity {
         }
 
         void refreshAttrList() {
+            //Load offline data first because it is faster, then online data
+            new RefreshAttractionsOfflineTask().execute();
             new RefreshAttractionsTask().execute();
+        }
+
+        public class RefreshAttractionsOfflineTask extends AsyncTask<Void, Void, List<Attraction>> {
+
+            @Override
+            protected List<Attraction> doInBackground(Void... params) {
+                String parkId = getArguments().getString("parkId");
+                return new JsonManager(getContext()).getAttractionList(parkId);
+            }
+
+            @Override
+            protected void onPostExecute(List<Attraction> attractionList) {
+                if (attractionList == null) {
+                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                } else {
+                    attractionListAdapter.setAttractionList(attractionList);
+                    attractionListAdapter.notifyDataSetChanged();
+                }
+                swipeRefresh.setRefreshing(false);
+            }
         }
 
         public class RefreshAttractionsTask extends AsyncTask<Void, Void, List<Attraction>> {
@@ -237,7 +264,55 @@ public class AttractionOverviewActivity extends BaseActivity {
                 swipeRefresh.setRefreshing(false);
             }
         }
+
+        void refreshAttrListFaves() {
+            //Load offline data first because it is faster, then online data
+            new RefreshAttractionsFavesOfflineTask().execute();
+            new RefreshAttractionsFavesTask().execute();
+        }
+
+        public class RefreshAttractionsFavesOfflineTask extends AsyncTask<Void, Void, List<Attraction>> {
+
+            @Override
+            protected List<Attraction> doInBackground(Void... params) {
+                String parkId = getArguments().getString("parkId");
+                return new JsonManager(getContext()).getFavoriteAttractions(parkId, new JsonManager(getContext()).getAttractionList(parkId));
+            }
+
+            @Override
+            protected void onPostExecute(List<Attraction> attractionList) {
+                if (attractionList == null) {
+                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                } else {
+                    attractionListAdapter.setAttractionList(attractionList);
+                    attractionListAdapter.notifyDataSetChanged();
+                }
+                swipeRefresh.setRefreshing(false);
+            }
+        }
+
+        public class RefreshAttractionsFavesTask extends AsyncTask<Void, Void, List<Attraction>> {
+
+            @Override
+            protected List<Attraction> doInBackground(Void... params) {
+                String parkId = getArguments().getString("parkId");
+                return new JsonManager(getContext()).getFavoriteAttractions(parkId, new AzureDBManager(getContext()).getAttractionList(parkId));
+            }
+
+            @Override
+            protected void onPostExecute(List<Attraction> attractionList) {
+                if (attractionList == null) {
+                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                } else {
+                    attractionListAdapter.setAttractionList(attractionList);
+                    attractionListAdapter.notifyDataSetChanged();
+                }
+                swipeRefresh.setRefreshing(false);
+            }
+        }
     }
+
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

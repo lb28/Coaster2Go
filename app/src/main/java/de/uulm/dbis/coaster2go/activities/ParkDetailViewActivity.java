@@ -119,7 +119,9 @@ public class ParkDetailViewActivity extends BaseActivity {
 
         @Override
         protected Park doInBackground(Void... params) {
-            return new AzureDBManager(ParkDetailViewActivity.this).getParkById(parkId);
+            //return new AzureDBManager(ParkDetailViewActivity.this).getParkById(parkId);
+            //Load offline data because it got updated right before in the Park Overview:
+            return new JsonManager(ParkDetailViewActivity.this).getParkById(parkId);
         }
 
         @Override
