@@ -373,13 +373,11 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         void refreshParkListAll() {
             //Load offline data first because it is faster, then online data
             new RefreshParksOfflineTask().execute();
-            new RefreshParksTask().execute();
         }
 
         void refreshParkListFaves(){
             //Load offline data first because it is faster, then online data
             new RefreshFaveParksOfflineTask().execute();
-            new RefreshFaveParksTask().execute();
         }
 
         class RefreshParksOfflineTask extends AsyncTask<Void, Void, List<Park>> {
@@ -398,6 +396,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     parkListAdapter.notifyDataSetChanged();
                 }
                 swipeRefreshLayout.setRefreshing(false);
+                new RefreshParksTask().execute(); //Load real onlnie data when offline data is loaded
             }
         }
 
@@ -436,6 +435,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     parkListAdapter.notifyDataSetChanged();
                 }
                 swipeRefreshLayout.setRefreshing(false);
+                new RefreshFaveParksTask().execute(); //Load online data when offline data is loaded
             }
         }
 

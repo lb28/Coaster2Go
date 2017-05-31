@@ -35,11 +35,11 @@
         android:id="@+id/park_detail_view_header_relativelayout">
 
         <ImageButton
+            android:id="@+id/park_detail_button_favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_favorite_border_black_24dp"
-            android:background="@color/tw__solid_white"
-            android:id="@+id/park_detail_button_favorite"/>
+            android:background="@color/tw__transparent"
+            android:src="@drawable/ic_favorite_border_black_24dp" />
 
         <TextView
             android:layout_width="wrap_content"

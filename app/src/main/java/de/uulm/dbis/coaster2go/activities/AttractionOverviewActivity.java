@@ -228,7 +228,6 @@ public class AttractionOverviewActivity extends BaseActivity {
         void refreshAttrListAll() {
             //Load offline data first because it is faster, then online data
             new RefreshAttractionsOfflineTask().execute();
-            new RefreshAttractionsTask().execute();
         }
 
         public class RefreshAttractionsOfflineTask extends AsyncTask<Void, Void, List<Attraction>> {
@@ -248,6 +247,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.notifyDataSetChanged();
                 }
                 swipeRefresh.setRefreshing(false);
+                new RefreshAttractionsTask().execute(); //Load online data when offline data is loaded
             }
         }
 
@@ -274,7 +274,6 @@ public class AttractionOverviewActivity extends BaseActivity {
         void refreshAttrListFaves() {
             //Load offline data first because it is faster, then online data
             new RefreshAttractionsFavesOfflineTask().execute();
-            new RefreshAttractionsFavesTask().execute();
         }
 
         public class RefreshAttractionsFavesOfflineTask extends AsyncTask<Void, Void, List<Attraction>> {
@@ -294,6 +293,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.notifyDataSetChanged();
                 }
                 swipeRefresh.setRefreshing(false);
+                new RefreshAttractionsFavesTask().execute(); //Load online data when offline data is loaded
             }
         }
 

@@ -20,8 +20,6 @@ import de.uulm.dbis.coaster2go.data.*;
 
 public class TestDataActivity extends AppCompatActivity {
     //Daten zur Verwaltung
-    private TextView testText;
-    WaitingTime testTimeZone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +47,8 @@ public class TestDataActivity extends AppCompatActivity {
                 //Fill Database with new WaitingTimes
                 //Important for different Hours in the Statistics
                 //dbExample.fillDatabaseWaitingTimes();
+
+                //System.out.println(new JsonManager(TestDataActivity.this).deleteFile(JsonManager.JSON_FILENAME_ATTRACTIONS_FAVORITES));
 
                 if(dbManager.hasActiveInternetConnection()){
                     System.out.println("Internet connection");

@@ -99,9 +99,6 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
         new LoadAttrAsync().execute();
 
-        //bar chart
-        new LoadBarChartDataAsync().execute();
-
         //check if a user is signed in
         //if so -> allowed to enter a waitingtime
         //if not -> view elements are set to invisible
@@ -220,7 +217,11 @@ public class AttractionDetailViewActivity extends BaseActivity {
             } else {
                 attr = attr2;
                 parkId = attr.getParkId();
+                //fave
                 new LoadFaveAsync().execute();
+                //bar chart
+                new LoadBarChartDataAsync().execute();
+
                 Picasso.with(AttractionDetailViewActivity.this).load(attr2.getImage()).into(attrImage);
                 attrName.setText(attr2.getName());
                 attrRatingbar.setRating((float) attr2.getAverageReview());
