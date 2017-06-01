@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -159,14 +160,18 @@ public class AttractionDetailViewActivity extends BaseActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO check for illegal character in entered time
+                try {
+                    wt = new WaitingTime(attrID, user.getDisplayName(), user.getUid(),
+                            Integer.parseInt(enterTime.getText().toString()));
 
-                wt = new WaitingTime(attrID, user.getDisplayName(), user.getUid(),
-                        Integer.parseInt(enterTime.getText().toString()));
+                    //create a new waiting time with the entered minutes
+                    //then set the gui elements disabled
+                    new CreateWaitingTimeAsync().execute();
+                } catch (NumberFormatException nfe) {
+                    Snackbar.make(findViewById(R.id.coordinatorLayout_AttrDetailview),
+                            "Geben Sie eine gültige Zahl ein", Snackbar.LENGTH_SHORT);
+                }
 
-                //create a new waiting time with the entered minutes
-                //then set the gui elements disabled
-                new CreateWaitingTimeAsync().execute();
             }
         });
 

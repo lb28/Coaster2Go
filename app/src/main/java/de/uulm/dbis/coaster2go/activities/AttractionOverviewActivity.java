@@ -99,8 +99,7 @@ public class AttractionOverviewActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        // TODO handle menu item clicks
-
+        // handle menu item clicks
         switch (id) {
             case R.id.action_sort_abc:
                 changeAttractionListSort(AttractionListAdapter.SortMode.NAME);

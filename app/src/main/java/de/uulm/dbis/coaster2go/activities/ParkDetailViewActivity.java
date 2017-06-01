@@ -3,6 +3,7 @@ package de.uulm.dbis.coaster2go.activities;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -66,13 +67,6 @@ public class ParkDetailViewActivity extends BaseActivity {
             }
         });
 
-        ratingBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO call redirect method to rating activity
-            }
-        });
-
         buttonMaps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +87,6 @@ public class ParkDetailViewActivity extends BaseActivity {
 
 
     }
-
     public void goToAttractionOverview(View view) {
         Intent intent = new Intent(this, AttractionOverviewActivity.class);
         intent.putExtra("parkId", parkId);
@@ -126,7 +119,8 @@ public class ParkDetailViewActivity extends BaseActivity {
         protected void onPostExecute(Park park2) {
             if (park2 == null) {
                 Log.e("", "LoadParkAsync.onPostExecute: park was null!");
-                // TODO show snackbar "park laden fehlgeschlagen"
+                Snackbar.make(findViewById(R.id.coordinatorLayout_ParkDetailview),
+                        "Park konnte nicht geladen werden", Snackbar.LENGTH_SHORT);
             } else {
                 park = park2;
                 if (park2.getImage() == null || park2.getImage().isEmpty()) {
