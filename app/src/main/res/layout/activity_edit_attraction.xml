@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:id="@+id/coordinatorLayout_EditPark"
-    tools:context="de.uulm.dbis.coaster2go.activities.EditParkActivity"
+    android:id="@+id/coordinatorLayout_EditAttr"
+    tools:context="de.uulm.dbis.coaster2go.activities.EditAttractionActivity"
     >
     <ScrollView
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
                 android:layout_weight="1"
                 android:minHeight="200dp">
                 <ImageView
-                    android:id="@+id/imageViewEditPark"
+                    android:id="@+id/imageViewEditAttr"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/park_image" />
@@ -37,10 +37,10 @@
                     android:clickable="true"
                     android:src="@drawable/ic_add_a_photo_black_24dp"
                     app:fabSize="normal"
-                    app:layout_anchor="@id/imageViewEditPark"
+                    app:layout_anchor="@id/imageViewEditAttr"
                     app:layout_anchorGravity="bottom|right"
                     android:layout_margin="10dp"
-                    android:onClick="addParkImage"
+                    android:onClick="addAttrImage"
                     />
             </android.support.design.widget.CoordinatorLayout>
 
@@ -59,24 +59,24 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin">
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/inputLayoutParkName"
+                    android:id="@+id/inputLayoutAttrName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/editTextParkName"
+                        android:id="@+id/editTextAttrName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/name" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/inputLayoutParkLocationName"
+                    android:id="@+id/inputLayoutAttrLocationName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/editTextParkLocationName"
+                        android:id="@+id/editTextAttrLocationName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/locationName" />
@@ -88,13 +88,13 @@
                     android:orientation="horizontal">
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/inputLayoutParkLat"
+                        android:id="@+id/inputLayoutAttrLat"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/editTextParkLat"
+                            android:id="@+id/editTextAttrLat"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
@@ -102,13 +102,13 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/inputLayoutParkLon"
+                        android:id="@+id/inputLayoutAttrLon"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/editTextParkLon"
+                            android:id="@+id/editTextAttrLon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
@@ -127,12 +127,12 @@
                 </LinearLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/inputLayoutParkDescription"
+                    android:id="@+id/inputLayoutAttrDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/editTextParkDescription"
+                        android:id="@+id/editTextAttrDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/description" />
@@ -143,12 +143,12 @@
 
 
             <Button
-                android:id="@+id/buttonSavePark"
+                android:id="@+id/buttonSaveAttr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/button_text_save"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:onClick="savePark"/>
+                android:onClick="saveAttr"/>
 
         </LinearLayout>
 

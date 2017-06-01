@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +12,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -49,7 +52,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     protected ActionBarDrawerToggle drawerToggle;
     Toolbar toolbar;
-    ContentLoadingProgressBar progressBar;
+    //ContentLoadingProgressBar progressBar;
+    ImageView progressBar;
     TextView textViewUserName;
 
     @Override
@@ -61,7 +65,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         getLayoutInflater().inflate(layoutResID, actContent, true);
         super.setContentView(baseLayout);
 
-        progressBar = (ContentLoadingProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ImageView) findViewById(R.id.progressBar);
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(progressBar);
+        Glide.with(this).load(R.raw.small_loader).into(imageViewTarget);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -89,7 +95,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        progressBar.hide();
+        progressBar.setVisibility(View.GONE);
 
     }
 

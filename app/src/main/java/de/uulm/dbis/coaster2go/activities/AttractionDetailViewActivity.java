@@ -169,7 +169,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
                     new CreateWaitingTimeAsync().execute();
                 } catch (NumberFormatException nfe) {
                     Snackbar.make(findViewById(R.id.coordinatorLayout_AttrDetailview),
-                            "Geben Sie eine gültige Zahl ein", Snackbar.LENGTH_SHORT);
+                            "Geben Sie eine gültige Zahl ein", Snackbar.LENGTH_SHORT).show();
                 }
 
             }
@@ -205,7 +205,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            progressBar.show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -271,14 +271,14 @@ public class AttractionDetailViewActivity extends BaseActivity {
                     buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
                 }
             }
-            AttractionDetailViewActivity.this.progressBar.hide();
+            AttractionDetailViewActivity.this.progressBar.setVisibility(View.GONE);
         }
     }
 
     public class LoadBarChartDataAsync extends AsyncTask<Void, Void, HashMap<Integer, Integer>> {
 
         @Override
-        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.show();
+        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -313,14 +313,14 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 barChart.setFitBars(true); // make the x-axis fit exactly all bars
                 barChart.invalidate();
             }
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     public class CheckWaitingtimeAllowedAsync extends AsyncTask<Void, Void, Boolean> {
 
         @Override
-        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.show();
+        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -340,14 +340,14 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 buttonSave.setEnabled(false);
             }
 
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     public class CreateWaitingTimeAsync extends AsyncTask<Void, Void, WaitingTime> {
 
         @Override
-        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.show();
+        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -366,7 +366,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 buttonSave.setEnabled(false);
             }
 
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
 
             recreate();
         }

@@ -62,7 +62,7 @@ public class MyAccountActivity extends BaseActivity {
 
     public void saveUserData(View view) {
         // start the progress bar
-        progressBar.show();
+        progressBar.setVisibility(View.VISIBLE);
 
         // update the username field
         final String newUserName = editTextUserName.getText().toString();
@@ -86,7 +86,7 @@ public class MyAccountActivity extends BaseActivity {
                         }
 
                         // hide the progress bar
-                        progressBar.hide();
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }

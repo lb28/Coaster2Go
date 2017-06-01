@@ -29,7 +29,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -334,10 +333,8 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                 }
             });
 
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(
                     R.id.recyclerViewParkList);
-            textView.setText("mode: " + getArguments().getString("mode")); // for testing
 
             recyclerView.setAdapter(parkListAdapter);
             // Set layout manager to position the items
@@ -525,7 +522,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
         @Override
         protected void onPreExecute() {
-            progressBar.show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -539,7 +536,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
         @Override
         protected void onPostExecute(Park deletedPark) {
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
 
             if (deletedPark == null) {
                 Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),

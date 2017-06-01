@@ -46,7 +46,7 @@ public class MapViewActivity extends BaseActivity
         });
 
         progressBar.setVisibility(View.VISIBLE);
-        progressBar.show();
+        progressBar.setVisibility(View.VISIBLE);
 
         name = getIntent().getStringExtra("name");
         double lat = getIntent().getDoubleExtra("lat", 0.0);
@@ -90,7 +90,7 @@ public class MapViewActivity extends BaseActivity
         uiSettings.setMyLocationButtonEnabled(true);
 
         mapView.onResume();
-        progressBar.hide();
+        progressBar.setVisibility(View.GONE);
     }
 
     private void enableMyLocation() {

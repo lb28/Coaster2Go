@@ -3,10 +3,10 @@ package de.uulm.dbis.coaster2go.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.dbis.coaster2go.R;
-import de.uulm.dbis.coaster2go.controller.ParkListAdapter;
 import de.uulm.dbis.coaster2go.controller.RatingListAdapter;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.Review;
@@ -194,7 +193,7 @@ public class RatingActivity extends BaseActivity {
     class SaveReviewTask extends AsyncTask<Review, Void, Review> {
         @Override
         protected void onPreExecute() {
-            progressBar.show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -217,7 +216,7 @@ public class RatingActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(Review updatedReview) {
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
             if (updatedReview == null) {
                 Snackbar.make(findViewById(R.id.coordinatorLayout_Ratings),
                         "Speichern fehlgeschlagen", Snackbar.LENGTH_SHORT);

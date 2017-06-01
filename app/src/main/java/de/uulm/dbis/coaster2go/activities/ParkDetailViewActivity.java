@@ -105,7 +105,7 @@ public class ParkDetailViewActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            progressBar.show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -141,7 +141,7 @@ public class ParkDetailViewActivity extends BaseActivity {
                 buttonMaps.setEnabled(true);
                 buttonFav.setEnabled(true);
             }
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
         }
     }
 

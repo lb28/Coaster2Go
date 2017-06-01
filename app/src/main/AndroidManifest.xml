@@ -18,11 +18,9 @@
     <application
         android:label="Coaster2Go"
         android:theme="@style/AppTheme.NoActionBar">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCTpG19jlWQTFsRl64ff7ugZqeuNaxSMZw" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -67,10 +65,12 @@
             android:name=".activities.RatingActivity"
             android:label="@string/ratings"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.WaitingTimesActivity"></activity>
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.MapViewActivity"
-            android:parentActivityName=".activities.EditParkActivity"/>
+        <activity android:name=".activities.WaitingTimesActivity" />
+        android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.MapViewActivity"
+            android:parentActivityName=".activities.EditParkActivity" />
+        <activity android:name=".activities.EditAttractionActivity"></activity>
     </application>
 
 </manifest>

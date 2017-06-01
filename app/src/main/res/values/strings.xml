@@ -127,5 +127,6 @@
     <string name="date">Datum</string>
     <string name="distanceMeters">%1$f m</string>
     <string name="wait_time">Wartezeit</string>
+    <string name="add_image">Bild hinzufügen</string>
 
 </resources>
