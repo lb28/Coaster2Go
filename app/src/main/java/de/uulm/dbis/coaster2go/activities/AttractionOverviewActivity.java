@@ -193,9 +193,9 @@ public class AttractionOverviewActivity extends BaseActivity {
                 }
             });
 
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewParkList);
-            textView.setText("mode: " + getArguments().getString("mode")); // for testing
+            //textView.setText("mode: " + getArguments().getString("mode")); // for testing
             recyclerView.setAdapter(attractionListAdapter);
             // Set layout manager to position the items
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

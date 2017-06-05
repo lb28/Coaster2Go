@@ -2,6 +2,7 @@ package de.uulm.dbis.coaster2go.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.Date;
 
 public class Attraction {
     private String id;
@@ -20,6 +21,8 @@ public class Attraction {
     //private int numberOfCurrentWaitingTimes //probably not necessary
     private int currentWaitingTime; //avg from the last 3 entries
     private String parkId;
+    private Date lastUpdated; //Date of the last time when the WaitingTimes got updated
+
 
     /** Konstruktor ohne Id.
      *
@@ -56,6 +59,7 @@ public class Attraction {
         this.averageTodayWaitingTime = averageTodayWaitingTime;
         this.currentWaitingTime = currentWaitingTime;
         this.parkId = parkId;
+        this.lastUpdated = new Date();
     }
 
     /** CKonstruktor mit id.
@@ -75,11 +79,12 @@ public class Attraction {
      * @param averageTodayWaitingTime
      * @param currentWaitingTime
      * @param parkId
+     * @param lastUpdated
      */
     public Attraction(String id, String name, String type, String description, double lat, double lon, String image,
                       int numberOfReviews, double averageReview, int numberOfWaitingTimes,
                       int averageWaitingTime, int numberOfTodayWaitingTimes,
-                      int averageTodayWaitingTime, int currentWaitingTime, String parkId) {
+                      int averageTodayWaitingTime, int currentWaitingTime, String parkId, Date lastUpdated) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -95,6 +100,12 @@ public class Attraction {
         this.averageTodayWaitingTime = averageTodayWaitingTime;
         this.currentWaitingTime = currentWaitingTime;
         this.parkId = parkId;
+        try{
+            this.lastUpdated = lastUpdated;
+        }catch(Exception e){
+            e.printStackTrace();
+            this.lastUpdated = new Date();
+        }
     }
 
     /** Makes a JSONObject out of the current Attraction Object
@@ -118,6 +129,13 @@ public class Attraction {
             jsonObject.put("numberOfTodayWaitingTimes", numberOfTodayWaitingTimes);
             jsonObject.put("averageTodayWaitingTime", averageTodayWaitingTime);
             jsonObject.put("currentWaitingTime", currentWaitingTime);
+            try{
+                jsonObject.put("lastUpdated", lastUpdated.toString());
+            }catch(Exception eaaa){
+                eaaa.printStackTrace();
+                Date now = new Date();
+                jsonObject.put("lastUpdated", now.toString());
+            }
             //jsonObject.put("parkId", parkId);
 
             return jsonObject;
@@ -248,6 +266,20 @@ public class Attraction {
         this.description = description;
     }
 
+    public Date getLastUpdated (){
+        if(lastUpdated == null){
+            return new Date();
+        }
+        return lastUpdated;}
+
+    public void setLastUpdated(Date lastUpdated){
+        try{
+        this.lastUpdated = lastUpdated;
+    }catch(Exception e){
+            e.printStackTrace();
+        this.lastUpdated = new Date();
+    }}
+
     @Override
     public String toString() {
         return "Attraction{" +
@@ -265,6 +297,7 @@ public class Attraction {
                 ", averageTodayWaitingTime=" + averageTodayWaitingTime +
                 ", currentWaitingTime=" + currentWaitingTime +
                 ", parkId='" + parkId + '\'' +
+                ", lastUpdated='" + lastUpdated.toString() + '\'' +
                 '}';
     }
 }

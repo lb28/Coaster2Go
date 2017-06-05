@@ -26,7 +26,7 @@ public class ParkDetailViewActivity extends BaseActivity {
     private Park park;
     private boolean isFave = false;
 
-    TextView parkName, parkLocation, parkRatingAvg, parkDescription;
+    TextView parkName, parkLocation, parkRatingAvg, parkDescription, parkDistance;
     RatingBar ratingBar;
     ImageView parkImage;
     ImageButton buttonFav, buttonMaps;
@@ -39,6 +39,7 @@ public class ParkDetailViewActivity extends BaseActivity {
 
         parkName = (TextView) findViewById(R.id.park_detail_parkname);
         parkLocation = (TextView) findViewById(R.id.park_detail_location);
+        parkDistance = (TextView) findViewById(R.id.park_detail_distance);
         parkRatingAvg = (TextView) findViewById(R.id.park_detail_average);
         parkDescription = (TextView) findViewById(R.id.park_detail_description);
         ratingBar = (RatingBar) findViewById(R.id.park_detail_ratingbar);
@@ -135,6 +136,7 @@ public class ParkDetailViewActivity extends BaseActivity {
                 parkRatingAvg.setText(df.format(park2.getAverageReview()));
                 parkLocation.setText(park2.getLocation());
                 parkDescription.setText(park2.getDescription());
+                parkDistance.setText("Entfernung: TODO"); //TODO
 
 
                 // enable buttons

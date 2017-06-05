@@ -18,7 +18,6 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"
                 android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
                 android:maxHeight="200dp"
@@ -46,9 +45,9 @@
                 android:layout_marginLeft="5dp"
                 android:textSize="22sp"
                 android:layout_toRightOf="@+id/attr_detail_button_fav"
-                android:text="EURO MIR"
+                android:text=""
                 android:id="@+id/attr_detail_name"
-                android:layout_above="@+id/attr_detail_ratingbar" />
+                android:layout_above="@+id/attr_detail_ratingbar"/>
 
             <RatingBar
                 android:layout_width="wrap_content"
@@ -61,7 +60,7 @@
                 android:id="@+id/attr_detail_ratingbar"
                 android:onClick="showAttrRatings"
                 android:clickable="true"
-                android:isIndicator="false"/>
+                android:isIndicator="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -135,7 +134,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:elevation="16dp"
-                        android:text="000"
+                        android:text=""
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@android:color/black"
                         android:onClick="goToWaitingTimeOverview"/>
@@ -166,7 +165,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:elevation="16dp"
-                        android:text="000"
+                        android:text=""
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@android:color/black"
                         android:onClick="goToWaitingTimeOverview"/>
@@ -197,7 +196,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:elevation="16dp"
-                        android:text="000"
+                        android:text=""
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@android:color/black"
                         android:onClick="goToWaitingTimeOverview"/>
@@ -216,9 +215,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Aktuell"/>
+                    android:text="Letzte 3"/>
 
                 <TextView
+                    android:id="@+id/attr_detail_today_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

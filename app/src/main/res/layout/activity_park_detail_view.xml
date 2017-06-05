@@ -24,8 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:maxHeight="200dp"
-                android:src="@mipmap/ic_launcher" />
+                android:maxHeight="200dp" />
 
         </LinearLayout>
 
@@ -90,8 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_toLeftOf="@id/park_detail_button_maps"
-                android:text="@string/locationName"/>
+                android:layout_toLeftOf="@id/park_detail_button_maps" />
 
             <TextView
                 android:id="@+id/park_detail_distance"
@@ -100,8 +98,7 @@
                 android:layout_below="@id/park_detail_location"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_toLeftOf="@id/park_detail_button_maps"
-                android:text="@string/distance"/>
+                android:layout_toLeftOf="@id/park_detail_button_maps" />
 
         </RelativeLayout>
 

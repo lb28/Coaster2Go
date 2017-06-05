@@ -67,8 +67,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:elevation="0dp"
-            app:useCompatPadding="true"
-            android:onClick="goToWaitingTimeOverview"/>
+            app:useCompatPadding="true"/>
 
         <TextView
             android:id="@+id/attrList_waitingTime"
@@ -79,8 +78,15 @@
             android:elevation="16dp"
             android:text="000"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black"
-            android:onClick="goToWaitingTimeOverview"/>
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/attrList_today_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:text="Heute" />
     </FrameLayout>
 
 

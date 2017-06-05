@@ -843,6 +843,7 @@ public class AzureDBManager {
             updateAttraction.setCurrentWaitingTime(newCurrentTime);
 
             //Update Attraction
+            updateAttraction.setLastUpdated(new Date());
             MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
             mAttractionTable.update(updateAttraction);
 

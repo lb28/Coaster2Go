@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.uulm.dbis.coaster2go.R;
@@ -53,7 +55,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
     private boolean isFave = false;
 
     ImageView attrImage;
-    TextView attrName, attrAvgRating, labelMinutes;
+    TextView attrName, attrAvgRating, labelMinutes, dateToday;
     EditText enterTime;
     RatingBar attrRatingbar;
     ImageButton buttonFav, buttonInfo, buttonMap;
@@ -79,6 +81,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
         currentWait = (TextView) findViewById(R.id.attr_detail_wait_current);
         todayWait = (TextView) findViewById(R.id.attr_detail_wait_today);
         alltimeWait = (TextView) findViewById(R.id.attr_detail_wait_alltime);
+        dateToday = (TextView) findViewById(R.id.attr_detail_today_date);
 
         buttonCurrentWait = (FloatingActionButton) findViewById(R.id.button_detail_wait_current);
         buttonTodayWait = (FloatingActionButton) findViewById(R.id.button_detail_wait_today);
@@ -99,29 +102,6 @@ public class AttractionDetailViewActivity extends BaseActivity {
         attrID = getIntent().getStringExtra("attrId");
 
         new LoadAttrAsync().execute();
-
-        //check if a user is signed in
-        //if so -> allowed to enter a waitingtime
-        //if not -> view elements are set to invisible
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // User is signed in
-            enterTime.setVisibility(View.VISIBLE);
-            labelMinutes.setVisibility(View.VISIBLE);
-            buttonSave.setVisibility(View.VISIBLE);
-
-            //checks if user is allowed to enter a new waitingtime
-            //if so -> gui elements enabled
-            //if not -> gui elements disabled
-            new CheckWaitingtimeAllowedAsync().execute();
-
-        } else {
-            // No user is signed in
-            enterTime.setVisibility(View.INVISIBLE);
-            labelMinutes.setVisibility(View.INVISIBLE);
-            buttonSave.setVisibility(View.INVISIBLE);
-        }
-
 
         buttonFav.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,6 +204,29 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 parkId = attr.getParkId();
                 //fave
                 new LoadFaveAsync().execute();
+
+                //check if a user is signed in
+                //if so -> allowed to enter a waitingtime
+                //if not -> view elements are set to invisible
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    enterTime.setVisibility(View.VISIBLE);
+                    labelMinutes.setVisibility(View.VISIBLE);
+                    buttonSave.setVisibility(View.VISIBLE);
+
+                    //checks if user is allowed to enter a new waitingtime
+                    //if so -> gui elements enabled
+                    //if not -> gui elements disabled
+                    new CheckWaitingtimeAllowedAsync().execute();
+
+                } else {
+                    // No user is signed in
+                    enterTime.setVisibility(View.INVISIBLE);
+                    labelMinutes.setVisibility(View.INVISIBLE);
+                    buttonSave.setVisibility(View.INVISIBLE);
+                }
+
                 //bar chart
                 new LoadBarChartDataAsync().execute();
 
@@ -242,6 +245,25 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 currentWait.setText(df.format(attr2.getCurrentWaitingTime()));
                 todayWait.setText(df.format(attr2.getAverageTodayWaitingTime()));
                 alltimeWait.setText(df.format(attr2.getAverageWaitingTime()));
+
+                //TAGES BESTIMMUNG LAST UPDATED
+                int lastYear = attr.getLastUpdated().getYear();
+                int lastMonth = attr.getLastUpdated().getMonth();
+                int lastDay = attr.getLastUpdated().getDay();
+                Date now = new Date();
+                if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
+                    if(now.getDay() == lastDay){
+                        dateToday.setText("Heute");
+                    }else if(now.getDay() - lastDay == 1){
+                        dateToday.setText("Gestern");
+                    }else if(now.getDay() - lastDay == 2){
+                        dateToday.setText("Vorgestern");
+                    }else{
+                        dateToday.setText(lastDay+"."+lastMonth+"."+lastYear);
+                    }
+                }else {
+                    dateToday.setText(lastDay+"."+lastMonth+"."+lastYear);
+                }
 
                 //SUPER ALOGRITHMUS ZUR BERECHNUNG WANN WARTEZEIT GRÜN/GELB/ROT
                 //GRÜN: Zeit < 70% Gesamtdurchschnitt
@@ -271,7 +293,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
                     buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
                 }
             }
-            AttractionDetailViewActivity.this.progressBar.setVisibility(View.GONE);
+            //AttractionDetailViewActivity.this.progressBar.setVisibility(View.GONE);
         }
     }
 

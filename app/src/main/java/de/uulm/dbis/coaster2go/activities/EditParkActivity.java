@@ -137,7 +137,7 @@ public class EditParkActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            progressBar.show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -162,7 +162,7 @@ public class EditParkActivity extends BaseActivity {
                 editTextParkLon.setText(String.valueOf(park.getLon()));
                 editTextParkDescription.setText(park.getDescription());
             }
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -170,7 +170,7 @@ public class EditParkActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            progressBar.show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         /**
@@ -211,12 +211,12 @@ public class EditParkActivity extends BaseActivity {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(Park resultPark) {
-            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
             if (resultPark == null) {
                 Snackbar.make(findViewById(R.id.coordinatorLayout_EditPark),
                         "Park konnte nicht gespeichert werden",

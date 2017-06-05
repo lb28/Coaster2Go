@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /** Class reads and writes Data from the local Storage into JSON Files.
@@ -472,12 +473,19 @@ public class JsonManager {
                 int numberOfTodayWaitingTimes = tmpAttraction.getInt("numberOfTodayWaitingTimes");
                 int averageTodayWaitingTime = tmpAttraction.getInt("averageTodayWaitingTime");
                 int currentWaitingTime = tmpAttraction.getInt("currentWaitingTime");
+                Date lastUpdated = new Date();
+                try{
+                    lastUpdated = new Date(tmpAttraction.getString("lastUpdated"));
+                }catch(Exception eaaa){
+                    eaaa.printStackTrace();
+                    lastUpdated = new Date();
+                }
                 //String parkId = tmpAttraction.getString("parkId");
 
                 Attraction newAttraction = new Attraction(id, name, type, description, lat, lon,
                         image, numberOfReviews, averageReview, numberOfWaitingTimes,
                         averageWaitingTime, numberOfTodayWaitingTimes, averageTodayWaitingTime,
-                        currentWaitingTime, parkId);
+                        currentWaitingTime, parkId, lastUpdated);
                 attractionList.add(newAttraction);
             }
         } catch (JSONException e) {

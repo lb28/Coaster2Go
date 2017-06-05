@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import de.uulm.dbis.coaster2go.R;
@@ -42,7 +43,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     // you provide access to all the views for a data item in a view holder
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView attractionImage;
-        TextView attractionName;
+        TextView attractionName, attractionDate;
         RatingBar attractionRating;
         TextView attractionWaitingTime;
         FloatingActionButton attractionWaitingBackground;
@@ -55,6 +56,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
             attractionRating = (RatingBar) itemView.findViewById(R.id.attrList_rating);
             attractionWaitingTime = (TextView) itemView.findViewById(R.id.attrList_waitingTime);
             attractionWaitingBackground = (FloatingActionButton) itemView.findViewById(R.id.attrList_waitingBackground);
+            attractionDate = (TextView) itemView.findViewById(R.id.attrList_today_date);
         }
 
     }
@@ -98,6 +100,22 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         } else {
             viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
             viewHolder.attractionWaitingTime.setTextColor(Color.BLACK);
+        }
+
+        int lastYear = attraction.getLastUpdated().getYear();
+        int lastMonth = attraction.getLastUpdated().getMonth();
+        int lastDay = attraction.getLastUpdated().getDay();
+        Date now = new Date();
+        if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
+            if(now.getDay() == lastDay){
+                viewHolder.attractionDate.setText("Heute");
+            }else if(now.getDay() - lastDay == 1){
+                viewHolder.attractionDate.setText("Gestern");
+            }else{
+                viewHolder.attractionDate.setText(lastDay+"."+lastMonth);
+            }
+        }else {
+            viewHolder.attractionDate.setText(lastDay+"."+lastMonth);
         }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
