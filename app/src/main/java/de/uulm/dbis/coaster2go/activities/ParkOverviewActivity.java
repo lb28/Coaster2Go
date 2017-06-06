@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -164,7 +165,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
     private void refreshParkList() {
         ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
         if (currentFragment != null && currentFragment.parkListAdapter != null) {
-            currentFragment.swipeRefreshLayout.setRefreshing(true);
+            currentFragment.progressBar.setVisibility(View.VISIBLE);
             currentFragment.refreshParkList();
         }
     }
@@ -253,6 +254,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
     public static class ParkListFragment extends Fragment {
         ParkListAdapter parkListAdapter;
         SwipeRefreshLayout swipeRefreshLayout;
+        ImageView progressBar;
 
         public ParkListFragment() {
         }
@@ -282,8 +284,9 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             View rootView = inflater.inflate(R.layout.fragment_parklist, container, false);
             swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(
                     R.id.swiperefresh_parkList);
+            progressBar = ((ParkOverviewActivity) getActivity()).progressBar;
 
-            swipeRefreshLayout.setRefreshing(true);
+            progressBar.setVisibility(View.VISIBLE);
             refreshParkList();
 
             List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
@@ -392,8 +395,10 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     parkListAdapter.setParkList(parkList);
                     parkListAdapter.notifyDataSetChanged();
                 }
-                swipeRefreshLayout.setRefreshing(false);
-                new RefreshParksTask().execute(); //Load real onlnie data when offline data is loaded
+                // experimentally leaving the spinner active while loading the online data
+                //swipeRefreshLayout.setRefreshing(false);
+                //progressBar.setVisibility(View.GONE);
+                new RefreshParksTask().execute(); //Load real online data when offline data is loaded
             }
         }
 
@@ -413,6 +418,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     parkListAdapter.notifyDataSetChanged();
                 }
                 swipeRefreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
         }
 
@@ -431,7 +437,9 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     parkListAdapter.setParkList(parkList);
                     parkListAdapter.notifyDataSetChanged();
                 }
-                swipeRefreshLayout.setRefreshing(false);
+                // experimentally leaving the spinner active while loading the online data
+                //swipeRefreshLayout.setRefreshing(false);
+                //progressBar.setVisibility(View.GONE);
                 new RefreshFaveParksTask().execute(); //Load online data when offline data is loaded
             }
         }
@@ -452,6 +460,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     parkListAdapter.notifyDataSetChanged();
                 }
                 swipeRefreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
         }
 

@@ -20,7 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +131,7 @@ public class AttractionOverviewActivity extends BaseActivity {
     public void refreshAttractionList() {
         AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
         if (currentFragment != null && currentFragment.attractionListAdapter != null) {
+            currentFragment.progressBar.setVisibility(View.VISIBLE);
             currentFragment.refreshAttrList();
         }
     }
@@ -147,6 +148,7 @@ public class AttractionOverviewActivity extends BaseActivity {
     public static class AttractionListFragment extends Fragment {
         AttractionListAdapter attractionListAdapter;
         SwipeRefreshLayout swipeRefresh;
+        ImageView progressBar;
 
         public AttractionListFragment() {
         }
@@ -178,8 +180,9 @@ public class AttractionOverviewActivity extends BaseActivity {
             View rootView = inflater.inflate(R.layout.fragment_parklist, container, false);
 
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh_parkList);
+            progressBar = ((AttractionOverviewActivity) getActivity()).progressBar;
 
-            swipeRefresh.setRefreshing(true);
+            progressBar.setVisibility(View.VISIBLE);
             refreshAttrList();
 
             List<Attraction> attractionList = new ArrayList<>(); // empty list before it is loaded
@@ -229,6 +232,11 @@ public class AttractionOverviewActivity extends BaseActivity {
             new RefreshAttractionsOfflineTask().execute();
         }
 
+        void refreshAttrListFaves() {
+            //Load offline data first because it is faster, then online data
+            new RefreshAttractionsFavesOfflineTask().execute();
+        }
+
         public class RefreshAttractionsOfflineTask extends AsyncTask<Void, Void, List<Attraction>> {
 
             @Override
@@ -245,7 +253,8 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
                 }
-                swipeRefresh.setRefreshing(false);
+                //swipeRefresh.setRefreshing(false);
+                //progressBar.setVisibility(View.GONE);
                 new RefreshAttractionsTask().execute(); //Load online data when offline data is loaded
             }
         }
@@ -267,12 +276,8 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.notifyDataSetChanged();
                 }
                 swipeRefresh.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
-        }
-
-        void refreshAttrListFaves() {
-            //Load offline data first because it is faster, then online data
-            new RefreshAttractionsFavesOfflineTask().execute();
         }
 
         public class RefreshAttractionsFavesOfflineTask extends AsyncTask<Void, Void, List<Attraction>> {
@@ -291,7 +296,8 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
                 }
-                swipeRefresh.setRefreshing(false);
+                //swipeRefresh.setRefreshing(false);
+                //progressBar.setVisibility(View.GONE);
                 new RefreshAttractionsFavesTask().execute(); //Load online data when offline data is loaded
             }
         }
@@ -313,6 +319,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.notifyDataSetChanged();
                 }
                 swipeRefresh.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
         }
     }

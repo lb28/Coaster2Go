@@ -85,7 +85,7 @@ public class EditParkActivity extends BaseActivity {
 
     public void addParkImage(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.add_park_image);
+        builder.setTitle(R.string.add_image);
         final EditText editTextParkImageUrl = new EditText(this);
         editTextParkImageUrl.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
 

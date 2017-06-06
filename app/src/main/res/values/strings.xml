@@ -120,9 +120,8 @@
     <string name="latitude">Breitengrad</string>
     <string name="longitude">Längengrad</string>
     <string name="maps">Karte</string>
-    <string name="add_park_image">Park-Bild hinzufügen</string>
     <string name="cancel">Abbrechen</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="ratings">Bewertungen</string>
     <string name="date">Datum</string>
     <string name="distanceMeters">%1$f m</string>
