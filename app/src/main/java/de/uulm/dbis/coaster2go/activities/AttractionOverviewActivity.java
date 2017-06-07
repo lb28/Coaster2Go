@@ -53,6 +53,8 @@ public class AttractionOverviewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attraction_overview);
 
+        progressBar.setVisibility(View.VISIBLE);
+
         parkId = getIntent().getStringExtra("parkId");
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -220,6 +222,9 @@ public class AttractionOverviewActivity extends BaseActivity {
         }
 
         void refreshAttrList() {
+            swipeRefresh.setRefreshing(false);
+            progressBar.setVisibility(View.VISIBLE);
+
             if(getArguments().getString("mode").equals(MODE_FAVS)){
                 refreshAttrListFaves();
             }else{
@@ -275,7 +280,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
                 }
-                swipeRefresh.setRefreshing(false);
+                //swipeRefresh.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
         }
@@ -318,7 +323,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
                 }
-                swipeRefresh.setRefreshing(false);
+                //swipeRefresh.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
         }

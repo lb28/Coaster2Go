@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.text.method.ScrollingMovementMethod;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,9 +29,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
@@ -252,17 +254,26 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 int lastDay = attr.getLastUpdated().getDay();
                 Date now = new Date();
                 if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
-                    if(now.getDay() == lastDay){
+                    if(DateUtils.isToday(attr.getLastUpdated().getTime())){
+                        //Date lastUpdated = attr.getLastUpdated();
+                        //SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.GERMANY);
+                        //String dateString = dateFormat.format(lastUpdated);
                         dateToday.setText("Heute");
                     }else if(now.getDay() - lastDay == 1){
                         dateToday.setText("Gestern");
                     }else if(now.getDay() - lastDay == 2){
                         dateToday.setText("Vorgestern");
                     }else{
-                        dateToday.setText(lastDay+"."+lastMonth+"."+lastYear);
+                        Date lastUpdated = attr.getLastUpdated();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy", Locale.GERMANY);
+                        String dateString = dateFormat.format(lastUpdated);
+                        dateToday.setText(dateString);
                     }
                 }else {
-                    dateToday.setText(lastDay+"."+lastMonth+"."+lastYear);
+                    Date lastUpdated = attr.getLastUpdated();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy", Locale.GERMANY);
+                    String dateString = dateFormat.format(lastUpdated);
+                    dateToday.setText(dateString);
                 }
 
                 //SUPER ALOGRITHMUS ZUR BERECHNUNG WANN WARTEZEIT GRÜN/GELB/ROT
@@ -335,7 +346,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 barChart.setFitBars(true); // make the x-axis fit exactly all bars
                 barChart.invalidate();
             }
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -390,7 +401,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
             progressBar.setVisibility(View.GONE);
 
-            recreate();
+            new LoadAttrAsync().execute();
         }
     }
 

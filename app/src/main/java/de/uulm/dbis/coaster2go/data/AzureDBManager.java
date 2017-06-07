@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -757,9 +758,7 @@ public class AzureDBManager {
             int i = 0;
             if(waitList != null && !waitList.isEmpty()){
                 for(i = 0; i < waitList.size(); i++){
-                    if(waitList.get(i).getCreatedAt().getYear()==todayDate.getYear()
-                            && waitList.get(i).getCreatedAt().getMonth()==todayDate.getMonth()
-                            && waitList.get(i).getCreatedAt().getDay()==todayDate.getDay()){
+                    if(DateUtils.isToday(waitList.get(i).getCreatedAt().getTime())){
                         counter++;
                     }else{
                         i = waitList.size();

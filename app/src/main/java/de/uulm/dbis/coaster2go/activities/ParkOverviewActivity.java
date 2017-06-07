@@ -67,6 +67,8 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_park_overview);
 
+        progressBar.setVisibility(View.VISIBLE);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
@@ -363,6 +365,9 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         }
 
         void refreshParkList() {
+            swipeRefreshLayout.setRefreshing(false);
+            progressBar.setVisibility(View.VISIBLE);
+
             if(getArguments().getString("mode").equals(MODE_FAVS)){
                 refreshParkListFaves();
             }else{
@@ -417,7 +422,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     parkListAdapter.setParkList(parkList);
                     parkListAdapter.notifyDataSetChanged();
                 }
-                swipeRefreshLayout.setRefreshing(false);
+                //swipeRefreshLayout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
         }
@@ -459,7 +464,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                     parkListAdapter.setParkList(parkList);
                     parkListAdapter.notifyDataSetChanged();
                 }
-                swipeRefreshLayout.setRefreshing(false);
+                //swipeRefreshLayout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
         }

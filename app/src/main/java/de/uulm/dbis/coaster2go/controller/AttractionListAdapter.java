@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
@@ -90,6 +93,8 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         viewHolder.attractionName.setText(attraction.getName());
         viewHolder.attractionRating.setRating((float) attraction.getAverageReview());
         viewHolder.attractionWaitingTime.setText(attraction.getCurrentWaitingTime()+"");
+        //Experimental use the todayAverage instead of the currentWaitingTime for the overview
+        //viewHolder.attractionWaitingTime.setText(attraction.getAverageTodayWaitingTime()+"");
 
         if(attraction.getCurrentWaitingTime() < attraction.getAverageWaitingTime()*0.7 || attraction.getCurrentWaitingTime() <= 10){
             viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
@@ -107,15 +112,24 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         int lastDay = attraction.getLastUpdated().getDay();
         Date now = new Date();
         if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
-            if(now.getDay() == lastDay){
-                viewHolder.attractionDate.setText("Heute");
+            if(DateUtils.isToday(attraction.getLastUpdated().getTime())){
+                Date lastUpdated = attraction.getLastUpdated();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.GERMANY);
+                String dateString = dateFormat.format(lastUpdated);
+                viewHolder.attractionDate.setText("Heute\n"+dateString);
             }else if(now.getDay() - lastDay == 1){
                 viewHolder.attractionDate.setText("Gestern");
             }else{
-                viewHolder.attractionDate.setText(lastDay+"."+lastMonth);
+                Date lastUpdated = attraction.getLastUpdated();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM", Locale.GERMANY);
+                String dateString = dateFormat.format(lastUpdated);
+                viewHolder.attractionDate.setText(dateString);
             }
         }else {
-            viewHolder.attractionDate.setText(lastDay+"."+lastMonth);
+            Date lastUpdated = attraction.getLastUpdated();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM", Locale.GERMANY);
+            String dateString = dateFormat.format(lastUpdated);
+            viewHolder.attractionDate.setText(dateString);
         }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
