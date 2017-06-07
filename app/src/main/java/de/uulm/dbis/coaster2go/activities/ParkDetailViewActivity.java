@@ -1,6 +1,7 @@
 package de.uulm.dbis.coaster2go.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,7 @@ public class ParkDetailViewActivity extends BaseActivity {
     private String parkId;
     private Park park;
     private boolean isFave = false;
+    private Location lastLocation;
 
     TextView parkName, parkLocation, parkRatingAvg, parkDescription, parkDistance;
     RatingBar ratingBar;
@@ -131,12 +133,30 @@ public class ParkDetailViewActivity extends BaseActivity {
                     Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
                 }
                 parkName.setText(park2.getName());
+                parkName.setSelected(true);
                 ratingBar.setRating((float) park2.getAverageReview());
                 DecimalFormat df = new DecimalFormat("#.#");
                 parkRatingAvg.setText(df.format(park2.getAverageReview()));
                 parkLocation.setText(park2.getLocation());
                 parkDescription.setText(park2.getDescription());
-                parkDistance.setText("Entfernung: TODO"); //TODO
+
+                Location parkLocationLatLng = new Location("");
+                parkLocationLatLng.setLatitude(park.getLat());
+                parkLocationLatLng.setLongitude(park.getLon());
+                if (lastLocation == null) {
+                    //parkDistance.setVisibility(View.INVISIBLE);
+                    parkDistance.setText("TODO get location");
+                } else {
+                    parkDistance.setVisibility(View.VISIBLE);
+                    Location parkLoc = new Location("");
+                    parkLoc.setLongitude(park.getLon());
+                    parkLoc.setLatitude(park.getLat());
+
+                    float distance = lastLocation.distanceTo(parkLoc);
+
+                    parkDistance.setText(buildDistanceString(distance));
+
+                }
 
 
                 // enable buttons
@@ -189,6 +209,20 @@ public class ParkDetailViewActivity extends BaseActivity {
             }else{
                 Log.e("", "Put Park into favorites didn't work!");
             }
+        }
+    }
+
+    /**
+     * builds an appropriate string based on the distance
+     * @param distanceMeters the distance in meters
+     * @return a string showing the distance in m or km
+     */
+    private String buildDistanceString(float distanceMeters) {
+        if (distanceMeters > 1000) {
+            int distanceKm = Math.round(distanceMeters/1000);
+            return distanceKm + " km";
+        } else {
+            return Math.round(distanceMeters) + " m";
         }
     }
 

@@ -44,12 +44,30 @@
                 android:background="@color/tw__transparent"
                 android:src="@drawable/ic_favorite_border_black_24dp" />
 
+            <ImageButton
+                android:id="@+id/park_detail_button_maps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_place_black_24dp"/>
+
+            <TextView
+                android:id="@+id/park_detail_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toLeftOf="@id/park_detail_button_maps" />
+
             <TextView
                 android:id="@+id/park_detail_parkname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="marquee"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/park_detail_button_favorite"
+                android:layout_toLeftOf="@id/park_detail_location"
                 android:textSize="20dp" />
 
             <RatingBar
@@ -75,21 +93,6 @@
                 android:onClick="showParkRatings"
                 android:textColor="@color/linkColor"
                 android:textSize="18dp"/>
-
-            <ImageButton
-                android:id="@+id/park_detail_button_maps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_place_black_24dp"/>
-
-            <TextView
-                android:id="@+id/park_detail_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_toLeftOf="@id/park_detail_button_maps" />
 
             <TextView
                 android:id="@+id/park_detail_distance"

@@ -47,6 +47,8 @@ public class RatingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
 
+        progressBar.setVisibility(View.VISIBLE);
+
         reviewedId = getIntent().getStringExtra("reviewedId");
 
         usersReview = null;
@@ -71,7 +73,6 @@ public class RatingActivity extends BaseActivity {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_ratings);
-        swipeRefresh.setRefreshing(true);
 
         new RefreshRatingsTask().execute();
 
@@ -80,6 +81,7 @@ public class RatingActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+                swipeRefresh.setRefreshing(false);
                 new RefreshRatingsTask().execute();
             }
         });
@@ -186,7 +188,8 @@ public class RatingActivity extends BaseActivity {
 
                 fabEditReview.setVisibility(View.VISIBLE);
             }
-            swipeRefresh.setRefreshing(false);
+            //swipeRefresh.setRefreshing(false);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -221,7 +224,8 @@ public class RatingActivity extends BaseActivity {
                 Snackbar.make(findViewById(R.id.coordinatorLayout_Ratings),
                         "Speichern fehlgeschlagen", Snackbar.LENGTH_SHORT);
             } else {
-                swipeRefresh.setRefreshing(true);
+                //swipeRefresh.setRefreshing(true);
+                progressBar.setVisibility(View.VISIBLE);
                 new RefreshRatingsTask().execute();
             }
         }

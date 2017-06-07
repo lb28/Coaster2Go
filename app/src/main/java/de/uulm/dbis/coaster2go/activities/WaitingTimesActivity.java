@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ public class WaitingTimesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_times);
 
+        progressBar.setVisibility(View.VISIBLE);
+
         attrId = getIntent().getStringExtra("attrId");
 
         // empty list at the beginning
@@ -49,13 +52,14 @@ public class WaitingTimesActivity extends BaseActivity {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_waitingtimes);
-        swipeRefresh.setRefreshing(true);
         new RefreshWaitingTimesTask().execute();
 
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+                swipeRefresh.setRefreshing(false);
+                progressBar.setVisibility(View.VISIBLE);
                 new RefreshWaitingTimesTask().execute();
             }
         });
@@ -111,7 +115,8 @@ public class WaitingTimesActivity extends BaseActivity {
                 waitingTimeListAdapter.notifyDataSetChanged();
             }
 
-            swipeRefresh.setRefreshing(false);
+            //swipeRefresh.setRefreshing(false);
+            progressBar.setVisibility(View.GONE);
         }
     }
 }

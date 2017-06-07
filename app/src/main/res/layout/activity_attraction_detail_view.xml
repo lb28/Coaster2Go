@@ -45,8 +45,11 @@
                 android:layout_marginLeft="5dp"
                 android:textSize="22sp"
                 android:layout_toRightOf="@+id/attr_detail_button_fav"
+                android:layout_toLeftOf="@+id/attr_detail_button_info"
                 android:text=""
                 android:id="@+id/attr_detail_name"
+                android:singleLine="true"
+                android:ellipsize="marquee"
                 android:layout_above="@+id/attr_detail_ratingbar"/>
 
             <RatingBar

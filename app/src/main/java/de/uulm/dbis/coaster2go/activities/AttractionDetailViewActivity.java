@@ -234,6 +234,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
                 Picasso.with(AttractionDetailViewActivity.this).load(attr2.getImage()).into(attrImage);
                 attrName.setText(attr2.getName());
+                attrName.setSelected(true);
                 attrRatingbar.setRating((float) attr2.getAverageReview());
                 DecimalFormat df = new DecimalFormat("#.#");
                 attrAvgRating.setText(df.format(attr2.getAverageReview()));

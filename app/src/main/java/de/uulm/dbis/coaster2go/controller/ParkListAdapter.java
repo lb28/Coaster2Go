@@ -99,7 +99,8 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         parkLocationLatLng.setLatitude(park.getLat());
         parkLocationLatLng.setLongitude(park.getLon());
         if (lastLocation == null) {
-            viewHolder.parkDistance.setVisibility(View.INVISIBLE);
+            //viewHolder.parkDistance.setVisibility(View.INVISIBLE);
+            viewHolder.parkDistance.setText("TODO get location");
         } else {
             viewHolder.parkDistance.setVisibility(View.VISIBLE);
             Location parkLoc = new Location("");
