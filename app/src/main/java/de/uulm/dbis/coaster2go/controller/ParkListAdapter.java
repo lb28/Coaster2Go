@@ -30,9 +30,6 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
 
     private SortMode currentSortMode;
 
-    // TODO implement SortedList?
-    // private SortedList<Park> parkList;
-
     private List<Park> parkList;
     private Context context;
     private final OnParkItemClickListener clickListener;

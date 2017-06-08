@@ -41,13 +41,14 @@ public class EditAttractionActivity extends BaseActivity {
         setContentView(R.layout.activity_edit_attraction);
 
         attrId = getIntent().getStringExtra("attrId");
-        parkId = getIntent().getStringExtra("parkId"); //TODO provide parkId with intent
+        parkId = getIntent().getStringExtra("parkId");
 
-        editTextAttrName = (EditText) findViewById(R.id.editTextParkName);
-        editTextAttrLat = (EditText) findViewById(R.id.editTextParkLat);
-        editTextAttrLon = (EditText) findViewById(R.id.editTextParkLon);
-        editTextAttrDescription = (EditText) findViewById(R.id.editTextParkDescription);
-        imageViewAttr = (ImageView) findViewById(R.id.imageViewEditPark);
+        editTextAttrName = (EditText) findViewById(R.id.editTextAttrName);
+        editTextAttrTypes = (EditText) findViewById(R.id.editTextAttrTypes);
+        editTextAttrLat = (EditText) findViewById(R.id.editTextAttrLat);
+        editTextAttrLon = (EditText) findViewById(R.id.editTextAttrLon);
+        editTextAttrDescription = (EditText) findViewById(R.id.editTextAttrDescription);
+        imageViewAttr = (ImageView) findViewById(R.id.imageViewEditAttr);
 
         if (attrId != null) {
             new LoadAttrTask().execute();
@@ -174,7 +175,7 @@ public class EditAttractionActivity extends BaseActivity {
         }
 
         /**
-         * @param params name, location, descr, lat, lon
+         * @param params name, types, descr, lat, lon
          */
         @Override
         protected Attraction doInBackground(String... params) {

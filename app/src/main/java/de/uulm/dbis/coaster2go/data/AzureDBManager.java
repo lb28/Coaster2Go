@@ -165,7 +165,6 @@ public class AzureDBManager {
 
     /**
      * Deletes the park with the given id
-     * TODO - should the park also be deleted from the offline storage?
      * @param parkId
      * @return
      */
@@ -358,7 +357,7 @@ public class AzureDBManager {
      * @param attractionId Id of the Attraction
      * @return true if successful.
      */
-    public boolean deleteAttraction(String attractionId){
+    public boolean deleteAttractionOnline(String attractionId){
         if(!hasActiveInternetConnection()){
             return false;
         }
@@ -367,13 +366,19 @@ public class AzureDBManager {
 
         try {
             mAttractionTable.delete(attractionId);
-            //Write new AttractionList into Internal Storage:
-            getAttractionListOnline(toDelete.getParkId());
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    public Attraction deleteAttraction(String parkId, String attrId) {
+        // try to delete the online attraction
+        if (!deleteAttractionOnline(attrId)) return null;
+
+        // if successful, delete the offline attraction
+        return new JsonManager(context).deleteAttraction(parkId, attrId);
     }
 
     /** Returns the Attraction object or null.

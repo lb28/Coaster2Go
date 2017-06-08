@@ -1,5 +1,6 @@
 package de.uulm.dbis.coaster2go.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +50,9 @@ public class AttractionOverviewActivity extends BaseActivity {
     private ViewPager tabsViewPager;
 
     private int currentFragmentIndex;
+
     private String parkId;
+    private boolean isParkAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +61,7 @@ public class AttractionOverviewActivity extends BaseActivity {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        parkId = getIntent().getStringExtra("parkId");
+        isParkAdmin = getIntent().getBooleanExtra("isParkAdmin", false);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -138,10 +144,23 @@ public class AttractionOverviewActivity extends BaseActivity {
         }
     }
 
+    private void deleteAttrGui(Attraction attr) {
+        AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        if (currentFragment != null && currentFragment.attractionListAdapter != null) {
+            int pos = currentFragment.attractionListAdapter.getPositionOf(attr);
+            if (pos != -1) {
+                currentFragment.attractionListAdapter.removeAt(pos);
+            } else {
+                Log.e(TAG, "deleteAttrGui: attraction not in list");
+            }
+        }
+    }
+
     public void addAttraction(View view) {
-        Snackbar.make(view, "TODO Add Attraction Activity", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .show();
+        Intent intent = new Intent(this, EditAttractionActivity.class);
+        intent.putExtra("parkId", parkId);
+
+        startActivity(intent);
     }
 
     /**
@@ -196,6 +215,42 @@ public class AttractionOverviewActivity extends BaseActivity {
                     intent.putExtra("attrId", attraction.getId());
                     startActivity(intent);
                 }
+
+                @Override
+                public boolean onAttractionItemLongClick(Attraction attraction) {
+                    // open context menu for edit, delete, ...
+                    final Attraction attr = attraction;
+
+                    FirebaseUser user = ((AttractionOverviewActivity) getActivity()).user;
+
+                    if (user != null && attr.getParkId().equals(user.getUid())) {
+                        String[] menuOptions = {
+                                "Attraktion bearbeiten",
+                                "Attraktion löschen"};
+                        android.app.AlertDialog.Builder builder =
+                                new android.app.AlertDialog.Builder(getContext());
+                        builder.setTitle(attr.getName())
+                                .setItems(menuOptions, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        switch (which) {
+                                            case 0:
+                                                Intent intent = new Intent(getContext(),
+                                                        EditAttractionActivity.class);
+                                                intent.putExtra("parkId", attr.getParkId());
+                                                intent.putExtra("attrId", attr.getId());
+                                                startActivity(intent);
+                                                break;
+                                            case 1:
+                                                showDeleteDialog(attr);
+                                                break;
+                                        }
+                                    }
+                                });
+                        builder.create().show();
+                    }
+
+                    return true;
+                }
             });
 
             //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
@@ -240,6 +295,25 @@ public class AttractionOverviewActivity extends BaseActivity {
         void refreshAttrListFaves() {
             //Load offline data first because it is faster, then online data
             new RefreshAttractionsFavesOfflineTask().execute();
+        }
+
+        void showDeleteDialog(final Attraction attr) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Park löschen");
+            builder.setMessage("Wollen Sie den Park \"" + attr.getName() + "\" wirklich löschen?");
+            builder.setPositiveButton("Löschen", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ((AttractionOverviewActivity) getActivity()).new DeleteAttrTask().execute(attr.getId());
+                }
+            });
+            builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
         }
 
         public class RefreshAttractionsOfflineTask extends AsyncTask<Void, Void, List<Attraction>> {
@@ -373,5 +447,34 @@ public class AttractionOverviewActivity extends BaseActivity {
         }
     }
 
+    private class DeleteAttrTask extends AsyncTask<String, Void, Attraction> {
 
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Attraction doInBackground(String... params) {
+            String attrId = params[0];
+            if (attrId == null || attrId.isEmpty()) {
+                return null;
+            }
+            return new AzureDBManager(AttractionOverviewActivity.this).deleteAttraction(parkId, attrId);
+        }
+
+        @Override
+        protected void onPostExecute(Attraction deletedAttr) {
+            progressBar.setVisibility(View.GONE);
+
+            if (deletedAttr == null) {
+                Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
+                        "Löschen Fehlgeschlagen", Snackbar.LENGTH_SHORT).show();
+            } else {
+                // update the view
+                deleteAttrGui(deletedAttr);
+            }
+
+        }
+    }
 }

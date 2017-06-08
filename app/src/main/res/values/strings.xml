@@ -127,5 +127,7 @@
     <string name="distanceMeters">%1$f m</string>
     <string name="wait_time">Wartezeit</string>
     <string name="add_image">Bild hinzufügen</string>
+    <string name="attr_image">Attraktions-Bild</string>
+    <string name="attr_types">Tags</string>
 
 </resources>

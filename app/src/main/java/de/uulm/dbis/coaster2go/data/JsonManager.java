@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -586,6 +585,27 @@ public class JsonManager {
                 parkList.remove(p);
                 if (writeParkList(parkList)) {
                     return p;
+                }
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public Attraction deleteAttraction(String parkId, String attrId) {
+        List<Park> parkList = getParkList();
+        if(parkList == null || parkList.isEmpty()){
+            return null;
+        }
+
+        List<Attraction> attrList = getAttractionList(parkId);
+
+        for (Attraction a : attrList) {
+            if (a.getId().equals(attrId)) {
+                attrList.remove(a);
+                if (writeAttractionList(attrList, parkId)) {
+                    return a;
                 }
                 return null;
             }

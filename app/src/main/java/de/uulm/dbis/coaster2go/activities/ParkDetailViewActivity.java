@@ -87,12 +87,12 @@ public class ParkDetailViewActivity extends BaseActivity {
                 new SetFaveAsync().execute();
             }
         });
-
-
     }
+
     public void goToAttractionOverview(View view) {
         Intent intent = new Intent(this, AttractionOverviewActivity.class);
         intent.putExtra("parkId", parkId);
+        intent.putExtra("isParkAdmin", park.getAdmin().equals(user.getUid()));
         startActivity(intent);
     }
 

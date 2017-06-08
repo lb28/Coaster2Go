@@ -179,7 +179,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             if (pos != -1) {
                 currentFragment.parkListAdapter.removeAt(pos);
             } else {
-                Log.e(TAG, "deleteParkGui: park not in list = -1");
+                Log.e(TAG, "deleteParkGui: park not in list");
             }
         }
     }
@@ -530,7 +530,6 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             }
         }
     }
-
 
     private class DeleteParkTask extends AsyncTask<String, Void, Park> {
 

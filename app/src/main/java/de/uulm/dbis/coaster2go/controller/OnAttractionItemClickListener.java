@@ -7,4 +7,5 @@ import de.uulm.dbis.coaster2go.data.Attraction;
  */
 public interface OnAttractionItemClickListener {
     void onAttractionItemClick(Attraction attraction);
+    boolean onAttractionItemLongClick(Attraction attraction);
 }

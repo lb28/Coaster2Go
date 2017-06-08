@@ -34,6 +34,8 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         NAME, RATING, WAIT_TIME
     }
 
+    private SortMode currentSortMode;
+
     // TODO implement SortedList?
     // private SortedList<Park> parkList;
 
@@ -138,6 +140,12 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
                 clickListener.onAttractionItemClick(attraction);
             }
         });
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return clickListener.onAttractionItemLongClick(attraction);
+            }
+        });
     }
 
     @Override
@@ -187,6 +195,11 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         }
     }
 
+    public void removeAt(int pos) {
+        attractionList.remove(pos);
+        notifyItemRemoved(pos);
+    }
+
     // GETTERS & SETTERS
 
     public Context getContext() {
@@ -196,4 +209,9 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     public void setAttractionList(List<Attraction> attractionList) {
         this.attractionList = attractionList;
     }
+
+    public int getPositionOf(Attraction attraction) {
+        return attractionList.indexOf(attraction);
+    }
+
 }
