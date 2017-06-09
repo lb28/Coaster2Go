@@ -9,7 +9,9 @@
     android:orientation="horizontal"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:selectableItemBackground">
+    android:background="?android:selectableItemBackground"
+    android:id="@+id/parkList_bg"
+    >
 
     <ImageView
         android:id="@+id/parkList_image"
@@ -29,13 +31,15 @@
         <TextView
             android:id="@+id/parkList_name"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:text="@string/name"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            />
 
         <RatingBar
             android:id="@+id/parkList_rating"

@@ -42,6 +42,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     private List<Attraction> attractionList;
     private Context context;
     private final OnAttractionItemClickListener clickListener;
+    private final OnAttractionItemLongClickListener longClickListener;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -67,10 +68,12 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     }
 
     public AttractionListAdapter(Context context, List<Attraction> attractionList,
-                                 OnAttractionItemClickListener clickListener) {
+                                 OnAttractionItemClickListener clickListener,
+                                 OnAttractionItemLongClickListener longClickListener) {
         this.context = context;
         this.attractionList = attractionList;
         this.clickListener = clickListener;
+        this.longClickListener = longClickListener;
     }
 
     @Override
@@ -143,7 +146,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                return clickListener.onAttractionItemLongClick(attraction);
+                return longClickListener.onAttractionItemLongClick(attraction);
             }
         });
     }

@@ -67,7 +67,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         progressBar = (ImageView) findViewById(R.id.progressBar);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(progressBar);
-        Glide.with(this).load(R.raw.small_loader).into(imageViewTarget);
+        Glide.with(this).load(R.raw.loader_fast).into(imageViewTarget);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 

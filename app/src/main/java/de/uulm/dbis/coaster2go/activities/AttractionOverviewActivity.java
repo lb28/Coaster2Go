@@ -32,6 +32,7 @@ import java.util.List;
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.controller.AttractionListAdapter;
 import de.uulm.dbis.coaster2go.controller.OnAttractionItemClickListener;
+import de.uulm.dbis.coaster2go.controller.OnAttractionItemLongClickListener;
 import de.uulm.dbis.coaster2go.data.Attraction;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.JsonManager;
@@ -62,6 +63,7 @@ public class AttractionOverviewActivity extends BaseActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         isParkAdmin = getIntent().getBooleanExtra("isParkAdmin", false);
+        parkId = getIntent().getStringExtra("parkId");
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -208,50 +210,53 @@ public class AttractionOverviewActivity extends BaseActivity {
 
             List<Attraction> attractionList = new ArrayList<>(); // empty list before it is loaded
 
-            attractionListAdapter = new AttractionListAdapter(getContext(), attractionList, new OnAttractionItemClickListener() {
-                @Override
-                public void onAttractionItemClick(Attraction attraction) {
-                    Intent intent = new Intent(getContext(), AttractionDetailViewActivity.class);
-                    intent.putExtra("attrId", attraction.getId());
-                    startActivity(intent);
-                }
+            attractionListAdapter = new AttractionListAdapter(
+                    getContext(),
+                    attractionList,
+                    new OnAttractionItemClickListener() {
+                        @Override
+                        public void onAttractionItemClick(Attraction attraction) {
+                            Intent intent = new Intent(getContext(), AttractionDetailViewActivity.class);
+                            intent.putExtra("attrId", attraction.getId());
+                            startActivity(intent);
+                        }
+                    }, new OnAttractionItemLongClickListener() {
+                        @Override
+                        public boolean onAttractionItemLongClick(Attraction attraction) {
+                            // open context menu for edit, delete, ...
+                            final Attraction attr = attraction;
 
-                @Override
-                public boolean onAttractionItemLongClick(Attraction attraction) {
-                    // open context menu for edit, delete, ...
-                    final Attraction attr = attraction;
+                            FirebaseUser user = ((AttractionOverviewActivity) getActivity()).user;
 
-                    FirebaseUser user = ((AttractionOverviewActivity) getActivity()).user;
+                            if (user != null && attr.getParkId().equals(user.getUid())) {
+                                String[] menuOptions = {
+                                        "Attraktion bearbeiten",
+                                        "Attraktion löschen"};
+                                android.app.AlertDialog.Builder builder =
+                                        new android.app.AlertDialog.Builder(getContext());
+                                builder.setTitle(attr.getName())
+                                        .setItems(menuOptions, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which) {
+                                                    case 0:
+                                                        Intent intent = new Intent(getContext(),
+                                                                EditAttractionActivity.class);
+                                                        intent.putExtra("parkId", attr.getParkId());
+                                                        intent.putExtra("attrId", attr.getId());
+                                                        startActivity(intent);
+                                                        break;
+                                                    case 1:
+                                                        showDeleteDialog(attr);
+                                                        break;
+                                                }
+                                            }
+                                        });
+                                builder.create().show();
+                            }
 
-                    if (user != null && attr.getParkId().equals(user.getUid())) {
-                        String[] menuOptions = {
-                                "Attraktion bearbeiten",
-                                "Attraktion löschen"};
-                        android.app.AlertDialog.Builder builder =
-                                new android.app.AlertDialog.Builder(getContext());
-                        builder.setTitle(attr.getName())
-                                .setItems(menuOptions, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        switch (which) {
-                                            case 0:
-                                                Intent intent = new Intent(getContext(),
-                                                        EditAttractionActivity.class);
-                                                intent.putExtra("parkId", attr.getParkId());
-                                                intent.putExtra("attrId", attr.getId());
-                                                startActivity(intent);
-                                                break;
-                                            case 1:
-                                                showDeleteDialog(attr);
-                                                break;
-                                        }
-                                    }
-                                });
-                        builder.create().show();
-                    }
-
-                    return true;
-                }
-            });
+                            return true;
+                        }
+                    });
 
             //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewParkList);
@@ -327,7 +332,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             @Override
             protected void onPostExecute(List<Attraction> attractionList) {
                 if (attractionList == null) {
-                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                    Log.e(TAG, "RefreshAttractionsOfflineTask.onPostExecute: attrList was null!");
                 } else {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
@@ -349,7 +354,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             @Override
             protected void onPostExecute(List<Attraction> attractionList) {
                 if (attractionList == null) {
-                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                    Log.e(TAG, "RefreshAttractionsTask.onPostExecute: attrList was null!");
                 } else {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
@@ -370,7 +375,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             @Override
             protected void onPostExecute(List<Attraction> attractionList) {
                 if (attractionList == null) {
-                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                    Log.e(TAG, "RefreshAttractionsFavesOfflineTask.onPostExecute: attrList was null!");
                 } else {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
@@ -392,7 +397,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             @Override
             protected void onPostExecute(List<Attraction> attractionList) {
                 if (attractionList == null) {
-                    Log.e(TAG, "RefreshParksTask.onPostExecute: parkList was null!");
+                    Log.e(TAG, "RefreshAttractionsFavesTask.onPostExecute: attrList was null!");
                 } else {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
@@ -420,7 +425,7 @@ public class AttractionOverviewActivity extends BaseActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a ParkListFragment (defined as a static inner class).
+            // Return a AttractionListFragment (defined as a static inner class).
             if (position >= fragmentList.size() || fragmentList.get(position) == null) {
                 AttractionListFragment newFragment = AttractionListFragment.newInstance(position, parkId);
                 fragmentList.add(newFragment);

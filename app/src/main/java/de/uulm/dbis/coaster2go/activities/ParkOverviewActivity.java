@@ -41,6 +41,7 @@ import java.util.List;
 
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.controller.OnParkItemClickListener;
+import de.uulm.dbis.coaster2go.controller.OnParkItemLongClickListener;
 import de.uulm.dbis.coaster2go.controller.ParkListAdapter;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.JsonManager;
@@ -158,14 +159,14 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
      * @param sortMode one of the sort modes available in {@link ParkListAdapter}
      */
     public void changeParkListSort(ParkListAdapter.SortMode sortMode) {
-        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        ParkListFragment currentFragment = getCurrentFragment();
         if (currentFragment != null && currentFragment.parkListAdapter != null) {
             currentFragment.parkListAdapter.changeSort(sortMode);
         }
     }
 
     private void refreshParkList() {
-        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        ParkListFragment currentFragment = getCurrentFragment();
         if (currentFragment != null && currentFragment.parkListAdapter != null) {
             currentFragment.progressBar.setVisibility(View.VISIBLE);
             currentFragment.refreshParkList();
@@ -173,7 +174,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
     }
 
     private void deleteParkGui(Park park) {
-        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        ParkListFragment currentFragment = getCurrentFragment();
         if (currentFragment != null && currentFragment.parkListAdapter != null) {
             int pos = currentFragment.parkListAdapter.getPositionOf(park);
             if (pos != -1) {
@@ -184,8 +185,17 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         }
     }
 
+    private ParkListFragment getCurrentFragment() {
+        try {
+            return tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "getCurrentFragment: No fragments in list", e);
+            return null;
+        }
+    }
+
     private void updateDistances(Location lastLocation) {
-        ParkListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+        ParkListFragment currentFragment = getCurrentFragment();
         if (currentFragment != null && currentFragment.parkListAdapter != null) {
             currentFragment.parkListAdapter.setLastLocation(lastLocation);
             currentFragment.parkListAdapter.notifyDataSetChanged();
@@ -293,50 +303,53 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
             List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
 
-            parkListAdapter = new ParkListAdapter(getContext(), parkList, new OnParkItemClickListener() {
-                @Override
-                public void onParkItemClick(Park park) {
-                    Intent intent = new Intent(getContext(), ParkDetailViewActivity.class);
-                    intent.putExtra("parkId", park.getId());
-                    startActivity(intent);
-                }
+            parkListAdapter = new ParkListAdapter(getContext(),
+                    parkList,
+                    new OnParkItemClickListener() {
+                        @Override
+                        public void onParkItemClick(Park park) {
+                            Intent intent = new Intent(getContext(), ParkDetailViewActivity.class);
+                            intent.putExtra("parkId", park.getId());
+                            startActivity(intent);
+                        }
+                    }, new OnParkItemLongClickListener() {
 
-                @Override
-                public boolean onParkItemLongClick(final Park park) {
-                    // open context menu for edit, delete, ...
-                    final Park p = park;
+                        @Override
+                        public boolean onParkItemLongClick(final Park park) {
+                            // open context menu for edit, delete, ...
+                            final Park p = park;
 
-                    FirebaseUser user = ((ParkOverviewActivity) getActivity()).user;
+                            FirebaseUser user = ((ParkOverviewActivity) getActivity()).user;
 
-                    if (user != null && park.getAdmin().equals(user.getUid())) {
-                        String[] menuOptions = {
-                                "Park bearbeiten",
-                                "Park löschen"};
-                        android.app.AlertDialog.Builder builder =
-                                new android.app.AlertDialog.Builder(getContext());
-                        builder.setTitle(park.getName())
-                                .setItems(menuOptions, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        switch (which) {
-                                            case 0:
-                                                Intent intent = new Intent(getContext(),
-                                                        EditParkActivity.class);
-                                                intent.putExtra("parkId", p.getId());
-                                                startActivity(intent);
-                                                break;
-                                            case 1:
-                                                showDeleteDialog(park);
-                                                break;
-                                        }
-                                    }
-                                });
-                        Dialog d = builder.create();
-                        d.show();
-                    }
+                            if (user != null && park.getAdmin().equals(user.getUid())) {
+                                String[] menuOptions = {
+                                        "Park bearbeiten",
+                                        "Park löschen"};
+                                android.app.AlertDialog.Builder builder =
+                                        new android.app.AlertDialog.Builder(getContext());
+                                builder.setTitle(park.getName())
+                                        .setItems(menuOptions, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which) {
+                                                    case 0:
+                                                        Intent intent = new Intent(getContext(),
+                                                                EditParkActivity.class);
+                                                        intent.putExtra("parkId", p.getId());
+                                                        startActivity(intent);
+                                                        break;
+                                                    case 1:
+                                                        showDeleteDialog(park);
+                                                        break;
+                                                }
+                                            }
+                                        });
+                                Dialog d = builder.create();
+                                d.show();
+                            }
 
-                    return true;
-                }
-            });
+                            return true;
+                        }
+                    });
 
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(
                     R.id.recyclerViewParkList);

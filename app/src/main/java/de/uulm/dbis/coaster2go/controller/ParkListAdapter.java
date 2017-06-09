@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
@@ -33,6 +36,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
     private List<Park> parkList;
     private Context context;
     private final OnParkItemClickListener clickListener;
+    private final OnParkItemLongClickListener longClickListener;
     private Location lastLocation;
 
     // Provide a reference to the views for each data item
@@ -44,6 +48,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         public RatingBar parkRating;
         public TextView parkLocation;
         public TextView parkDistance;
+        LinearLayout background;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -53,15 +58,19 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
             parkRating = (RatingBar) itemView.findViewById(R.id.parkList_rating);
             parkLocation = (TextView) itemView.findViewById(R.id.parkList_location);
             parkDistance = (TextView) itemView.findViewById(R.id.parkList_distance);
+
+            background = (LinearLayout) itemView.findViewById(R.id.parkList_bg);
         }
 
     }
 
     public ParkListAdapter(Context context, List<Park> parkList,
-                           OnParkItemClickListener clickListener) {
+                           OnParkItemClickListener clickListener,
+                           OnParkItemLongClickListener longClickListener) {
         this.context = context;
         this.parkList = parkList;
         this.clickListener = clickListener;
+        this.longClickListener = longClickListener;
     }
 
     @Override
@@ -81,6 +90,8 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         // get the park item based on position
         final Park park = parkList.get(position);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         // fill the view based on the data
         if (park.getImage() == null || park.getImage().isEmpty()) {
             Picasso.with(context).load(R.mipmap.ic_launcher).
@@ -89,7 +100,15 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
             Picasso.with(context).load(park.getImage()).into(viewHolder.parkImage);
         }
 
+        viewHolder.parkName.setSelected(true);
+
         viewHolder.parkName.setText(park.getName());
+        if (user != null && park.getAdmin().equals(user.getUid())) {
+            viewHolder.parkName.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_edit_black_24dp, 0, 0, 0);
+        } else {
+            viewHolder.parkName.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+        }
         viewHolder.parkRating.setRating((float) park.getAverageReview());
         viewHolder.parkLocation.setText(park.getLocation());
         Location parkLocationLatLng = new Location("");
@@ -119,7 +138,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                return clickListener.onParkItemLongClick(park);
+                return longClickListener.onParkItemLongClick(park);
             }
         });
     }

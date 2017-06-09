@@ -1,22 +1,15 @@
 package de.uulm.dbis.coaster2go.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
 import de.uulm.dbis.coaster2go.R;
-import de.uulm.dbis.coaster2go.data.*;
+import de.uulm.dbis.coaster2go.data.AzureDBManager;
+import de.uulm.dbis.coaster2go.data.AzureExampleData;
 
 public class TestDataActivity extends AppCompatActivity {
     //Daten zur Verwaltung
@@ -29,7 +22,7 @@ public class TestDataActivity extends AppCompatActivity {
         //Test if Animated Gif does get shown
         ImageView imageView = (ImageView) findViewById(R.id.gifView);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
-        Glide.with(this).load(R.raw.small_loader).into(imageViewTarget);
+        Glide.with(this).load(R.raw.loader_fast).into(imageViewTarget);
 
 
     //Thread testet die neusten Methoden des AzureDBManagers
