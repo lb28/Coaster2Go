@@ -125,9 +125,9 @@ public class EditAttractionActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
 
+                editTextAttrName.setText(String.valueOf(place.getName()));
                 editTextAttrLat.setText(String.valueOf(place.getLatLng().latitude));
                 editTextAttrLon.setText(String.valueOf(place.getLatLng().longitude));
-                editTextAttrTypes.setText(String.valueOf(place.getName()));
             }
         }
 

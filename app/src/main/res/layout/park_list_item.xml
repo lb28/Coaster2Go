@@ -15,9 +15,9 @@
 
     <ImageView
         android:id="@+id/parkList_image"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/park_image"
         android:src="@drawable/ic_local_activity_black_24dp" />
 
@@ -59,7 +59,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
         android:layout_marginLeft="5dp"
         android:orientation="vertical">
 
@@ -69,7 +69,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right|center"
-            android:text="Ort" />
+            android:ellipsize="end"
+            android:singleLine="true"
+            />
 
         <TextView
             android:id="@+id/parkList_distance"
@@ -77,7 +79,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right|center"
-            android:text="Entf." />
+            android:ellipsize="end"
+            android:singleLine="true"
+            />
 
     </LinearLayout>
 

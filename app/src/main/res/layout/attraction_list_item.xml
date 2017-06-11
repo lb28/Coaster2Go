@@ -52,43 +52,48 @@
 
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_weight="1">
+        android:orientation="vertical"
+        >
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/attrList_waitingBackground"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:color/transparent"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:elevation="0dp"
-            app:useCompatPadding="true"/>
+            android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/attrList_waitingTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:elevation="16dp"
-            android:text="000"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black"/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/attrList_waitingBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:color/transparent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                app:useCompatPadding="true"/>
+
+            <TextView
+                android:id="@+id/attrList_waitingTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:elevation="16dp"
+                android:text="000"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/black"/>
+        </FrameLayout>
+
 
         <TextView
             android:id="@+id/attrList_today_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|center_horizontal"
             android:gravity="center"
             android:text="Heute" />
-    </FrameLayout>
-
+    </LinearLayout>
 
 </LinearLayout>

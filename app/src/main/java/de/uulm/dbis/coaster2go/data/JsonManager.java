@@ -464,7 +464,10 @@ public class JsonManager {
                 String description = tmpAttraction.getString("description");
                 double lat = tmpAttraction.getDouble("lat");
                 double lon = tmpAttraction.getDouble("lon");
-                String image = tmpAttraction.getString("image");
+                String image = "";
+                if (tmpAttraction.has("image")) {
+                    image = tmpAttraction.getString("image");
+                }
                 int numberOfReviews = tmpAttraction.getInt("numberOfReviews");
                 double averageReview = tmpAttraction.getDouble("averageReview");
                 int numberOfWaitingTimes = tmpAttraction.getInt("numberOfWaitingTimes");
@@ -472,7 +475,7 @@ public class JsonManager {
                 int numberOfTodayWaitingTimes = tmpAttraction.getInt("numberOfTodayWaitingTimes");
                 int averageTodayWaitingTime = tmpAttraction.getInt("averageTodayWaitingTime");
                 int currentWaitingTime = tmpAttraction.getInt("currentWaitingTime");
-                Date lastUpdated = new Date();
+                Date lastUpdated;
                 try{
                     lastUpdated = new Date(tmpAttraction.getString("lastUpdated"));
                 }catch(Exception eaaa){

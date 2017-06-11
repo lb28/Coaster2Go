@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_text_save"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:onClick="saveAttr"/>
+                android:onClick="saveAttraction"/>
 
         </LinearLayout>
 
