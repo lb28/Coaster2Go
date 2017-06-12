@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +44,7 @@ import de.uulm.dbis.coaster2go.data.WaitingTime;
 public class AttractionDetailViewActivity extends BaseActivity {
 
     private static final String TAG = AttractionDetailViewActivity.class.getSimpleName();
+    public final int millisecondsOfADay = 86400000;
     private String attrID;
     private String parkId;
     private Attraction attr;
@@ -252,17 +252,16 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 //TAGES BESTIMMUNG LAST UPDATED
                 int lastYear = attr.getLastUpdated().getYear();
                 int lastMonth = attr.getLastUpdated().getMonth();
-                int lastDay = attr.getLastUpdated().getDay();
                 Date now = new Date();
                 if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
-                    if(DateUtils.isToday(attr.getLastUpdated().getTime())){
+                    if(now.getTime() - attr.getLastUpdated().getTime() < millisecondsOfADay){
                         //Date lastUpdated = attr.getLastUpdated();
                         //SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.GERMANY);
                         //String dateString = dateFormat.format(lastUpdated);
                         dateToday.setText("Heute");
-                    }else if(now.getDay() - lastDay == 1){
+                    }else if(now.getTime() - attr.getLastUpdated().getTime() < 2*millisecondsOfADay){
                         dateToday.setText("Gestern");
-                    }else if(now.getDay() - lastDay == 2){
+                    }else if(now.getTime() - attr.getLastUpdated().getTime() < 3*millisecondsOfADay){
                         dateToday.setText("Vorgestern");
                     }else{
                         Date lastUpdated = attr.getLastUpdated();

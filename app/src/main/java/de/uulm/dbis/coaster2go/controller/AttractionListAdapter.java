@@ -43,6 +43,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     private Context context;
     private final OnAttractionItemClickListener clickListener;
     private final OnAttractionItemLongClickListener longClickListener;
+    private final int millisecondsOfADay = 86400000;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -119,15 +120,14 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
 
         int lastYear = attraction.getLastUpdated().getYear();
         int lastMonth = attraction.getLastUpdated().getMonth();
-        int lastDay = attraction.getLastUpdated().getDay();
         Date now = new Date();
         if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
-            if(DateUtils.isToday(attraction.getLastUpdated().getTime())){
+            if(now.getTime() - attraction.getLastUpdated().getTime() < millisecondsOfADay){
                 Date lastUpdated = attraction.getLastUpdated();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.GERMANY);
                 String dateString = dateFormat.format(lastUpdated);
                 viewHolder.attractionDate.setText("Heute\n"+dateString);
-            }else if(now.getDay() - lastDay == 1){
+            }else if(now.getTime() - attraction.getLastUpdated().getTime() < 2*millisecondsOfADay){
                 viewHolder.attractionDate.setText("Gestern");
             }else{
                 Date lastUpdated = attraction.getLastUpdated();
