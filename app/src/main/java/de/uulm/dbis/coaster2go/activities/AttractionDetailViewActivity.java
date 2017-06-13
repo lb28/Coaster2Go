@@ -146,6 +146,10 @@ public class AttractionDetailViewActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 try {
+
+                    //TODO check for location (if too far from attraction -> waiting time not allowed
+
+
                     wt = new WaitingTime(attrID, user.getDisplayName(), user.getUid(),
                             Integer.parseInt(enterTime.getText().toString()));
 
@@ -227,7 +231,9 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
                 } else {
                     // No user is signed in
-                    enterTime.setVisibility(View.INVISIBLE);
+                    enterTime.setVisibility(View.VISIBLE);
+                    enterTime.setHint("Einloggen um Wartezeiten einzutragen");
+                    enterTime.setEnabled(false);
                     labelMinutes.setVisibility(View.INVISIBLE);
                     buttonSave.setVisibility(View.INVISIBLE);
                 }
