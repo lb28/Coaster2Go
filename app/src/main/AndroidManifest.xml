@@ -28,7 +28,10 @@
         <activity
             android:name=".activities.BaseActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,13 +44,7 @@
         <activity
             android:name=".activities.ParkOverviewActivity"
             android:label="@string/title_activity_park_overview"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.ParkDetailViewActivity"
             android:parentActivityName=".activities.ParkOverviewActivity" />
@@ -70,7 +67,7 @@
         <activity
             android:name=".activities.MapViewActivity"
             android:parentActivityName=".activities.EditParkActivity" />
-        <activity android:name=".activities.EditAttractionActivity"></activity>
+        <activity android:name=".activities.EditAttractionActivity" />
     </application>
 
 </manifest>

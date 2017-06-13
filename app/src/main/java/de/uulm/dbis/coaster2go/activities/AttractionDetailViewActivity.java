@@ -23,6 +23,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -344,6 +345,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
 
                 barChart.setData(barData);
                 barChart.setFitBars(true); // make the x-axis fit exactly all bars
+                barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
                 barChart.invalidate();
             }
             //progressBar.setVisibility(View.GONE);

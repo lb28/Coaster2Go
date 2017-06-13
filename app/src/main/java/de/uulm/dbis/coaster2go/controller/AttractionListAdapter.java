@@ -103,9 +103,14 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         }
         viewHolder.attractionName.setText(attraction.getName());
         viewHolder.attractionRating.setRating((float) attraction.getAverageReview());
+
+        //If Latest WaitingTime is from Today use the last three ones else use the average of the last day with waiting times:
+        Date now = new Date();
+        if(now.getTime() - attraction.getLastUpdated().getTime() >= millisecondsOfADay){
+            attraction.setCurrentWaitingTime(attraction.getAverageTodayWaitingTime());
+        }
+
         viewHolder.attractionWaitingTime.setText(attraction.getCurrentWaitingTime()+"");
-        //Experimental use the todayAverage instead of the currentWaitingTime for the overview
-        //viewHolder.attractionWaitingTime.setText(attraction.getAverageTodayWaitingTime()+"");
 
         if(attraction.getCurrentWaitingTime() < attraction.getAverageWaitingTime()*0.7 || attraction.getCurrentWaitingTime() <= 10){
             viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
@@ -120,13 +125,12 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
 
         int lastYear = attraction.getLastUpdated().getYear();
         int lastMonth = attraction.getLastUpdated().getMonth();
-        Date now = new Date();
         if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
             if(now.getTime() - attraction.getLastUpdated().getTime() < millisecondsOfADay){
                 Date lastUpdated = attraction.getLastUpdated();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.GERMANY);
                 String dateString = dateFormat.format(lastUpdated);
-                viewHolder.attractionDate.setText("Heute\n"+dateString);
+                viewHolder.attractionDate.setText("Heute "+dateString);
             }else if(now.getTime() - attraction.getLastUpdated().getTime() < 2*millisecondsOfADay){
                 viewHolder.attractionDate.setText("Gestern");
             }else{

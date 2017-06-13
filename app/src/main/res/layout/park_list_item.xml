@@ -36,8 +36,8 @@
             android:text="@string/name"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textSize="18sp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:marqueeRepeatLimit="marquee_forever"
             />
 
