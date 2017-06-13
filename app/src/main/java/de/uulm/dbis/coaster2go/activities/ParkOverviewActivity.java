@@ -317,7 +317,6 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                         @Override
                         public boolean onParkItemLongClick(final Park park) {
                             // open context menu for edit, delete, ...
-                            final Park p = park;
 
                             FirebaseUser user = ((ParkOverviewActivity) getActivity()).user;
 
@@ -334,7 +333,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                                                     case 0:
                                                         Intent intent = new Intent(getContext(),
                                                                 EditParkActivity.class);
-                                                        intent.putExtra("parkId", p.getId());
+                                                        intent.putExtra("parkId", park.getId());
                                                         startActivity(intent);
                                                         break;
                                                     case 1:

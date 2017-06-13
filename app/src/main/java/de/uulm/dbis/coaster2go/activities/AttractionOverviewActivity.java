@@ -24,8 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +51,7 @@ public class AttractionOverviewActivity extends BaseActivity {
     private int currentFragmentIndex;
 
     private String parkId;
-    private boolean isParkAdmin;
+    private static boolean isParkAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,13 +220,10 @@ public class AttractionOverviewActivity extends BaseActivity {
                         }
                     }, new OnAttractionItemLongClickListener() {
                         @Override
-                        public boolean onAttractionItemLongClick(Attraction attraction) {
+                        public boolean onAttractionItemLongClick(final Attraction attr) {
                             // open context menu for edit, delete, ...
-                            final Attraction attr = attraction;
 
-                            FirebaseUser user = ((AttractionOverviewActivity) getActivity()).user;
-
-                            if (user != null && attr.getParkId().equals(user.getUid())) {
+                            if (isParkAdmin) {
                                 String[] menuOptions = {
                                         "Attraktion bearbeiten",
                                         "Attraktion löschen"};
