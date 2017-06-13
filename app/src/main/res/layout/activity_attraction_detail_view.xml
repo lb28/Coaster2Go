@@ -103,7 +103,7 @@
             android:layout_below="@id/attr_detail_header_rellayout"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:id="@+id/attr_detail_waitingtime_view_rellayout">
 
             <LinearLayout
@@ -243,7 +243,7 @@
             android:id="@+id/attr_detail_barchart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="120dp"
+            android:minHeight="130dp"
             android:layout_below="@id/attr_detail_waitingtime_view_rellayout"/>
 
         <LinearLayout

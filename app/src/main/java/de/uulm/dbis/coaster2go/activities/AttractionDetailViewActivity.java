@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -330,14 +332,14 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 ArrayList<BarEntry> yVals1 = new ArrayList<>();
                 yVals1.add(new BarEntry(0, 0));
                 for(int i=8; i<21; i++){
-                    yVals1.add(new BarEntry(i-6, hashMap.get(i)));
+                    yVals1.add(new BarEntry(i-7, hashMap.get(i)));
                 }
-                yVals1.add(new BarEntry(17, 0));
+                yVals1.add(new BarEntry(14, 0));
 
                 BarDataSet barDataSet = new BarDataSet(yVals1, "values");
 
                 ArrayList<String> labels = new ArrayList<>();
-                for(int i=6; i<23; i++){
+                for(int i=7; i<22; i++){
                     labels.add("" + i + " Uhr");
                 }
 
@@ -346,6 +348,16 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 barChart.setData(barData);
                 barChart.setFitBars(true); // make the x-axis fit exactly all bars
                 barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+
+                Description d = new Description();
+                //falls wir doch noch eine Beschreibung wollten
+                //d.setText("Durchschnittliche Wartezeit in Minuten");
+                d.setEnabled(false);
+                barChart.setDescription(d);
+
+                Legend l = barChart.getLegend();
+                l.setEnabled(false);
+
                 barChart.invalidate();
             }
             //progressBar.setVisibility(View.GONE);
