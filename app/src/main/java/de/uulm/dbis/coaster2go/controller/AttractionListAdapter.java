@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,6 +121,8 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
             viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
             viewHolder.attractionWaitingTime.setTextColor(Color.BLACK);
         }
+
+        viewHolder.attractionWaitingBackground.setCompatElevation(0);
 
         int lastYear = attraction.getLastUpdated().getYear();
         int lastMonth = attraction.getLastUpdated().getMonth();

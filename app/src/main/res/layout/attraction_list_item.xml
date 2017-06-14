@@ -74,13 +74,14 @@
                 android:gravity="center"
                 app:useCompatPadding="true"/>
 
+            <!-- TextView not visible in preview because of elevation,
+            but fab's elevation can be set to 0 in code -->
             <TextView
                 android:id="@+id/attrList_waitingTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:elevation="16dp"
                 android:text="000"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black"/>

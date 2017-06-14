@@ -1,13 +1,19 @@
 package de.uulm.dbis.coaster2go.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +32,9 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -44,16 +53,28 @@ import de.uulm.dbis.coaster2go.data.JsonManager;
 import de.uulm.dbis.coaster2go.data.WaitingTime;
 
 
-public class AttractionDetailViewActivity extends BaseActivity {
+public class AttractionDetailViewActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    /**
+     * the gps permission request code
+     */
+    private static final int RC_PERM_GPS = 502;
 
     private static final String TAG = AttractionDetailViewActivity.class.getSimpleName();
+    private static final float MAX_DISTANCE_TO_ATTR_METERS = 50 * 1000;
     public final int millisecondsOfADay = 86400000;
     private String attrID;
     private String parkId;
     private Attraction attr;
     private FirebaseUser user;
 
-    private WaitingTime wt;
+    /**
+     * caution: may be null! (is null at the beginning)
+     */
+    private Location currentUserLocation;
+
+    // GoogleApiClient for location service
+    private GoogleApiClient mGoogleApiClient;
 
     private HashMap<Integer, Integer> hashMap;
 
@@ -91,6 +112,10 @@ public class AttractionDetailViewActivity extends BaseActivity {
         buttonCurrentWait = (FloatingActionButton) findViewById(R.id.button_detail_wait_current);
         buttonTodayWait = (FloatingActionButton) findViewById(R.id.button_detail_wait_today);
         buttonAlltimeWait = (FloatingActionButton) findViewById(R.id.button_detail_wait_alltime);
+
+        buttonCurrentWait.setCompatElevation(0);
+        buttonTodayWait.setCompatElevation(0);
+        buttonAlltimeWait.setCompatElevation(0);
 
         barChart = (BarChart) findViewById(R.id.attr_detail_barchart);
 
@@ -142,27 +167,7 @@ public class AttractionDetailViewActivity extends BaseActivity {
             }
         });
 
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-
-                    //TODO check for location (if too far from attraction -> waiting time not allowed
-
-
-                    wt = new WaitingTime(attrID, user.getDisplayName(), user.getUid(),
-                            Integer.parseInt(enterTime.getText().toString()));
-
-                    //create a new waiting time with the entered minutes
-                    //then set the gui elements disabled
-                    new CreateWaitingTimeAsync().execute();
-                } catch (NumberFormatException nfe) {
-                    Snackbar.make(findViewById(R.id.coordinatorLayout_AttrDetailview),
-                            "Geben Sie eine gültige Zahl ein", Snackbar.LENGTH_SHORT).show();
-                }
-
-            }
-        });
+        buttonSave.setOnClickListener(new CreateWaitingTimeClickListener());
 
         buttonMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +179,63 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    private class CreateWaitingTimeClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            try {
+
+                // TODO test if this works
+
+                if (currentUserLocation == null) {
+                    return;
+                }
+
+                Location attrLocation = new Location("");
+                attrLocation.setLatitude(attr.getLat());
+                attrLocation.setLongitude(attr.getLon());
+
+                if (attrLocation.distanceTo(currentUserLocation) > MAX_DISTANCE_TO_ATTR_METERS) {
+                    Snackbar.make(findViewById(R.id.coordinatorLayout_AttrDetailview),
+                            "Zu weit von Attraktion entfernt", Snackbar.LENGTH_SHORT).show();
+                    enterTime.setEnabled(false);
+                    buttonSave.setEnabled(false);
+                } else {
+                    WaitingTime wt = new WaitingTime(attrID, user.getDisplayName(), user.getUid(),
+                            Integer.parseInt(enterTime.getText().toString()));
+
+                    new CreateWaitingTimeAsync().execute(wt);
+                }
+
+
+            } catch (NumberFormatException nfe) {
+                Snackbar.make(findViewById(R.id.coordinatorLayout_AttrDetailview),
+                        "Geben Sie eine gültige Zahl ein", Snackbar.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void goToWaitingTimeOverview(View view) {
@@ -190,7 +252,66 @@ public class AttractionDetailViewActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    public class LoadAttrAsync extends AsyncTask<Void, Void, Attraction> {
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
+                    "Standortberechtigung nicht erteilt",
+                    Snackbar.LENGTH_SHORT);
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RC_PERM_GPS);
+
+            return;
+        }
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        // update the location
+        currentUserLocation = lastLocation;
+        updateLocationGUI();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // TODO what does the parameter do?
+        Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
+                "Standort: Verbindung unterbrochen",
+                Snackbar.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
+                "Standort konnte nicht ermittelt werden",
+                Snackbar.LENGTH_SHORT);
+    }
+
+    /**
+     * updates the GUI to match the location (i.e. distance too big?)
+     */
+    private void updateLocationGUI() {
+        if (currentUserLocation != null) {
+
+            Location attrLocation = new Location("");
+            attrLocation.setLatitude(attr.getLat());
+            attrLocation.setLongitude(attr.getLon());
+
+            if (attrLocation.distanceTo(currentUserLocation) > MAX_DISTANCE_TO_ATTR_METERS) {
+                // too far away
+                enterTime.setHint("Zu weit entfernt");
+                enterTime.setEnabled(false);
+                buttonSave.setEnabled(false);
+            } else {
+                enterTime.setHint("Minuten eingeben");
+                enterTime.setEnabled(true);
+                buttonSave.setEnabled(true);
+            }
+        }
+    }
+
+    private class LoadAttrAsync extends AsyncTask<Void, Void, Attraction> {
 
         @Override
         protected void onPreExecute() {
@@ -241,7 +362,11 @@ public class AttractionDetailViewActivity extends BaseActivity {
                 //bar chart
                 new LoadBarChartDataAsync().execute();
 
-                Picasso.with(AttractionDetailViewActivity.this).load(attr2.getImage()).into(attrImage);
+                if (attr2.getImage() != null && !attr2.getImage().isEmpty()) {
+                    Picasso.with(AttractionDetailViewActivity.this).load(attr2.getImage()).into(attrImage);
+                } else {
+                    Picasso.with(AttractionDetailViewActivity.this).load(R.mipmap.ic_theme_park).into(attrImage);
+                }
                 attrName.setText(attr2.getName());
                 attrName.setSelected(true);
                 attrRatingbar.setRating((float) attr2.getAverageReview());
@@ -397,23 +522,44 @@ public class AttractionDetailViewActivity extends BaseActivity {
         }
     }
 
-    public class CreateWaitingTimeAsync extends AsyncTask<Void, Void, WaitingTime> {
+    /**
+     * create a new waiting time with the entered minutes,
+     * then set the gui elements disabled
+     */
+    private class CreateWaitingTimeAsync extends AsyncTask<WaitingTime, Void, WaitingTime> {
 
         @Override
-        protected void onPreExecute() {AttractionDetailViewActivity.this.progressBar.setVisibility(View.VISIBLE);
+        protected void onPreExecute() {
+            AttractionDetailViewActivity.this.progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected WaitingTime doInBackground(Void... params) {
+        protected WaitingTime doInBackground(WaitingTime... params) {
+            WaitingTime wt = params[0];
+            if (wt == null) {
+                Log.e(TAG, "CreateWaitingTimeAsync.doInBackground: wt was null");
+                return null;
+            }
             return new AzureDBManager(AttractionDetailViewActivity.this).createWaitingTime(wt);
         }
 
         @Override
-        protected void onPostExecute(WaitingTime w) {
-            if (w == null) {
-                Log.e("", "CreateWaitingTimeAsync.onPostExecute: w was null!");
+        protected void onPostExecute(WaitingTime wt) {
+            if (wt == null) {
+                Log.e(TAG, "CreateWaitingTimeAsync.onPostExecute: wt was null!");
+                Snackbar.make(findViewById(R.id.coordinatorLayout_AttrDetailview),
+                        "Wartezeit konnte nicht eingetragen werden", Snackbar.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(AttractionDetailViewActivity.this, "Wartezeit eingetragen", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinatorLayout_AttrDetailview),
+                        "Wartezeit eingetragen", Snackbar.LENGTH_LONG)
+                        .setAction("TODO 'Rückgängig'?", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // TODO implement a "delete waitingtime" task, or delete this action
+                                Toast.makeText(AttractionDetailViewActivity.this, "TODO", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
 
                 enterTime.setEnabled(false);
                 buttonSave.setEnabled(false);
@@ -470,5 +616,17 @@ public class AttractionDetailViewActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if(requestCode == RC_PERM_GPS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission granted
+                onConnected(null);
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
 }
