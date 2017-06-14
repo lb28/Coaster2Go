@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -388,7 +389,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 int lastMonth = attr.getLastUpdated().getMonth();
                 Date now = new Date();
                 if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
-                    if(now.getTime() - attr.getLastUpdated().getTime() < millisecondsOfADay){
+                    if(DateUtils.isToday(attr.getLastUpdated().getTime())){
                         //Date lastUpdated = attr.getLastUpdated();
                         //SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.GERMANY);
                         //String dateString = dateFormat.format(lastUpdated);

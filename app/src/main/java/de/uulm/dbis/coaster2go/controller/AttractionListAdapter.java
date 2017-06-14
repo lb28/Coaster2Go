@@ -104,8 +104,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         viewHolder.attractionRating.setRating((float) attraction.getAverageReview());
 
         //If Latest WaitingTime is from Today use the last three ones else use the average of the last day with waiting times:
-        Date now = new Date();
-        if(now.getTime() - attraction.getLastUpdated().getTime() >= millisecondsOfADay){
+        if(!DateUtils.isToday(attraction.getLastUpdated().getTime())){
             attraction.setCurrentWaitingTime(attraction.getAverageTodayWaitingTime());
         }
 
@@ -126,8 +125,9 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
 
         int lastYear = attraction.getLastUpdated().getYear();
         int lastMonth = attraction.getLastUpdated().getMonth();
+        Date now = new Date();
         if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
-            if(now.getTime() - attraction.getLastUpdated().getTime() < millisecondsOfADay){
+            if(DateUtils.isToday(attraction.getLastUpdated().getTime())){
                 Date lastUpdated = attraction.getLastUpdated();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.GERMANY);
                 String dateString = dateFormat.format(lastUpdated);
