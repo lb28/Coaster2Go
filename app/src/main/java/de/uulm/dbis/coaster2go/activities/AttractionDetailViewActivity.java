@@ -309,6 +309,8 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 enterTime.setEnabled(true);
                 buttonSave.setEnabled(true);
             }
+
+            Log.d(TAG, "updateLocationGUI: ACCURACY " + currentUserLocation.getAccuracy() + "m");
         }
     }
 

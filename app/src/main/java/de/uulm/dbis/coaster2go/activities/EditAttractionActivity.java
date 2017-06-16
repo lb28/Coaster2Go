@@ -190,7 +190,7 @@ public class EditAttractionActivity extends BaseActivity {
                 lon = Double.parseDouble(params[4]);
             } catch (NumberFormatException nfe) {
                 nfe.printStackTrace();
-                Snackbar.make(findViewById(R.id.coordinatorLayout_EditPark),
+                Snackbar.make(findViewById(R.id.coordinatorLayout_EditAttr),
                         "Überprüfen Sie die Koordinaten", Snackbar.LENGTH_SHORT).show();
                 cancel(true);
             }
