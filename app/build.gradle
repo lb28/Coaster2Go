@@ -24,11 +24,18 @@ android {
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/raw'] } }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    compile 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.7.0'
+
     // Required -- JUnit 4 framework
     // AZURE
     // FIREBASE
@@ -59,6 +66,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.google.android.gms:play-services-location:10.2.0'
     compile 'com.google.android.gms:play-services-places:10.2.0'
+    compile 'com.cloudinary:cloudinary-http44:1.13.0'
     testCompile 'junit:junit:4.12'
 }
 
@@ -68,3 +76,4 @@ dependencies {
 
 
 apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.getkeepsafe.dexcount'
