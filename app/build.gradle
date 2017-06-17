@@ -22,10 +22,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/raw'] } }
-}
 
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -64,7 +61,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.google.android.gms:play-services-location:10.2.0'
     compile 'com.google.android.gms:play-services-places:10.2.0'
-    compile 'com.cloudinary:cloudinary-http44:1.13.0'
+    compile 'com.cloudinary:cloudinary-android:1.13.0'
     testCompile 'junit:junit:4.12'
 }
 

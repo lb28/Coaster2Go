@@ -1,5 +1,10 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Coaster2Go</string>
+
+    <!-- Cloudinary -->
+    <string name="cloudinary_conn_url" translatable="false"
+        >cloudinary://345643398363983:YbroL3aZYf5jrUpkKcJ_AXGDGp8@coaster2go</string>
+
     <string name="facebook_application_id" translatable="false">810569725772828</string>
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fb810569725772828</string>

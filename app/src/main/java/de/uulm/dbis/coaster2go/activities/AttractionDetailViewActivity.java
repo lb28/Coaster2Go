@@ -276,7 +276,6 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
 
     @Override
     public void onConnectionSuspended(int i) {
-        // TODO what does the parameter do?
         Snackbar.make(findViewById(R.id.coordinatorLayout_ParkOverview),
                 "Standort: Verbindung unterbrochen",
                 Snackbar.LENGTH_SHORT);

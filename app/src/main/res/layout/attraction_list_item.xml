@@ -72,6 +72,7 @@
                 android:src="@android:color/transparent"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:focusable="false"
                 app:useCompatPadding="true"/>
 
             <!-- TextView not visible in preview because of elevation,

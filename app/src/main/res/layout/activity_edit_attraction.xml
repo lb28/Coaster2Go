@@ -21,13 +21,12 @@
 
             <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:minHeight="200dp">
+                android:layout_height="200dp">
                 <ImageView
                     android:id="@+id/imageViewEditAttr"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
                     android:contentDescription="@string/attr_image" />
 
                 <android.support.design.widget.FloatingActionButton
@@ -40,7 +39,7 @@
                     app:layout_anchor="@id/imageViewEditAttr"
                     app:layout_anchorGravity="bottom|right"
                     android:layout_margin="10dp"
-                    android:onClick="addAttrImage"
+                    android:onClick="addAttrImageDialog"
                     />
             </android.support.design.widget.CoordinatorLayout>
 
@@ -53,7 +52,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.5"
-                android:minHeight="220dp"
                 android:orientation="vertical"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin">
@@ -135,6 +133,8 @@
                         android:id="@+id/editTextAttrDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLines="3"
+                        android:inputType="textMultiLine"
                         android:hint="@string/description" />
                 </android.support.design.widget.TextInputLayout>
 

@@ -34,10 +34,8 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         NAME, RATING, WAIT_TIME
     }
 
+    // TODO use currentSortMode
     private SortMode currentSortMode;
-
-    // TODO implement SortedList?
-    // private SortedList<Park> parkList;
 
     private List<Attraction> attractionList;
     private Context context;

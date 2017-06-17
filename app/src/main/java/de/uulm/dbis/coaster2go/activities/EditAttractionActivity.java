@@ -1,35 +1,56 @@
 package de.uulm.dbis.coaster2go.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.ProgressCallback;
+import com.cloudinary.Transformation;
+import com.cloudinary.utils.ObjectUtils;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 
 public class EditAttractionActivity extends BaseActivity {
-    static final int PLACE_PICKER_REQUEST = 8;
 
+    private static final String TAG = "EditAttractionActivity";
     EditText editTextAttrName;
     EditText editTextAttrTypes;
     EditText editTextAttrLat;
     EditText editTextAttrLon;
     EditText editTextAttrDescription;
     ImageView imageViewAttr;
+
+    ProgressDialog progressDialog;
 
     String attrImageUrl;
     String attrId;
@@ -77,14 +98,41 @@ public class EditAttractionActivity extends BaseActivity {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try {
-            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+            startActivityForResult(builder.build(this), RC_PLACE_PICKER);
         } catch (GooglePlayServicesRepairableException
                 | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
     }
 
-    public void addAttrImage(View view) {
+    public void addAttrImageDialog(View view) {
+        String[] options = {"Foto aufnehmen", "Aus Galerie wählen", "URL eingeben"};
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Bild hinzufügen");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    launchCamera();
+                } else if (which == 1) {
+                    launchGallery();
+                } else if (which == 2) {
+                    launchURLImageDialog();
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void launchURLImageDialog() {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.add_image);
         final EditText editTextAttrImageUrl = new EditText(this);
@@ -117,17 +165,111 @@ public class EditAttractionActivity extends BaseActivity {
         });
 
         builder.show();
+
+    }
+
+    public void launchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, RC_IMAGE_CAPTURE);
+        }
+    }
+
+    public void launchGallery() {
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user
+                Snackbar.make(findViewById(R.id.coordinatorLayout_EditAttr),
+                        "Berechtigung zum Lesen der Bilder benötigt",
+                        Snackbar.LENGTH_LONG).show();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        RC_READ_EXTERNAL_STORAGE);
+
+            }
+
+            return;
+        }
+
+        Intent intent;
+        intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+
+        startActivityForResult(intent, RC_PICK_IMAGE);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case RC_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted
+                    Intent intent;
+                    intent = new Intent();
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+
+                    startActivityForResult(intent, RC_PICK_IMAGE);
+
+
+                }
+            }
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
+        if (requestCode == RC_PLACE_PICKER) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
 
                 editTextAttrName.setText(String.valueOf(place.getName()));
                 editTextAttrLat.setText(String.valueOf(place.getLatLng().latitude));
                 editTextAttrLon.setText(String.valueOf(place.getLatLng().longitude));
+            }
+        } else if (requestCode == RC_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Bitmap picture = (Bitmap) data.getExtras().get("data");
+
+                // upload the picture with cloudinary
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                if (picture == null) {
+                    Snackbar.make(findViewById(R.id.coordinatorLayout_EditAttr),
+                            "Bild konnte nicht übertragen werden", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                picture.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                new CloudinaryUploadTask().execute((Object) bos.toByteArray());
+            }
+        } else if (requestCode == RC_PICK_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                final Uri uri = data.getData();
+                if (uri == null) {
+                    Snackbar.make(findViewById(R.id.coordinatorLayout_EditAttr),
+                            "Bild wurde nicht gefunden", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
+                File imageFile = getFileFromURI(uri);
+                new CloudinaryUploadTask().execute(imageFile);
             }
         }
 
@@ -154,7 +296,7 @@ public class EditAttractionActivity extends BaseActivity {
                     Picasso.with(EditAttractionActivity.this).load(attr.getImage()).into(imageViewAttr);
                     attrImageUrl = attr.getImage();
                 } else {
-                    Picasso.with(EditAttractionActivity.this).load(R.mipmap.ic_launcher).into(imageViewAttr);
+                    Picasso.with(EditAttractionActivity.this).load(R.mipmap.ic_theme_park).into(imageViewAttr);
                     attrImageUrl = "";
                 }
                 editTextAttrName.setText(attr.getName());
@@ -164,6 +306,7 @@ public class EditAttractionActivity extends BaseActivity {
                 editTextAttrDescription.setText(attr.getDescription());
             }
             progressBar.setVisibility(View.GONE);
+
         }
     }
 
@@ -228,5 +371,77 @@ public class EditAttractionActivity extends BaseActivity {
                 startActivity(intent);
             }
         }
+    }
+
+    private class CloudinaryUploadTask extends AsyncTask<Object, Integer, Map> {
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(EditAttractionActivity.this);
+            progressDialog.setTitle("Bild wird hochgeladen");
+            progressDialog.setMessage("asdasd");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setMax(100);
+            progressDialog.show();
+            progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    cancel(true);
+                }
+            });
+        }
+
+        @Override
+        protected Map doInBackground(Object... params) {
+            Cloudinary cloudinary = new Cloudinary(getString(R.string.cloudinary_conn_url));
+            Map uploadResult = null;
+
+            try {
+                Object file = params[0];
+                uploadResult = cloudinary.uploader().upload(
+                        file,
+                        ObjectUtils.asMap("transformation",
+                        new Transformation().width(2000).height(2000).crop("limit")),
+                        new ProgressCallback() {
+                            @Override
+                            public void onProgress(long bytesUploaded, long totalBytes) {
+                                int percent = (int) (bytesUploaded * 100 / totalBytes);
+                                publishProgress(percent);
+                            }
+                        });
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                Log.e(TAG, "doInBackground: params empty", e);
+            }
+            return uploadResult;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... percentValues) {
+            progressDialog.setProgress(percentValues[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Map uploadResult) {
+            if (uploadResult == null) {
+                Snackbar.make(findViewById(R.id.coordinatorLayout_EditAttr),
+                        "Upload fehlgeschlagen", Snackbar.LENGTH_SHORT).show();
+            } else {
+                // update the Url and the visible picture
+                attrImageUrl = (String) uploadResult.get("secure_url");
+                Picasso.with(EditAttractionActivity.this).load(attrImageUrl).into(imageViewAttr);
+            }
+
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

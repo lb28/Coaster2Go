@@ -1,6 +1,9 @@
 package de.uulm.dbis.coaster2go.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -30,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.File;
 import java.util.Arrays;
 
 import de.uulm.dbis.coaster2go.R;
@@ -43,6 +47,11 @@ import de.uulm.dbis.coaster2go.R;
  */
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int RC_SIGN_IN = 1;
+    public static final int RC_IMAGE_CAPTURE = 6;
+    public static final int RC_PICK_IMAGE = 7;
+    public static final int RC_PLACE_PICKER = 8;
+    public static final int RC_READ_EXTERNAL_STORAGE = 9;
+
     private static final String TAG = "BaseActivity";
 
     FirebaseUser user;
@@ -245,6 +254,21 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         );
     }
 
+    public File getFileFromURI(Uri contentUri) {
+        File result = null;
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            String path = cursor.getString(column_index);
+            result = new File(path);
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return result;
+    }
 
 
 }
