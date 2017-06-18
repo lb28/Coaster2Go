@@ -62,7 +62,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
     private static final int RC_PERM_GPS = 502;
 
     private static final String TAG = AttractionDetailViewActivity.class.getSimpleName();
-    private static final float MAX_DISTANCE_TO_ATTR_METERS = 50 * 1000;
+    private static final float MAX_DISTANCE_TO_ATTR_METERS = 250 * 1000; //Enough km to rate the EP from here
     public final int millisecondsOfADay = 86400000;
     private String attrID;
     private String parkId;
@@ -229,6 +229,9 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                             Integer.parseInt(enterTime.getText().toString()));
 
                     new CreateWaitingTimeAsync().execute(wt);
+
+                    enterTime.setEnabled(false);
+                    buttonSave.setEnabled(false);
                 }
 
 
@@ -271,7 +274,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
 
         // update the location
         currentUserLocation = lastLocation;
-        updateLocationGUI();
+
     }
 
     @Override
@@ -334,6 +337,10 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
             } else {
                 attr = attr2;
                 parkId = attr.getParkId();
+
+                //Location
+                updateLocationGUI();
+
                 //fave
                 new LoadFaveAsync().execute();
 
@@ -493,7 +500,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
 
                 barChart.invalidate();
             }
-            //progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         }
     }
 

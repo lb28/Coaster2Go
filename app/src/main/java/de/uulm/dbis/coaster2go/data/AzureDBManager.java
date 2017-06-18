@@ -96,7 +96,7 @@ public class AzureDBManager {
                 HttpURLConnection urlc = (HttpURLConnection) (new URL("http://clients3.google.com/generate_204").openConnection()); //TEst Website
                 urlc.setRequestProperty("User-Agent", "Test");
                 urlc.setRequestProperty("Connection", "close");
-                urlc.setConnectTimeout(2000); //Time until the Method decides, that there is no reliable internet connection
+                urlc.setConnectTimeout(1500); //Time until the Method decides, that there is no reliable internet connection
                 urlc.connect();
                 return (urlc.getResponseCode() == 204); //Check for no content status
                 //return (urlc.getResponseCode() == 200); //check for ok status
