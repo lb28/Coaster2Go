@@ -50,9 +50,10 @@ public class ParkDetailViewActivity extends BaseActivity {
         buttonMaps = (ImageButton) findViewById(R.id.park_detail_button_maps);
         buttonAttractions = (Button) findViewById(R.id.park_detail_button_attractions);
 
-        // enable buttons
+        // disable buttons
         buttonMaps.setEnabled(false);
         buttonFav.setEnabled(false);
+        buttonAttractions.setEnabled(false);
 
         //get parkID from intent (clicked list item from previous activity)
         parkId = getIntent().getStringExtra("parkId");
@@ -90,11 +91,14 @@ public class ParkDetailViewActivity extends BaseActivity {
     }
 
     public void goToAttractionOverview(View view) {
+        if (park == null) {
+            return;
+        }
         Intent intent = new Intent(this, AttractionOverviewActivity.class);
-        intent.putExtra("parkId", parkId);
         if (user != null){
             intent.putExtra("isParkAdmin", park.getAdmin().equals(user.getUid()));
         }
+        intent.putExtra("parkId", parkId);
         startActivity(intent);
     }
 
@@ -130,7 +134,7 @@ public class ParkDetailViewActivity extends BaseActivity {
                 park = park2;
                 if (park2.getImage() == null || park2.getImage().isEmpty()) {
                     Picasso.with(ParkDetailViewActivity.this)
-                            .load(R.mipmap.ic_launcher).into(parkImage);
+                            .load(R.drawable.ic_theme_park).into(parkImage);
                 } else {
                     Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
                 }
@@ -164,6 +168,7 @@ public class ParkDetailViewActivity extends BaseActivity {
                 // enable buttons
                 buttonMaps.setEnabled(true);
                 buttonFav.setEnabled(true);
+                buttonAttractions.setEnabled(true);
             }
             progressBar.setVisibility(View.GONE);
         }

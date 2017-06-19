@@ -62,6 +62,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.2.0'
     compile 'com.google.android.gms:play-services-places:10.2.0'
     compile 'com.cloudinary:cloudinary-android:1.13.0'
+    //compile 'com.beloo.widget:ChipsLayoutManager:0.3.7@aar'
+    compile 'com.github.pchmn:MaterialChipsInput:1.0.8'
+
+
     testCompile 'junit:junit:4.12'
 }
 

@@ -94,7 +94,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
 
         // fill the view based on the data
         if (park.getImage() == null || park.getImage().isEmpty()) {
-            Picasso.with(context).load(R.mipmap.ic_theme_park)
+            Picasso.with(context).load(R.drawable.ic_theme_park)
                     .into(viewHolder.parkImage);
         } else {
             Picasso.with(context).load(park.getImage())

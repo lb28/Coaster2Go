@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="75dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
+    android:paddingRight="5dp"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
     android:orientation="horizontal"
@@ -14,11 +13,12 @@
 
     <ImageView
         android:id="@+id/attrList_image"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.9"
-        android:src="@drawable/ic_local_activity_black_24dp"
-        android:contentDescription="@string/park_image" />
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_theme_park"
+        android:contentDescription="@string/park_image"
+        />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -30,8 +30,7 @@
         <TextView
             android:id="@+id/attrList_name"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
             android:text="@string/name"
@@ -43,6 +42,7 @@
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_gravity="start"
             android:isIndicator="true"
             android:numStars="5"
@@ -52,50 +52,64 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:minWidth="50dp"
+        android:paddingRight="5dp"
+        android:layout_gravity="center_vertical"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_weight="1">
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/attrList_waitingBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:color/transparent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:focusable="false"
-                app:useCompatPadding="true"/>
-
-            <!-- TextView not visible in preview because of elevation,
-            but fab's elevation can be set to 0 in code -->
-            <TextView
-                android:id="@+id/attrList_waitingTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="000"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black"/>
-        </FrameLayout>
-
-
-        <TextView
-            android:id="@+id/attrList_today_date"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:gravity="center"
-            android:text="Heute" />
-    </LinearLayout>
+            android:layout_gravity="end"
+            android:orientation="vertical"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            >
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                >
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/attrList_waitingBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:focusable="false"
+                    />
+
+                <TextView
+                    android:id="@+id/attrList_waitingTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:elevation="16dp"
+                    android:text="000"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black" />
+            </FrameLayout>
+
+
+            <TextView
+                android:id="@+id/attrList_today_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="3dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:text="Tag" />
+        </LinearLayout>
+
+    </FrameLayout>
+
 
 </LinearLayout>

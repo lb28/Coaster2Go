@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +49,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import de.uulm.dbis.coaster2go.R;
+import de.uulm.dbis.coaster2go.controller.InputFilterMinMax;
 import de.uulm.dbis.coaster2go.data.Attraction;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.JsonManager;
@@ -62,7 +64,17 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
     private static final int RC_PERM_GPS = 502;
 
     private static final String TAG = AttractionDetailViewActivity.class.getSimpleName();
+
+    /**
+     * The maximum distance (in meters) the user is allowed to be away from an attraction
+     * while still being able to enter a waiting time
+     */
     private static final float MAX_DISTANCE_TO_ATTR_METERS = 250 * 1000; //Enough km to rate the EP from here
+
+    /**
+     * The maximum number of minutes a user is allowed to enter
+     */
+    private static final int MAX_NUMBER_MINUTES = 999;
     public final int millisecondsOfADay = 86400000;
     private String attrID;
     private String parkId;
@@ -123,6 +135,8 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
         enterTime = (EditText) findViewById(R.id.attr_detail_time_edit);
         labelMinutes = (TextView) findViewById(R.id.attr_detail_label_minutes);
         buttonSave = (Button) findViewById(R.id.attr_detail_button_save_time);
+
+        enterTime.setFilters(new InputFilter[]{ new InputFilterMinMax(0, MAX_NUMBER_MINUTES)});
 
         // disable buttons
         buttonInfo.setEnabled(false);

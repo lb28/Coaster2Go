@@ -253,9 +253,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                         }
                     });
 
-            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewParkList);
-            //textView.setText("mode: " + getArguments().getString("mode")); // for testing
             recyclerView.setAdapter(attractionListAdapter);
             // Set layout manager to position the items
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -276,10 +274,11 @@ public class AttractionOverviewActivity extends BaseActivity {
             return rootView;
         }
 
+        /**
+         * refreshes the attraction list.
+         * the caller has to ensure the swipeRefresh spinner or the progressbar has been activated.
+         */
         void refreshAttrList() {
-            swipeRefresh.setRefreshing(false);
-            progressBar.setVisibility(View.VISIBLE);
-
             if(getArguments().getString("mode").equals(MODE_FAVS)){
                 refreshAttrListFaves();
             }else{
@@ -354,7 +353,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
                 }
-                //swipeRefresh.setRefreshing(false);
+                swipeRefresh.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
         }
@@ -397,7 +396,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                     attractionListAdapter.setAttractionList(attractionList);
                     attractionListAdapter.notifyDataSetChanged();
                 }
-                //swipeRefresh.setRefreshing(false);
+                swipeRefresh.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
         }

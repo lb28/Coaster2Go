@@ -94,7 +94,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
 
         // fill the view based on the data
         if (attraction.getImage() == null || attraction.getImage().isEmpty()) {
-            Picasso.with(context).load(R.mipmap.ic_theme_park).
+            Picasso.with(context).load(R.drawable.ic_theme_park).
                     into(viewHolder.attractionImage);
         } else {
             Picasso.with(context).load(attraction.getImage()).into(viewHolder.attractionImage);

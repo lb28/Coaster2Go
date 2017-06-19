@@ -28,7 +28,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_below="@+id/attr_detail_image_rellayout"
             android:id="@+id/attr_detail_header_rellayout">
 
@@ -101,15 +103,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/attr_detail_header_rellayout"
+            android:paddingTop="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="15dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+
             android:id="@+id/attr_detail_waitingtime_view_rellayout">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:id="@+id/attr_detail_button_linlayout">
 
                 <FrameLayout
@@ -118,6 +126,8 @@
                     android:layout_alignParentLeft="true"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     android:layout_weight="1">
 
                     <android.support.design.widget.FloatingActionButton
@@ -137,7 +147,6 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:elevation="16dp"
-                        android:text=""
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@android:color/black"
                         android:onClick="goToWaitingTimeOverview"/>
@@ -168,7 +177,6 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:elevation="16dp"
-                        android:text=""
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@android:color/black"
                         android:onClick="goToWaitingTimeOverview"/>
@@ -199,7 +207,6 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:elevation="16dp"
-                        android:text=""
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@android:color/black"
                         android:onClick="goToWaitingTimeOverview"/>
@@ -208,6 +215,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginTop="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/attr_detail_button_linlayout"
@@ -259,6 +267,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
+                android:inputType="number"
                 android:hint="Minuten eingeben"
                 android:id="@+id/attr_detail_time_edit"/>
 

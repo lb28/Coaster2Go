@@ -8,150 +8,160 @@
     android:id="@+id/coordinatorLayout_EditAttr"
     tools:context="de.uulm.dbis.coaster2go.activities.EditAttractionActivity"
     >
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <android.support.design.widget.CoordinatorLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp">
-                <ImageView
-                    android:id="@+id/imageViewEditAttr"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="@string/attr_image" />
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab_add_attr_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:src="@drawable/ic_add_a_photo_black_24dp"
-                    app:fabSize="normal"
-                    app:layout_anchor="@id/imageViewEditAttr"
-                    app:layout_anchorGravity="bottom|right"
-                    android:layout_margin="10dp"
-                    android:onClick="addAttrImageDialog"
-                    />
-            </android.support.design.widget.CoordinatorLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.5"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/inputLayoutAttrName"
+                <android.support.design.widget.CoordinatorLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/editTextAttrName"
+                    android:layout_height="200dp">
+                    <ImageView
+                        android:id="@+id/imageViewEditAttr"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/name" />
-                </android.support.design.widget.TextInputLayout>
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/attr_image" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/inputLayoutAttrTypes"
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/fab_add_attr_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:src="@drawable/ic_add_a_photo_black_24dp"
+                        app:fabSize="normal"
+                        app:layout_anchor="@id/imageViewEditAttr"
+                        app:layout_anchorGravity="bottom|right"
+                        android:layout_margin="10dp"
+                        android:onClick="addAttrImageDialog"
+                        />
+                </android.support.design.widget.CoordinatorLayout>
+
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/editTextAttrTypes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/attr_types" />
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="0dp"
+                    android:layout_weight="1.5"
+                    android:orientation="vertical"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/inputLayoutAttrLat"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:id="@+id/inputLayoutAttrName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/editTextAttrLat"
+                            android:id="@+id/editTextAttrName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
-                            android:hint="@string/latitude" />
+                            android:hint="@string/name" />
                     </android.support.design.widget.TextInputLayout>
+
+                    <com.pchmn.materialchips.ChipsInput
+                        android:id="@+id/chipsInputAttrTypes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:maxRows="2"
+                        app:hint="Kategorien"
+                        app:showChipDetailed="false"
+                        app:chip_deletable="true"
+
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/inputLayoutAttrLat"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/editTextAttrLat"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:ellipsize="end"
+                                android:hint="@string/latitude" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/inputLayoutAttrLon"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/editTextAttrLon"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:ellipsize="end"
+                                android:hint="@string/longitude" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                            android:layout_marginStart="@dimen/activity_horizontal_margin"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_add_location_black_24dp"
+                            android:onClick="startPlacePicker"
+                            android:contentDescription="@string/maps" />
+
+                    </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/inputLayoutAttrLon"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:id="@+id/inputLayoutAttrDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/editTextAttrLon"
+                            android:id="@+id/editTextAttrDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
-                            android:hint="@string/longitude" />
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:hint="@string/description" />
                     </android.support.design.widget.TextInputLayout>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:drawableLeft="@drawable/ic_add_location_black_24dp"
-                        android:drawableStart="@drawable/ic_add_location_black_24dp"
-                        android:onClick="startPlacePicker"
-                        android:text="@string/maps" />
 
                 </LinearLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/inputLayoutAttrDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/editTextAttrDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="3"
-                        android:inputType="textMultiLine"
-                        android:hint="@string/description" />
-                </android.support.design.widget.TextInputLayout>
-
-
             </LinearLayout>
 
+        </ScrollView>
 
-            <Button
-                android:id="@+id/buttonSaveAttr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_text_save"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:onClick="saveAttraction"/>
+        <Button
+            android:id="@+id/buttonSaveAttr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text_save"
+            android:onClick="saveAttraction"
+            />
 
-        </LinearLayout>
+    </LinearLayout>
 
-    </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

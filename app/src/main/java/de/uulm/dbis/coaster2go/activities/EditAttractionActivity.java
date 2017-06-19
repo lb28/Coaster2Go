@@ -29,11 +29,19 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.pchmn.materialchips.ChipsInput;
+import com.pchmn.materialchips.model.Chip;
+import com.pchmn.materialchips.model.ChipInterface;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import de.uulm.dbis.coaster2go.R;
@@ -44,7 +52,7 @@ public class EditAttractionActivity extends BaseActivity {
 
     private static final String TAG = "EditAttractionActivity";
     EditText editTextAttrName;
-    EditText editTextAttrTypes;
+    ChipsInput chipsInputAttrTypes;
     EditText editTextAttrLat;
     EditText editTextAttrLon;
     EditText editTextAttrDescription;
@@ -65,12 +73,31 @@ public class EditAttractionActivity extends BaseActivity {
         parkId = getIntent().getStringExtra("parkId");
 
         editTextAttrName = (EditText) findViewById(R.id.editTextAttrName);
-        editTextAttrTypes = (EditText) findViewById(R.id.editTextAttrTypes);
+        chipsInputAttrTypes = (ChipsInput) findViewById(R.id.chipsInputAttrTypes);
         editTextAttrLat = (EditText) findViewById(R.id.editTextAttrLat);
         editTextAttrLon = (EditText) findViewById(R.id.editTextAttrLon);
         editTextAttrDescription = (EditText) findViewById(R.id.editTextAttrDescription);
         imageViewAttr = (ImageView) findViewById(R.id.imageViewEditAttr);
 
+        List<Chip> typeChips = Arrays.asList(
+                new Chip(ContextCompat.getDrawable(this, R.drawable.ic_favorite_red_24dp), "test1", null),
+                new Chip(ContextCompat.getDrawable(this, R.drawable.ic_add_location_black_24dp), "test2", null),
+                new Chip(ContextCompat.getDrawable(this, R.drawable.ic_add_black_24dp), "test3", null)
+        );
+
+        chipsInputAttrTypes.setFilterableList(typeChips);
+
+        /*
+        ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager
+                .newBuilder(EditAttractionActivity.this)
+                .setChildGravity(Gravity.TOP)
+                .setOrientation(ChipsLayoutManager.HORIZONTAL)
+                .setScrollingEnabled(true)
+                .setRowStrategy(ChipsLayoutManager.STRATEGY_DEFAULT)
+                .withLastRow(true)
+                .build();
+        chipsInputAttrTypes.setLayoutManager(chipsLayoutManager);
+*/
         if (attrId != null) {
             new LoadAttrTask().execute();
         }
@@ -82,12 +109,19 @@ public class EditAttractionActivity extends BaseActivity {
      */
     public void saveAttraction(View view) {
         String name = editTextAttrName.getText().toString();
-        String types = editTextAttrTypes.getText().toString();
+//TODO        String types = chipsInputAttrTypes.getText().toString();
         String descr = editTextAttrDescription.getText().toString();
         String lat = editTextAttrLat.getText().toString();
         String lon = editTextAttrLon.getText().toString();
 
-        new SaveAttrTask().execute(name, types, descr, lat, lon);
+        JSONArray jsonArrayTypes = new JSONArray();
+        for (ChipInterface c : chipsInputAttrTypes.getSelectedChipList()) {
+            jsonArrayTypes.put(c.getLabel());
+        }
+        String typesString = jsonArrayTypes.toString();
+        Log.d(TAG, "saveAttraction: types: " + typesString);
+
+        new SaveAttrTask().execute(name, typesString, descr, lat, lon);
     }
 
     /**
@@ -241,12 +275,16 @@ public class EditAttractionActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
 
-                editTextAttrName.setText(String.valueOf(place.getName()));
+                if (editTextAttrName.getText().toString().isEmpty()) {
+                    editTextAttrName.setText(String.valueOf(place.getName()));
+                }
+
                 editTextAttrLat.setText(String.valueOf(place.getLatLng().latitude));
                 editTextAttrLon.setText(String.valueOf(place.getLatLng().longitude));
             }
         } else if (requestCode == RC_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
+                // TODO maybe get the full size picture?
                 Bitmap picture = (Bitmap) data.getExtras().get("data");
 
                 // upload the picture with cloudinary
@@ -300,10 +338,19 @@ public class EditAttractionActivity extends BaseActivity {
                     attrImageUrl = "";
                 }
                 editTextAttrName.setText(attr.getName());
-                editTextAttrTypes.setText(attr.getType());
                 editTextAttrLat.setText(String.valueOf(attr.getLat()));
                 editTextAttrLon.setText(String.valueOf(attr.getLon()));
                 editTextAttrDescription.setText(attr.getDescription());
+                try {
+                    JSONArray jsonArrayAttrTypes = new JSONArray(attr.getType());
+                    for (int i = 0; i < jsonArrayAttrTypes.length(); i++) {
+                        chipsInputAttrTypes.addChip(jsonArrayAttrTypes.get(i).toString(), null);
+                    }
+                    Log.d(TAG, "onPostExecute: loaded types: " + jsonArrayAttrTypes);
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "onPostExecute: reading json types failed", e);
+                }
             }
             progressBar.setVisibility(View.GONE);
 
@@ -363,11 +410,13 @@ public class EditAttractionActivity extends BaseActivity {
         protected void onPostExecute(Attraction resultAttraction) {
             progressBar.setVisibility(View.GONE);
             if (resultAttraction == null) {
-                Snackbar.make(findViewById(R.id.coordinatorLayout_EditPark),
+                Snackbar.make(findViewById(R.id.coordinatorLayout_EditAttr),
                         "Park konnte nicht gespeichert werden",
                         Snackbar.LENGTH_SHORT).show();
             } else {
-                Intent intent = new Intent(EditAttractionActivity.this, ParkOverviewActivity.class);
+                Intent intent = new Intent(EditAttractionActivity.this, AttractionOverviewActivity.class);
+                intent.putExtra("isAdmin", true);
+                intent.putExtra("parkId", parkId);
                 startActivity(intent);
             }
         }
@@ -386,6 +435,12 @@ public class EditAttractionActivity extends BaseActivity {
             progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
+                    cancel(true);
+                }
+            });
+            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Abbrechen", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
                     cancel(true);
                 }
             });

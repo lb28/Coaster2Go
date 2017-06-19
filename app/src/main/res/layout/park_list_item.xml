@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="75dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="5dp"
@@ -18,8 +18,9 @@
         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:src="@mipmap/ic_theme_park"
         android:contentDescription="@string/park_image"
-        android:src="@drawable/ic_local_activity_black_24dp" />
+        />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -45,6 +46,7 @@
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_gravity="start"
             android:isIndicator="true"
             android:numStars="5"
@@ -67,9 +69,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="right|center"
+            android:gravity="end|center_vertical"
             android:ellipsize="end"
             android:singleLine="true"
+            android:text="Ort"
             />
 
         <TextView
@@ -77,9 +80,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="right|center"
+            android:gravity="end|center_vertical"
             android:ellipsize="end"
             android:singleLine="true"
+            android:text="Entfernung"
             />
 
     </LinearLayout>
