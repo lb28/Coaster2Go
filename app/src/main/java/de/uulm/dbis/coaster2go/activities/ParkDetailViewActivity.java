@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.text.DecimalFormat;
 
 import de.uulm.dbis.coaster2go.R;
+import de.uulm.dbis.coaster2go.controller.ParkListAdapter;
 import de.uulm.dbis.coaster2go.data.JsonManager;
 import de.uulm.dbis.coaster2go.data.Park;
 
@@ -149,18 +150,13 @@ public class ParkDetailViewActivity extends BaseActivity {
                 Location parkLocationLatLng = new Location("");
                 parkLocationLatLng.setLatitude(park.getLat());
                 parkLocationLatLng.setLongitude(park.getLon());
-                if (lastLocation == null) {
-                    //parkDistance.setVisibility(View.INVISIBLE);
-                    parkDistance.setText("TODO get location");
+                float distance = getIntent().getFloatExtra("distance", -1);
+                if (distance == -1) {
+                    parkDistance.setVisibility(View.INVISIBLE);
+                    parkDistance.setText("");
                 } else {
                     parkDistance.setVisibility(View.VISIBLE);
-                    Location parkLoc = new Location("");
-                    parkLoc.setLongitude(park.getLon());
-                    parkLoc.setLatitude(park.getLat());
-
-                    float distance = lastLocation.distanceTo(parkLoc);
-
-                    parkDistance.setText(buildDistanceString(distance));
+                    parkDistance.setText(ParkListAdapter.buildDistanceString(distance));
 
                 }
 
@@ -216,20 +212,6 @@ public class ParkDetailViewActivity extends BaseActivity {
             }else{
                 Log.e("", "Put Park into favorites didn't work!");
             }
-        }
-    }
-
-    /**
-     * builds an appropriate string based on the distance
-     * @param distanceMeters the distance in meters
-     * @return a string showing the distance in m or km
-     */
-    private String buildDistanceString(float distanceMeters) {
-        if (distanceMeters > 1000) {
-            int distanceKm = Math.round(distanceMeters/1000);
-            return distanceKm + " km";
-        } else {
-            return Math.round(distanceMeters) + " m";
         }
     }
 

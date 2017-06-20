@@ -56,6 +56,8 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
     private SectionsPagerAdapter tabsPagerAdapter;
 
+    Location lastLocation;
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -194,11 +196,18 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         }
     }
 
-    private void updateDistances(Location lastLocation) {
-        ParkListFragment currentFragment = getCurrentFragment();
-        if (currentFragment != null && currentFragment.parkListAdapter != null) {
-            currentFragment.parkListAdapter.setLastLocation(lastLocation);
-            currentFragment.parkListAdapter.notifyDataSetChanged();
+    private void updateDistances() {
+        if (lastLocation != null) {
+            try {
+                for (ParkListFragment fragment : tabsPagerAdapter.fragmentList) {
+                    if (fragment != null && fragment.parkListAdapter != null) {
+                        fragment.parkListAdapter.setLastLocation(lastLocation);
+                        fragment.parkListAdapter.notifyDataSetChanged();
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+                Log.e(TAG, "getCurrentFragment: No fragments in list", e);
+            }
         }
     }
 
@@ -213,6 +222,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
     // LOCATION STUFF
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG, "location service connected");
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this,
@@ -225,12 +235,11 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
             return;
         }
-        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (lastLocation != null) {
+
+        lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             // use the location
-            updateDistances(lastLocation);
+            updateDistances();
         }
-    }
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -309,6 +318,16 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                         public void onParkItemClick(Park park) {
                             Intent intent = new Intent(getContext(), ParkDetailViewActivity.class);
                             intent.putExtra("parkId", park.getId());
+                            if (parkListAdapter.getLastLocation() != null) {
+                                // put park distance in the intent
+                                Location parkLoc = new Location("");
+                                parkLoc.setLongitude(park.getLon());
+                                parkLoc.setLatitude(park.getLat());
+
+                                float distance = parkListAdapter.getLastLocation().distanceTo(parkLoc);
+
+                                intent.putExtra("distance", distance);
+                            }
                             startActivity(intent);
                         }
                     }, new OnParkItemLongClickListener() {
@@ -515,10 +534,12 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
         @Override
         public Fragment getItem(int position) {
+            Log.d(TAG, "getItem called for position " + position);
             // getItem is called to instantiate the fragment for the given page.
             // Return a ParkListFragment (defined as a static inner class).
             if (position >= fragmentList.size() || fragmentList.get(position) == null) {
                 fragmentList.add(ParkListFragment.newInstance(position));
+                updateDistances();
             }
             return fragmentList.get(position);
         }

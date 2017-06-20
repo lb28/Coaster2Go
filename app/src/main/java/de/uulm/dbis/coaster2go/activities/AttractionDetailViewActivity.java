@@ -19,6 +19,7 @@ import android.text.InputFilter;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -108,6 +109,8 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attraction_detail_view);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         attrImage = (ImageView) findViewById(R.id.attr_detail_image);
         buttonFav = (ImageButton) findViewById(R.id.attr_detail_button_fav);
@@ -357,6 +360,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 Log.e("", "LoadAttrAsync.onPostExecute: Attraction was null!");
             } else {
                 attr = attr2;
+
                 parkId = attr.getParkId();
 
                 setTitle(attr.getName());

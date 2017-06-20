@@ -152,7 +152,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
      * @param distanceMeters the distance in meters
      * @return a string showing the distance in m or km
      */
-    private String buildDistanceString(float distanceMeters) {
+    public static String buildDistanceString(float distanceMeters) {
         if (distanceMeters > 1000) {
             int distanceKm = Math.round(distanceMeters/1000);
             return distanceKm + " km";

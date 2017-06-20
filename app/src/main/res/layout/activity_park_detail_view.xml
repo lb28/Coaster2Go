@@ -89,6 +89,7 @@
                 android:layout_below="@id/park_detail_parkname"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/park_detail_ratingbar"
                 android:onClick="showParkRatings"
                 android:textColor="@color/linkColor"
@@ -100,7 +101,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/park_detail_location"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_toLeftOf="@id/park_detail_button_maps" />
 
         </RelativeLayout>

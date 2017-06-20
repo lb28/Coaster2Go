@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="de.uulm.dbis.coaster2go.activities.AttractionDetailViewActivity"
     android:id="@+id/coordinatorLayout_AttrDetailview">
 
@@ -85,7 +84,7 @@
                         android:textSize="18sp"
                         android:text="0"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="2dp"
                         android:id="@+id/attr_detail_ratingavg"
                         android:onClick="showAttrRatings"
                         android:clickable="true" />
@@ -262,11 +261,7 @@
                     android:minHeight="130dp"
                     android:layout_below="@id/attr_detail_waitingtime_view_rellayout" />
 
-                <com.pchmn.materialchips.ChipView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:label="Chip"
-                    app:deletable="true"/>
+                <!-- TODO ChipViews -->
 
             </RelativeLayout>
         </ScrollView>
@@ -278,7 +273,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <EditText
