@@ -3,256 +3,274 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="de.uulm.dbis.coaster2go.activities.AttractionDetailViewActivity"
     android:id="@+id/coordinatorLayout_AttrDetailview">
 
     <RelativeLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/attr_detail_image_rellayout">
 
-            <ImageView
-                android:layout_width="match_parent"
+        <ScrollView android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <RelativeLayout
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:adjustViewBounds="true"
-                android:maxHeight="200dp"
-                android:id="@+id/attr_detail_image" />
+                android:layout_width="match_parent">
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_below="@+id/attr_detail_image_rellayout"
-            android:id="@+id/attr_detail_header_rellayout">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_favorite_border_black_24dp"
-                android:background="@color/tw__transparent"
-                android:id="@+id/attr_detail_button_fav"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:textSize="22sp"
-                android:layout_toRightOf="@+id/attr_detail_button_fav"
-                android:layout_toLeftOf="@+id/attr_detail_button_info"
-                android:text=""
-                android:id="@+id/attr_detail_name"
-                android:singleLine="true"
-                android:ellipsize="marquee"
-                android:layout_above="@+id/attr_detail_ratingbar"/>
-
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/attr_detail_button_fav"
-                style="?android:attr/ratingBarStyleSmall"
-                android:numStars="5"
-                android:stepSize="0.1"
-                android:layout_marginTop="5dp"
-                android:id="@+id/attr_detail_ratingbar"
-                android:onClick="showAttrRatings"
-                android:clickable="true"
-                android:isIndicator="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/attr_detail_ratingbar"
-                android:layout_below="@id/attr_detail_name"
-                android:textColor="@color/linkColor"
-                android:textSize="18sp"
-                android:text="0"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:id="@+id/attr_detail_ratingavg"
-                android:onClick="showAttrRatings"
-                android:clickable="true" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_place_black_24dp"
-                android:id="@+id/attr_detail_button_map"/>
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/attr_detail_button_map"
-                android:src="@drawable/ic_info_outline_black_24dp"
-                android:id="@+id/attr_detail_button_info"/>
-
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/attr_detail_header_rellayout"
-            android:paddingTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="15dp"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-
-            android:id="@+id/attr_detail_waitingtime_view_rellayout">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:id="@+id/attr_detail_button_linlayout">
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_gravity="center"
-                    android:gravity="center"
+                    android:id="@+id/attr_detail_image_rellayout">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_alignParentTop="true"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_theme_park"
+                        android:id="@+id/attr_detail_image" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_below="@+id/attr_detail_image_rellayout"
+                    android:id="@+id/attr_detail_header_rellayout">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_favorite_border_black_24dp"
+                        android:background="@color/tw__transparent"
+                        android:id="@+id/attr_detail_button_fav" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="22sp"
+                        android:layout_toRightOf="@+id/attr_detail_button_fav"
+                        android:layout_toLeftOf="@+id/attr_detail_button_info"
+                        android:text=""
+                        android:id="@+id/attr_detail_name"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:layout_above="@+id/attr_detail_ratingbar" />
+
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/attr_detail_button_fav"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:numStars="5"
+                        android:stepSize="0.1"
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/attr_detail_ratingbar"
+                        android:onClick="showAttrRatings"
+                        android:clickable="true"
+                        android:isIndicator="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/attr_detail_ratingbar"
+                        android:layout_below="@id/attr_detail_name"
+                        android:textColor="@color/linkColor"
+                        android:textSize="18sp"
+                        android:text="0"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/attr_detail_ratingavg"
+                        android:onClick="showAttrRatings"
+                        android:clickable="true" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_place_black_24dp"
+                        android:id="@+id/attr_detail_button_map" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/attr_detail_button_map"
+                        android:src="@drawable/ic_info_outline_black_24dp"
+                        android:id="@+id/attr_detail_button_info" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/attr_detail_header_rellayout"
+                    android:paddingTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="15dp"
                     android:clipChildren="false"
                     android:clipToPadding="false"
-                    android:layout_weight="1">
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/button_detail_wait_current"
-                        android:layout_width="wrap_content"
+                    android:id="@+id/attr_detail_waitingtime_view_rellayout">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@android:color/transparent"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:elevation="0dp"
-                        android:onClick="goToWaitingTimeOverview"/>
+                        android:orientation="horizontal"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:id="@+id/attr_detail_button_linlayout">
 
-                    <TextView
-                        android:id="@+id/attr_detail_wait_current"
-                        android:layout_width="wrap_content"
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:layout_weight="1">
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/button_detail_wait_current"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@android:color/transparent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:elevation="0dp"
+                                android:onClick="goToWaitingTimeOverview" />
+
+                            <TextView
+                                android:id="@+id/attr_detail_wait_current"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:elevation="16dp"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@android:color/black"
+                                android:onClick="goToWaitingTimeOverview" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_weight="1">
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/button_detail_wait_today"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@android:color/transparent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:elevation="0dp"
+                                android:onClick="goToWaitingTimeOverview" />
+
+                            <TextView
+                                android:id="@+id/attr_detail_wait_today"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:elevation="16dp"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@android:color/black"
+                                android:onClick="goToWaitingTimeOverview" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_weight="1">
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/button_detail_wait_alltime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@android:color/transparent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:elevation="0dp"
+                                android:onClick="goToWaitingTimeOverview" />
+
+                            <TextView
+                                android:id="@+id/attr_detail_wait_alltime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:elevation="16dp"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@android:color/black"
+                                android:onClick="goToWaitingTimeOverview" />
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginTop="3dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:elevation="16dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@android:color/black"
-                        android:onClick="goToWaitingTimeOverview"/>
-                </FrameLayout>
+                        android:layout_below="@id/attr_detail_button_linlayout"
+                        android:orientation="horizontal">
 
-                <FrameLayout
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Letzte 3" />
+
+                        <TextView
+                            android:id="@+id/attr_detail_today_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Heute" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Gesamt" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/attr_detail_barchart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="130dp"
+                    android:layout_below="@id/attr_detail_waitingtime_view_rellayout" />
+
+                <com.pchmn.materialchips.ChipView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="1">
+                    app:label="Chip"
+                    app:deletable="true"/>
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/button_detail_wait_today"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@android:color/transparent"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:elevation="0dp"
-                        android:onClick="goToWaitingTimeOverview"/>
+            </RelativeLayout>
+        </ScrollView>
 
-                    <TextView
-                        android:id="@+id/attr_detail_wait_today"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:elevation="16dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@android:color/black"
-                        android:onClick="goToWaitingTimeOverview"/>
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="1">
-
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/button_detail_wait_alltime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@android:color/transparent"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:elevation="0dp"
-                        android:onClick="goToWaitingTimeOverview"/>
-
-                    <TextView
-                        android:id="@+id/attr_detail_wait_alltime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:elevation="16dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@android:color/black"
-                        android:onClick="goToWaitingTimeOverview"/>
-                </FrameLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="3dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/attr_detail_button_linlayout"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Letzte 3"/>
-
-                <TextView
-                    android:id="@+id/attr_detail_today_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Heute"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Gesamt"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/attr_detail_barchart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="130dp"
-            android:layout_below="@id/attr_detail_waitingtime_view_rellayout"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -264,22 +282,24 @@
             android:orientation="horizontal">
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:inputType="number"
                 android:hint="Minuten eingeben"
+                android:textSize="14sp"
                 android:id="@+id/attr_detail_time_edit"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="14sp"
                 android:id="@+id/attr_detail_label_minutes"
                 android:text=" Min."/>
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="Speichern"
@@ -287,5 +307,6 @@
 
         </LinearLayout>
     </RelativeLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

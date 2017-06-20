@@ -139,6 +139,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
         enterTime.setFilters(new InputFilter[]{ new InputFilterMinMax(0, MAX_NUMBER_MINUTES)});
 
         // disable buttons
+        buttonSave.setEnabled(false);
         buttonInfo.setEnabled(false);
         buttonMap.setEnabled(false);
         buttonFav.setEnabled(false);
@@ -223,9 +224,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
         public void onClick(View v) {
             try {
 
-                // TODO test if this works
-
-                if (currentUserLocation == null) {
+                if (currentUserLocation == null || attr == null) {
                     return;
                 }
 
@@ -308,26 +307,34 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
     /**
      * updates the GUI to match the location (i.e. distance too big?)
      */
-    private void updateLocationGUI() {
-        if (currentUserLocation != null) {
+    private void updateLocationGUI(boolean lastEntryAllowed) {
+        if (lastEntryAllowed) {
+            if (currentUserLocation != null) {
 
-            Location attrLocation = new Location("");
-            attrLocation.setLatitude(attr.getLat());
-            attrLocation.setLongitude(attr.getLon());
+                Location attrLocation = new Location("");
+                attrLocation.setLatitude(attr.getLat());
+                attrLocation.setLongitude(attr.getLon());
 
-            if (attrLocation.distanceTo(currentUserLocation) > MAX_DISTANCE_TO_ATTR_METERS) {
-                // too far away
-                enterTime.setHint("Zu weit entfernt");
-                enterTime.setEnabled(false);
-                buttonSave.setEnabled(false);
-            } else {
-                enterTime.setHint("Minuten eingeben");
-                enterTime.setEnabled(true);
-                buttonSave.setEnabled(true);
+                if (attrLocation.distanceTo(currentUserLocation) > MAX_DISTANCE_TO_ATTR_METERS) {
+                    // too far away
+                    enterTime.setHint("Zu weit entfernt");
+                    enterTime.setEnabled(false);
+                    buttonSave.setEnabled(false);
+                } else {
+                    enterTime.setHint("Minuten eingeben");
+                    enterTime.setEnabled(true);
+                    buttonSave.setEnabled(true);
+                }
+
+                Log.d(TAG, "updateLocationGUI: ACCURACY " + currentUserLocation.getAccuracy() + "m");
             }
 
-            Log.d(TAG, "updateLocationGUI: ACCURACY " + currentUserLocation.getAccuracy() + "m");
+        } else {
+            enterTime.setHint("Letzter Eintrag vor unter 1h");
+            enterTime.setEnabled(false);
+            buttonSave.setEnabled(false);
         }
+
     }
 
     private class LoadAttrAsync extends AsyncTask<Void, Void, Attraction> {
@@ -352,8 +359,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 attr = attr2;
                 parkId = attr.getParkId();
 
-                //Location
-                updateLocationGUI();
+                setTitle(attr.getName());
 
                 //fave
                 new LoadFaveAsync().execute();
@@ -388,7 +394,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 if (attr2.getImage() != null && !attr2.getImage().isEmpty()) {
                     Picasso.with(AttractionDetailViewActivity.this).load(attr2.getImage()).into(attrImage);
                 } else {
-                    Picasso.with(AttractionDetailViewActivity.this).load(R.mipmap.ic_theme_park).into(attrImage);
+                    Picasso.with(AttractionDetailViewActivity.this).load(R.drawable.ic_theme_park).into(attrImage);
                 }
                 attrName.setText(attr2.getName());
                 attrName.setSelected(true);
@@ -397,6 +403,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 attrAvgRating.setText(df.format(attr2.getAverageReview()));
 
                 // enable buttons
+                buttonSave.setEnabled(true);
                 buttonInfo.setEnabled(true);
                 buttonMap.setEnabled(true);
                 buttonFav.setEnabled(true);
@@ -533,13 +540,8 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
         protected void onPostExecute(Boolean b) {
             // check if user has not entered a waiting time within the last our
 
-            if (b == true){
-                //allowed to enter a waiting time
-            } else {
-                enterTime.setText("Letzter Eintrag vor unter 1h");
-                enterTime.setEnabled(false);
-                buttonSave.setEnabled(false);
-            }
+            updateLocationGUI(b);
+
 
             progressBar.setVisibility(View.GONE);
         }

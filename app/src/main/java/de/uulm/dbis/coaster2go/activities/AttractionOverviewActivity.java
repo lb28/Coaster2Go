@@ -160,7 +160,7 @@ public class AttractionOverviewActivity extends BaseActivity {
         Intent intent = new Intent(this, EditAttractionActivity.class);
         intent.putExtra("parkId", parkId);
 
-        startActivity(intent);
+        startActivityForResult(intent, RC_ADD_ATTR);
     }
 
     /**

@@ -46,7 +46,8 @@ import de.uulm.dbis.coaster2go.R;
  *     http://stackoverflow.com/questions/4922641/sliding-drawer-appear-in-all-activities</a>
  */
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final int RC_SIGN_IN = 1;
+    public static final int RC_SIGN_IN = 1;
+    public static final int RC_ADD_ATTR = 4;
     public static final int RC_IMAGE_CAPTURE = 6;
     public static final int RC_PICK_IMAGE = 7;
     public static final int RC_PLACE_PICKER = 8;

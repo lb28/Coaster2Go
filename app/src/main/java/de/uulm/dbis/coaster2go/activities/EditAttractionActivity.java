@@ -414,10 +414,7 @@ public class EditAttractionActivity extends BaseActivity {
                         "Park konnte nicht gespeichert werden",
                         Snackbar.LENGTH_SHORT).show();
             } else {
-                Intent intent = new Intent(EditAttractionActivity.this, AttractionOverviewActivity.class);
-                intent.putExtra("isAdmin", true);
-                intent.putExtra("parkId", parkId);
-                startActivity(intent);
+                finish();
             }
         }
     }

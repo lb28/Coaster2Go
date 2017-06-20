@@ -3,6 +3,7 @@ package de.uulm.dbis.coaster2go.controller;
 import android.content.Context;
 import android.location.Location;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import de.uulm.dbis.coaster2go.data.Park;
  * Created by Luis on 06.05.2017.
  */
 public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHolder> {
+
+    private static final String TAG = "ParkListAdapter";
 
     public enum SortMode {
         RATING, NAME, DISTANCE
@@ -116,8 +119,8 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         parkLocationLatLng.setLatitude(park.getLat());
         parkLocationLatLng.setLongitude(park.getLon());
         if (lastLocation == null) {
-            //viewHolder.parkDistance.setVisibility(View.INVISIBLE);
-            viewHolder.parkDistance.setText("TODO get location");
+            Log.d(TAG, "onBindViewHolder: lastLocation is null");
+            viewHolder.parkDistance.setVisibility(View.INVISIBLE);
         } else {
             viewHolder.parkDistance.setVisibility(View.VISIBLE);
             Location parkLoc = new Location("");
@@ -195,7 +198,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
     private class AbcComparator implements Comparator<Park> {
         @Override
         public int compare(Park park1, Park park2) {
-            return park1.getName().compareTo(park2.getName());
+            return park1.getName().toLowerCase().compareTo(park2.getName().toLowerCase());
         }
     }
 
