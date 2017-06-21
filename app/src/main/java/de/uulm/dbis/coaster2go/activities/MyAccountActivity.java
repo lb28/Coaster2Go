@@ -90,9 +90,4 @@ public class MyAccountActivity extends BaseActivity {
                     }
                 });
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onNavigateUp();
-    }
 }

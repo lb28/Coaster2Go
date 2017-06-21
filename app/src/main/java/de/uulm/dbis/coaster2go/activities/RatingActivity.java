@@ -1,7 +1,9 @@
 package de.uulm.dbis.coaster2go.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.dbis.coaster2go.R;
+import de.uulm.dbis.coaster2go.controller.OnRatingItemClickListener;
 import de.uulm.dbis.coaster2go.controller.RatingListAdapter;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 import de.uulm.dbis.coaster2go.data.Review;
@@ -41,6 +44,7 @@ public class RatingActivity extends BaseActivity {
      */
     private Review usersReview;
     private boolean isAttraction;
+    private static boolean isParkAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,34 @@ public class RatingActivity extends BaseActivity {
         String reviewedName = getIntent().getStringExtra("reviewedName");
         setTitle(reviewedName);
 
-        ratingListAdapter = new RatingListAdapter(new ArrayList<Review>());
+        isParkAdmin = getIntent().getBooleanExtra("isParkAdmin", false);
+
+        ratingListAdapter = new RatingListAdapter(new ArrayList<Review>(), new OnRatingItemClickListener() {
+            @Override
+            public void onRatingItemClickListener(final Review review) {
+                if(isParkAdmin){
+                    String[] menuOptions = {"Zensieren", "Abbrechen"};
+                    android.app.AlertDialog.Builder builder =
+                            new android.app.AlertDialog.Builder(RatingActivity.this);
+                    builder.setTitle("Bewertung zensieren?")
+                            .setItems(menuOptions, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case 0:
+                                            //TODO zensieren
+                                            review.setComment("---");
+
+                                            break;
+                                        case 1:
+                                            break;
+                                    }
+                                }
+                            });
+                    Dialog d = builder.create();
+                    d.show();
+                }
+            }
+        });
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewRatings);
         recyclerView.setAdapter(ratingListAdapter);
 

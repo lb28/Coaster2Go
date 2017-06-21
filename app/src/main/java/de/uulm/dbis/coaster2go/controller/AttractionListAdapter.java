@@ -182,6 +182,9 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
             default:
                 break;
         }
+
+        // remember the new sort mode
+        currentSortMode = mode;
     }
 
     private class RatingComparator implements Comparator<Attraction> {
@@ -203,6 +206,12 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     private class WaitTimeComparator implements Comparator<Attraction> {
         @Override
         public int compare(Attraction a1, Attraction a2) {
+            if(!DateUtils.isToday(a1.getLastUpdated().getTime())){
+                a1.setCurrentWaitingTime(a1.getAverageTodayWaitingTime());
+            }
+            if(!DateUtils.isToday(a2.getLastUpdated().getTime())){
+                a2.setCurrentWaitingTime(a2.getAverageTodayWaitingTime());
+            }
             return Double.compare(a1.getCurrentWaitingTime(), a2.getCurrentWaitingTime());
         }
     }
@@ -220,6 +229,9 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
 
     public void setAttractionList(List<Attraction> attractionList) {
         this.attractionList = attractionList;
+        if (currentSortMode != null) {
+            changeSort(currentSortMode);
+        }
     }
 
     public int getPositionOf(Attraction attraction) {

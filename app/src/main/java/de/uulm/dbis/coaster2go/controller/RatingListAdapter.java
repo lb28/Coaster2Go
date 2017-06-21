@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Locale;
 
 import de.uulm.dbis.coaster2go.R;
-import de.uulm.dbis.coaster2go.data.Park;
 import de.uulm.dbis.coaster2go.data.Review;
 
 /**
@@ -31,6 +30,7 @@ public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.Vi
         NAME, DATE, RATING
     }
     private List<Review> ratingsList;
+    private final OnRatingItemClickListener clickListener;
 
     @Override
     public Filter getFilter() {
@@ -57,8 +57,9 @@ public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.Vi
 
     }
 
-    public RatingListAdapter(List<Review> ratingsList) {
+    public RatingListAdapter(List<Review> ratingsList, OnRatingItemClickListener clickListener) {
         this.ratingsList = ratingsList;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -86,6 +87,13 @@ public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.Vi
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMANY);
         String dateString = dateFormat.format(ratingDate);
         viewHolder.ratingDate.setText(dateString);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.onRatingItemClickListener(review);
+            }
+        });
     }
 
     @Override

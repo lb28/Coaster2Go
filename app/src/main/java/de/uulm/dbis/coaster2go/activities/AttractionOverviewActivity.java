@@ -216,6 +216,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                         public void onAttractionItemClick(Attraction attraction) {
                             Intent intent = new Intent(getContext(), AttractionDetailViewActivity.class);
                             intent.putExtra("attrId", attraction.getId());
+                            intent.putExtra("isParkAdmin", isParkAdmin);
                             startActivity(intent);
                         }
                     }, new OnAttractionItemLongClickListener() {
@@ -279,6 +280,7 @@ public class AttractionOverviewActivity extends BaseActivity {
          * the caller has to ensure the swipeRefresh spinner or the progressbar has been activated.
          */
         void refreshAttrList() {
+            progressBar.setVisibility(View.VISIBLE);
             if(getArguments().getString("mode").equals(MODE_FAVS)){
                 refreshAttrListFaves();
             }else{

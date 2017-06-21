@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,8 +15,6 @@ import java.util.List;
 import java.util.Locale;
 
 import de.uulm.dbis.coaster2go.R;
-import de.uulm.dbis.coaster2go.activities.WaitingTimesActivity;
-import de.uulm.dbis.coaster2go.data.Review;
 import de.uulm.dbis.coaster2go.data.WaitingTime;
 
 /**
