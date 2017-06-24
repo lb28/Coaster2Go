@@ -77,7 +77,6 @@ public class RatingActivity extends BaseActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (which) {
                                         case 0:
-                                            //TODO zensieren
                                             review.setComment("---");
                                             toCensorReview = review;
                                             new UpdateReviewTask().execute(review);
