@@ -33,6 +33,7 @@ public class RatingActivity extends BaseActivity {
     public static final String TAG = "RatingActivity";
 
     String reviewedId; // can be either park or attraction
+    Review toCensorReview;
     RatingListAdapter ratingListAdapter;
 
     SwipeRefreshLayout swipeRefresh;
@@ -68,7 +69,7 @@ public class RatingActivity extends BaseActivity {
             @Override
             public void onRatingItemClickListener(final Review review) {
                 if(isParkAdmin){
-                    String[] menuOptions = {"Zensieren", "Abbrechen"};
+                    String[] menuOptions = {"Zensieren"};
                     android.app.AlertDialog.Builder builder =
                             new android.app.AlertDialog.Builder(RatingActivity.this);
                     builder.setTitle("Bewertung zensieren?")
@@ -78,9 +79,9 @@ public class RatingActivity extends BaseActivity {
                                         case 0:
                                             //TODO zensieren
                                             review.setComment("---");
+                                            toCensorReview = review;
+                                            new UpdateReviewTask().execute(review);
 
-                                            break;
-                                        case 1:
                                             break;
                                     }
                                 }
@@ -254,6 +255,39 @@ public class RatingActivity extends BaseActivity {
             if (updatedReview == null) {
                 Snackbar.make(findViewById(R.id.coordinatorLayout_Ratings),
                         "Speichern fehlgeschlagen", Snackbar.LENGTH_SHORT);
+            } else {
+                //swipeRefresh.setRefreshing(true);
+                progressBar.setVisibility(View.VISIBLE);
+                new RefreshRatingsTask().execute();
+            }
+        }
+    }
+
+    class UpdateReviewTask extends AsyncTask<Review, Void, Review> {
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Review doInBackground(Review... params) {
+            AzureDBManager dbManager = new AzureDBManager(RatingActivity.this);
+            Review updateReview = params[0];
+            if (updateReview == null) {
+                return null;
+            } else {
+                // Update the review
+                return dbManager.updateReview(updateReview, isAttraction);
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Review updatedReview) {
+            progressBar.setVisibility(View.GONE);
+            if (updatedReview == null) {
+                Snackbar.make(findViewById(R.id.coordinatorLayout_Ratings),
+                        "Zensieren fehlgeschlagen", Snackbar.LENGTH_SHORT);
             } else {
                 //swipeRefresh.setRefreshing(true);
                 progressBar.setVisibility(View.VISIBLE);
