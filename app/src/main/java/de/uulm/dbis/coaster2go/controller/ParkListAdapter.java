@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
     private SortMode currentSortMode;
 
     private List<Park> parkList;
+    private List<Park> copyOfParkList;
     private Context context;
     private final OnParkItemClickListener clickListener;
     private final OnParkItemLongClickListener longClickListener;
@@ -72,6 +74,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
                            OnParkItemLongClickListener longClickListener) {
         this.context = context;
         this.parkList = parkList;
+        this.copyOfParkList = parkList;
         this.clickListener = clickListener;
         this.longClickListener = longClickListener;
     }
@@ -166,6 +169,18 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         return parkList == null ? 0 : parkList.size();
     }
 
+    public void filterList(String searchString){
+        parkList = copyOfParkList;
+        List<Park> resultList = new ArrayList<Park>();
+        for(Park p : parkList){
+            if(p.getName().toLowerCase().contains(searchString.toLowerCase())){
+                resultList.add(p);
+            }
+        }
+        parkList = resultList;
+        notifyDataSetChanged();
+    }
+
     public void changeSort(SortMode mode) {
         switch (mode) {
             case NAME:
@@ -232,6 +247,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
 
     public void setParkList(List<Park> parkList) {
         this.parkList = parkList;
+        this.copyOfParkList = parkList;
         if (currentSortMode != null) {
             changeSort(currentSortMode);
         }

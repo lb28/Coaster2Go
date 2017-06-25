@@ -3,6 +3,8 @@ package de.uulm.dbis.coaster2go.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +24,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -388,6 +391,30 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                 public void onRefresh() {
                     Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
                     refreshParkList();
+                }
+            });
+
+            // Get the SearchView and set the searchable configuration
+            SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) rootView.findViewById(R.id.park_search_box);
+            // Assumes current activity is the searchable activity
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+            searchView. setSubmitButtonEnabled(true); //Shows an extra "Search Button"
+            //searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    //TODO only update the List when user presses search or after every textChange?
+                    //System.out.println("-----------Search typed: "+newText);
+                    parkListAdapter.filterList(newText);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    //System.out.println("-----------Search performed: "+query);
+                    parkListAdapter.filterList(query);
+                    return true;
                 }
             });
 
