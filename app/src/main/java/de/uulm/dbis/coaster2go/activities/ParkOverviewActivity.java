@@ -24,6 +24,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuInflater;
 import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -134,7 +135,32 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.park_overview_actions, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.park_overview_actions, menu);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.park_search_box).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView. setSubmitButtonEnabled(true); //Shows an extra "Search Button"
+        //searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ParkListFragment currentFragment = getCurrentFragment();
+                currentFragment.parkListAdapter.filterList(newText);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                ParkListFragment currentFragment = getCurrentFragment();
+                currentFragment.parkListAdapter.filterList(query);
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -391,30 +417,6 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
                 public void onRefresh() {
                     Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
                     refreshParkList();
-                }
-            });
-
-            // Get the SearchView and set the searchable configuration
-            SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) rootView.findViewById(R.id.park_search_box);
-            // Assumes current activity is the searchable activity
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-            searchView. setSubmitButtonEnabled(true); //Shows an extra "Search Button"
-            //searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    //TODO only update the List when user presses search or after every textChange?
-                    //System.out.println("-----------Search typed: "+newText);
-                    parkListAdapter.filterList(newText);
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    //System.out.println("-----------Search performed: "+query);
-                    parkListAdapter.filterList(query);
-                    return true;
                 }
             });
 

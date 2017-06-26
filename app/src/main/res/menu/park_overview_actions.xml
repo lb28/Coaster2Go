@@ -2,15 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_black_24dp"
-        android:title="@string/refresh"
-        app:showAsAction="never"/>
+        android:id="@+id/park_search_box"
+        android:icon="@drawable/ic_search_custom"
+        android:title="@string/search_name"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="collapseActionView|always" />
     <item
         android:icon="@drawable/ic_sort_black_24dp"
         android:title="@string/sort_method"
         android:checkableBehavior="single"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always">
         <menu>
             <item
                 android:id="@+id/action_sort_abc"

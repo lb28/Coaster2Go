@@ -140,6 +140,7 @@ public class ParkDetailViewActivity extends BaseActivity {
                 } else {
                     Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
                 }
+                setTitle(park2.getName());
                 parkName.setText(park2.getName());
                 parkName.setSelected(true);
                 ratingBar.setRating((float) park2.getAverageReview());

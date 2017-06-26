@@ -35,6 +35,7 @@
     <string name="distance">Entfernung</string>
     <string name="all_page_title">Alle</string>
     <string name="favs_page_title">Favoriten</string>
+    <string name="search_name">Suche</string>
 
 
     <!-- FIREBASE UI AUTH Strings -->
@@ -119,7 +120,7 @@
         completions."
     </string>
     <string name="user_name">Benutzername</string>
-    <string name="title_activity_attraction_overview">Attraktionsübersicht</string>
+    <string name="title_activity_attraction_overview">Attraktionen</string>
     <string name="locationName">Ortsname</string>
     <string name="description">Beschreibung</string>
     <string name="latitude">Breitengrad</string>
