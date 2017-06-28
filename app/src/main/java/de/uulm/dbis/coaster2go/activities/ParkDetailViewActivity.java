@@ -107,7 +107,9 @@ public class ParkDetailViewActivity extends BaseActivity {
         Intent intent = new Intent(this, RatingActivity.class);
         intent.putExtra("reviewedId", parkId);
         intent.putExtra("reviewedName", park.getName());
-        intent.putExtra("isParkAdmin", park.getAdmin().equals(user.getUid()) || park.getAdmin().equals("") ); //Can be changed again later
+        if(user != null){
+            intent.putExtra("isParkAdmin", park.getAdmin().equals(user.getUid()) || park.getAdmin().equals("") ); //Can be changed again later
+        }
         startActivity(intent);
     }
 

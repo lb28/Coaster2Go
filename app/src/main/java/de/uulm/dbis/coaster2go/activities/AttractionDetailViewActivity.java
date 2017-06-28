@@ -583,15 +583,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                         "Wartezeit konnte nicht eingetragen werden", Snackbar.LENGTH_SHORT).show();
             } else {
                 Snackbar.make(findViewById(R.id.coordinatorLayout_AttrDetailview),
-                        "Wartezeit eingetragen", Snackbar.LENGTH_LONG)
-                        .setAction("TODO 'Rückgängig'?", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // TODO implement a "delete waitingtime" task, or delete this action
-                                Toast.makeText(AttractionDetailViewActivity.this, "TODO", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .show();
+                        "Wartezeit eingetragen", Snackbar.LENGTH_LONG).show();
 
                 enterTime.setEnabled(false);
                 buttonSave.setEnabled(false);
