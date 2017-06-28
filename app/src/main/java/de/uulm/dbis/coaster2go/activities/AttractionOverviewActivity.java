@@ -1,5 +1,7 @@
 package de.uulm.dbis.coaster2go.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,10 +21,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +103,32 @@ public class AttractionOverviewActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.attraction_overview_actions, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.attraction_overview_actions, menu);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.attraction_search_box).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView. setSubmitButtonEnabled(true); //Shows an extra "Search Button"
+        //searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+                currentFragment.attractionListAdapter.filterList(newText);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+                currentFragment.attractionListAdapter.filterList(query);
+                return true;
+            }
+        });
+
         return true;
     }
 

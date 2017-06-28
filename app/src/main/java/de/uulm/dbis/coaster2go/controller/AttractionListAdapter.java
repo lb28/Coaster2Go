@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -38,6 +39,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     private SortMode currentSortMode;
 
     private List<Attraction> attractionList;
+    private List<Attraction> copyOfAttractionList;
     private Context context;
     private final OnAttractionItemClickListener clickListener;
     private final OnAttractionItemLongClickListener longClickListener;
@@ -71,6 +73,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
                                  OnAttractionItemLongClickListener longClickListener) {
         this.context = context;
         this.attractionList = attractionList;
+        this.copyOfAttractionList = attractionList;
         this.clickListener = clickListener;
         this.longClickListener = longClickListener;
     }
@@ -165,6 +168,18 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         return attractionList == null ? 0 : attractionList.size();
     }
 
+    public void filterList(String searchString){
+        attractionList = copyOfAttractionList;
+        List<Attraction> resultList = new ArrayList<Attraction>();
+        for(Attraction a : attractionList){
+            if(a.getName().toLowerCase().contains(searchString.toLowerCase())){
+                resultList.add(a);
+            }
+        }
+        attractionList = resultList;
+        notifyDataSetChanged();
+    }
+
     public void changeSort(SortMode mode) {
         switch (mode) {
             case NAME:
@@ -229,6 +244,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
 
     public void setAttractionList(List<Attraction> attractionList) {
         this.attractionList = attractionList;
+        this.copyOfAttractionList = attractionList;
         if (currentSortMode != null) {
             changeSort(currentSortMode);
         }
