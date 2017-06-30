@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorActionButtons">#FFFFFF</color>
-    <color name="light_green_bg">#644caf50</color>
+    <color name="colorPrimary">#4880CF</color>
+    <color name="colorPrimaryDark">#1460C9</color>
+    <color name="colorAccent">#F06F0C</color>
+    <color name="colorActionButtons">#91A0A3</color>
+    <color name="light_green_bg">#A5F011</color>
+    <color name="wait_red">#FF4A3A</color>
+    <color name="wait_yellow">#FFF848</color>
+    <color name="wait_green">#42E848</color>
 </resources>
