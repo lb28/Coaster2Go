@@ -113,13 +113,13 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         viewHolder.attractionWaitingTime.setText(attraction.getCurrentWaitingTime()+"");
 
         if(attraction.getCurrentWaitingTime() < attraction.getAverageWaitingTime()*0.7 || attraction.getCurrentWaitingTime() <= 10){
-            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(66,232,72)));
             viewHolder.attractionWaitingTime.setTextColor(Color.WHITE); //Black or white text color for green background?
         } else if(attraction.getCurrentWaitingTime() > attraction.getAverageWaitingTime()*1.3 || attraction.getCurrentWaitingTime() >= 90){
-            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,74,58)));
             viewHolder.attractionWaitingTime.setTextColor(Color.WHITE);
         } else {
-            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+            viewHolder.attractionWaitingBackground.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,248,72)));
             viewHolder.attractionWaitingTime.setTextColor(Color.BLACK);
         }
 

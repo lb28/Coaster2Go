@@ -453,26 +453,26 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 //ROT: 130% Gesamtdurchschnitt < Zeit
 
                 //gesamtdurchschnitt immer gelb
-                buttonAlltimeWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+                buttonAlltimeWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,248,72)));
                 //heute-durchschnitt
                 if(attr.getAverageTodayWaitingTime() < attr.getAverageWaitingTime()*0.7 || attr.getAverageTodayWaitingTime() <= 10){
-                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(66,232,72)));
                     todayWait.setTextColor(Color.WHITE); //Black or white text color for green background?
                 } else if(attr.getAverageTodayWaitingTime() > attr.getAverageWaitingTime()*1.3 || attr.getAverageTodayWaitingTime() >= 90){
-                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,74,58)));
                     todayWait.setTextColor(Color.WHITE);
                 } else {
-                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+                    buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,248,72)));
                 }
                 //aktuell (letzte 3) durchschnitt
                 if(attr.getCurrentWaitingTime() < attr.getAverageWaitingTime()*0.7 || attr.getCurrentWaitingTime() <= 10){
-                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(66,232,72)));
                     currentWait.setTextColor(Color.WHITE); //Black or white text color for green background?
                 } else if(attr.getCurrentWaitingTime() > attr.getAverageWaitingTime()*1.3 || attr.getCurrentWaitingTime() >= 90){
-                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,74,58)));
                     currentWait.setTextColor(Color.WHITE);
                 } else {
-                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+                    buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,248,72)));
                 }
             }
             //AttractionDetailViewActivity.this.progressBar.setVisibility(View.GONE);
