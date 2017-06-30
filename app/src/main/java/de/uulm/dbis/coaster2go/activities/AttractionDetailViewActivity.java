@@ -327,6 +327,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                     enterTime.setEnabled(false);
                     buttonSave.setEnabled(false);
                 } else {
+                    //TODO check if GPS Service is enabled and if not tell the user that he first has to enable it
                     enterTime.setHint("Minuten eingeben");
                     enterTime.setEnabled(true);
                     buttonSave.setEnabled(true);
@@ -336,7 +337,11 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
             }
 
         } else {
-            enterTime.setHint("Letzter Eintrag vor unter 1h");
+            if(user == null){
+                enterTime.setHint("Bitte zuerst einloggen");
+            }else{
+                enterTime.setHint("Letzter Eintrag vor unter 1h");
+            }
             enterTime.setEnabled(false);
             buttonSave.setEnabled(false);
         }
@@ -353,8 +358,8 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
         @Override
         protected Attraction doInBackground(Void... params) {
             //Load offline data because it got updated right before in the Attraction Overview:
-            //return new AzureDBManager(AttractionDetailViewActivity.this).getAttractionById(attrID);
-            return new JsonManager(AttractionDetailViewActivity.this).getAttractionById(attrID);
+            return new AzureDBManager(AttractionDetailViewActivity.this).getAttractionById(attrID);
+            //return new JsonManager(AttractionDetailViewActivity.this).getAttractionById(attrID);
         }
 
         @Override

@@ -41,7 +41,8 @@ public class MapViewActivity extends BaseActivity
         drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSupportNavigateUp();
+                //onSupportNavigateUp();
+                finish();
             }
         });
 

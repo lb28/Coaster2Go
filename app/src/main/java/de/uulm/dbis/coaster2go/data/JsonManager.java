@@ -477,6 +477,7 @@ public class JsonManager {
                 int currentWaitingTime = tmpAttraction.getInt("currentWaitingTime");
                 Date lastUpdated;
                 try{
+                    //TODO this seems like it doesn't work on older Android versions
                     lastUpdated = new Date(tmpAttraction.getString("lastUpdated"));
                 }catch(Exception eaaa){
                     eaaa.printStackTrace();

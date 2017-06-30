@@ -116,15 +116,26 @@ public class AttractionOverviewActivity extends BaseActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
-                currentFragment.attractionListAdapter.filterList(newText);
+                try{
+                    AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+                    currentFragment.attractionListAdapter.filterList(newText);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG, "Attractionsearch: Probably no current fragment");
+                }
+
                 return true;
             }
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
-                currentFragment.attractionListAdapter.filterList(query);
+                try{
+                    AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
+                    currentFragment.attractionListAdapter.filterList(query);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG, "Attractionsearch: Probably no current fragment");
+                }
                 return true;
             }
         });

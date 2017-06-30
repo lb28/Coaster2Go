@@ -35,7 +35,6 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         NAME, RATING, WAIT_TIME
     }
 
-    // TODO use currentSortMode
     private SortMode currentSortMode;
 
     private List<Attraction> attractionList;
@@ -128,6 +127,7 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         int lastYear = attraction.getLastUpdated().getYear();
         int lastMonth = attraction.getLastUpdated().getMonth();
         Date now = new Date();
+        System.out.println(attraction.getLastUpdated());
         if((now.getYear() == lastYear) &&  (now.getMonth() == lastMonth)){
             if(DateUtils.isToday(attraction.getLastUpdated().getTime())){
                 Date lastUpdated = attraction.getLastUpdated();

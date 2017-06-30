@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-/** Class handels all Connections between the App and the Azure SQL Data tables.
+/** Class handles all Connections between the App and the Azure SQL Data tables.
  *
  * TODO: Find a better solution for the date problems
  *
@@ -391,7 +391,6 @@ public class AzureDBManager {
             //If there is no internet Connection, read the Park from the Internal Storage
             return jsonManager.getAttractionById(attractionId);
         }
-        //TODO Find a solution to always load the Attraction out of the Internal Storage
         //The Park Id is needed to find out if the Attraction is already cached
 
         MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
@@ -749,7 +748,7 @@ public class AzureDBManager {
 
         try {
             Date todayDate = new Date(); //Maybe use something different then the Date Object later...
-            /* //TODO working with the sql Date functions seem like they do not work...
+            /* //working with the sql Date functions seem like they do not work...
             waitList = mWaitTable.where().field("attractionId").eq(attractionId)
                     .and().year("due").eq(todayDate.getYear())
                     .and().month("due").eq(todayDate.getMonth())
@@ -887,10 +886,6 @@ public class AzureDBManager {
         int currentHour = date.getHours();
         System.out.println("current hour: "+currentHour);
         for(WaitingTime w : todayList){
-            System.out.println(w.getCreatedAt().getHours());
-            //For now the method only checks if the User did already post a WaitingTime in the
-            // current hour. A better cariant would probably be to check if he did post a
-            // WaitingTime during the last 60 minutes... //TODO ?
             if(w.getUserId().equals(userId) && w.getCreatedAt().getHours()==currentHour){
                 return false;
             }

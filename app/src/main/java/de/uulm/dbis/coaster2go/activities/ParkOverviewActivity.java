@@ -148,15 +148,25 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                ParkListFragment currentFragment = getCurrentFragment();
-                currentFragment.parkListAdapter.filterList(newText);
+                try{
+                    ParkListFragment currentFragment = getCurrentFragment();
+                    currentFragment.parkListAdapter.filterList(newText);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG, "Parksearch: Probably no current fragment");
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                ParkListFragment currentFragment = getCurrentFragment();
-                currentFragment.parkListAdapter.filterList(query);
+                try{
+                    ParkListFragment currentFragment = getCurrentFragment();
+                    currentFragment.parkListAdapter.filterList(query);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG, "Parksearch: Probably no current fragment");
+                }
                 return true;
             }
         });
@@ -221,6 +231,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             return tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
         } catch (IndexOutOfBoundsException e) {
             Log.e(TAG, "getCurrentFragment: No fragments in list", e);
+            //TODO find out why this is null sometimes
             return null;
         }
     }
