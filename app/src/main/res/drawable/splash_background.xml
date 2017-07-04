@@ -3,8 +3,7 @@
 
     <item android:drawable="@color/colorPrimary" />
 
-    <item android:drawable="@drawable/splash_theme_park"
+    <item android:drawable="@drawable/ic_theme_park_splash"
             android:gravity="center"/>
-
 
 </layer-list>

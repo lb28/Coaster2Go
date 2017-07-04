@@ -238,8 +238,9 @@ public class EditAttractionActivity extends BaseActivity {
         }
 
         Intent intent;
-        intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
 
         startActivityForResult(intent, RC_PICK_IMAGE);
