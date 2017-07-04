@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/attraction_search_box"
-        android:icon="@drawable/ic_search_custom"
+        android:icon="@drawable/ic_search_24dp"
         android:title="@string/search_name"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="collapseActionView|always" />
