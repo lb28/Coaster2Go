@@ -331,11 +331,13 @@ public class AttractionOverviewActivity extends BaseActivity {
         void refreshAttrListAll() {
             //Load offline data first because it is faster, then online data
             new RefreshAttractionsOfflineTask().execute();
+            swipeRefresh.setRefreshing(false);
         }
 
         void refreshAttrListFaves() {
             //Load offline data first because it is faster, then online data
             new RefreshAttractionsFavesOfflineTask().execute();
+            swipeRefresh.setRefreshing(false);
         }
 
         void showDeleteDialog(final Attraction attr) {
