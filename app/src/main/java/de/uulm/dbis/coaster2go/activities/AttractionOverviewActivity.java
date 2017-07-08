@@ -244,7 +244,6 @@ public class AttractionOverviewActivity extends BaseActivity {
             progressBar = ((AttractionOverviewActivity) getActivity()).progressBar;
 
             progressBar.setVisibility(View.VISIBLE);
-            refreshAttrList();
 
             List<Attraction> attractionList = new ArrayList<>(); // empty list before it is loaded
 
@@ -313,6 +312,13 @@ public class AttractionOverviewActivity extends BaseActivity {
             });
 
             return rootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            // do the refresh onResume so it will be refreshed when returning to the activity
+            refreshAttrList();
         }
 
         /**

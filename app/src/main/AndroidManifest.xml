@@ -52,7 +52,8 @@
         <activity
             android:name=".activities.AttractionOverviewActivity"
             android:label="@string/title_activity_attraction_overview" />
-        <activity android:name=".activities.AttractionDetailViewActivity" />
+        <activity android:name=".activities.AttractionDetailViewActivity"
+            android:parentActivityName=".activities.AttractionOverviewActivity"/>
         <activity
             android:name=".activities.EditParkActivity"
             android:windowSoftInputMode="adjustResize" />

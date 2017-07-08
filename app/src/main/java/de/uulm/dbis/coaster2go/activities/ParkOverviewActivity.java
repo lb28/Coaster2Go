@@ -345,9 +345,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(
                     R.id.swiperefresh_parkList);
             progressBar = ((ParkOverviewActivity) getActivity()).progressBar;
-
             progressBar.setVisibility(View.VISIBLE);
-            refreshParkList();
 
             List<Park> parkList = new ArrayList<>(); // empty list before it is loaded
 
@@ -432,6 +430,13 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             });
 
             return rootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            // do the refresh onResume so it will be refreshed when returning to the activity
+            refreshParkList();
         }
 
         void refreshParkList() {

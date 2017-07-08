@@ -4,6 +4,6 @@
     <item android:drawable="@color/colorPrimary" />
 
     <item android:drawable="@drawable/ic_theme_park_splash"
-            android:gravity="center"/>
+        android:gravity="center" android:width="250dp" android:height="250dp" />
 
 </layer-list>
