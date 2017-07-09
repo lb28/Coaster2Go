@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -44,6 +45,9 @@ public class AzureDBManager {
     private MobileServiceClient mClient;
 
     public AzureDBManager(Context context) {
+        if (context == null) {
+            throw new IllegalArgumentException("context is null");
+        }
         this.context = context;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         jsonManager = new JsonManager(context);

@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +16,16 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.pchmn.materialchips.R2;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -26,16 +35,22 @@ import java.util.Locale;
 import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
 
+import static de.uulm.dbis.coaster2go.activities.AttractionOverviewActivity.ATTRACTION_TYPES;
+
 /**
  * Created by Luis on 06.05.2017.
  */
 public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAdapter.ViewHolder> {
+
+    private static final String TAG = "AttractionListAdapter";
 
     public enum SortMode {
         NAME, RATING, WAIT_TIME
     }
 
     private SortMode currentSortMode;
+    private String currentSearchString;
+    private List<String> currentTypeFilters;
 
     private List<Attraction> attractionList;
     private List<Attraction> copyOfAttractionList;
@@ -96,8 +111,8 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
 
         // fill the view based on the data
         if (attraction.getImage() == null || attraction.getImage().isEmpty()) {
-            Picasso.with(context).load(R.drawable.ic_theme_park).
-                    into(viewHolder.attractionImage);
+            viewHolder.attractionImage.setImageDrawable(
+                    ContextCompat.getDrawable(context, R.drawable.ic_theme_park));
         } else {
             Picasso.with(context).load(attraction.getImage()).into(viewHolder.attractionImage);
         }
@@ -168,15 +183,47 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
         return attractionList == null ? 0 : attractionList.size();
     }
 
-    public void filterList(String searchString){
+    /**
+     * Filters the attractions based on the search string AND the filtered types
+     * @param searchString attraction names will all contain the searchString
+     * @param filterTypes attraction types will contain
+     */
+    public void filterList(String searchString, List<String> filterTypes){
+        List<String> attrTypes = new ArrayList<>();
+
         attractionList = copyOfAttractionList;
-        List<Attraction> resultList = new ArrayList<Attraction>();
+        List<Attraction> resultList = new ArrayList<>();
         for(Attraction a : attractionList){
             if(a.getName().toLowerCase().contains(searchString.toLowerCase())){
-                resultList.add(a);
+                // do we even need to check for attraction types?
+                if (filterTypes.containsAll(ATTRACTION_TYPES)) {
+                    // all types are valid --> found a match
+                    resultList.add(a);
+                } else {
+                    // additional type filter --> see if the types match
+                    attrTypes.addAll(Arrays.asList(TextUtils.split(a.getType(), ",")));
+                    Log.d(TAG, "--- filterList: attrTypes: " + Arrays.toString(attrTypes.toArray()));
+                    Log.d(TAG, "--- filterList: filterTypes: " + Arrays.toString(filterTypes.toArray()));
+                    for (String type : attrTypes) {
+                        // only add the attraction if it matches at least one type
+                        // and is not already in the list
+                        if (filterTypes.contains(type) && !resultList.contains(a)) {
+                            // the attraction contains at least one of the types we filtered for
+                            resultList.add(a);
+                        }
+                    }
+
+                }
             }
+
+            // clear the type list
+            attrTypes.clear();
         }
         attractionList = resultList;
+
+        currentSearchString = searchString;
+        currentTypeFilters = filterTypes;
+
         notifyDataSetChanged();
     }
 
@@ -245,8 +292,13 @@ public class AttractionListAdapter extends RecyclerView.Adapter<AttractionListAd
     public void setAttractionList(List<Attraction> attractionList) {
         this.attractionList = attractionList;
         this.copyOfAttractionList = attractionList;
+
+        // restore the last sort and filter state
         if (currentSortMode != null) {
             changeSort(currentSortMode);
+        }
+        if (currentSearchString != null && currentTypeFilters != null) {
+            filterList(currentSearchString, currentTypeFilters);
         }
     }
 

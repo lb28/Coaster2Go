@@ -150,8 +150,8 @@ public class EditParkActivity extends BaseActivity {
             public void onClick(DialogInterface dialog, int which) {
                 parkImageUrl = editTextParkImageUrl.getText().toString();
                 if (parkImageUrl.isEmpty()) {
-                    Picasso.with(EditParkActivity.this)
-                            .load(R.mipmap.ic_launcher).into(imageViewPark);
+                    imageViewPark.setImageDrawable(ContextCompat.getDrawable(
+                            EditParkActivity.this, R.drawable.ic_theme_park));
                 } else {
                     Picasso.with(EditParkActivity.this).load(parkImageUrl).into(imageViewPark);
                 }
@@ -297,12 +297,13 @@ public class EditParkActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Park park) {
             if (park != null) {
-                if (!(park.getImage() == null || park.getImage().isEmpty())) {
+                if (park.getImage() == null || park.getImage().isEmpty()) {
+                    imageViewPark.setImageDrawable(ContextCompat.getDrawable(
+                            EditParkActivity.this, R.drawable.ic_theme_park));
+                    parkImageUrl = "";
+                } else {
                     Picasso.with(EditParkActivity.this).load(park.getImage()).into(imageViewPark);
                     parkImageUrl = park.getImage();
-                } else {
-                    Picasso.with(EditParkActivity.this).load(R.drawable.ic_theme_park).into(imageViewPark);
-                    parkImageUrl = "";
                 }
                 editTextParkName.setText(park.getName());
                 editTextParkLocationName.setText(park.getLocation());

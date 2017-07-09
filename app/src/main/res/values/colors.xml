@@ -8,4 +8,6 @@
     <color name="wait_red">#FF4A3A</color>
     <color name="wait_yellow">#FFF848</color>
     <color name="wait_green">#42E848</color>
+    <color name="colorAlmostWhite">#fafafa</color>
+    <color name="colorAlmostWhiteTransparent">#d9fafafa</color>
 </resources>

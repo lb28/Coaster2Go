@@ -16,10 +16,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.ProgressCallback;
@@ -29,17 +33,15 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.pchmn.materialchips.ChipsInput;
-import com.pchmn.materialchips.model.Chip;
-import com.pchmn.materialchips.model.ChipInterface;
+import com.pchmn.materialchips.ChipView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +50,13 @@ import de.uulm.dbis.coaster2go.R;
 import de.uulm.dbis.coaster2go.data.Attraction;
 import de.uulm.dbis.coaster2go.data.AzureDBManager;
 
+import static de.uulm.dbis.coaster2go.activities.AttractionOverviewActivity.ATTRACTION_TYPES;
+
 public class EditAttractionActivity extends BaseActivity {
 
     private static final String TAG = "EditAttractionActivity";
     EditText editTextAttrName;
-    ChipsInput chipsInputAttrTypes;
+    LinearLayout chipsLayoutAttrTypes;
     EditText editTextAttrLat;
     EditText editTextAttrLon;
     EditText editTextAttrDescription;
@@ -64,6 +68,9 @@ public class EditAttractionActivity extends BaseActivity {
     String attrId;
     String parkId;
 
+    private List<ChipView> typeChips;
+    private List<String> selectedTypes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,31 +80,36 @@ public class EditAttractionActivity extends BaseActivity {
         parkId = getIntent().getStringExtra("parkId");
 
         editTextAttrName = (EditText) findViewById(R.id.editTextAttrName);
-        chipsInputAttrTypes = (ChipsInput) findViewById(R.id.chipsInputAttrTypes);
+        chipsLayoutAttrTypes = (LinearLayout) findViewById(R.id.chipsLayoutAttrTypes);
         editTextAttrLat = (EditText) findViewById(R.id.editTextAttrLat);
         editTextAttrLon = (EditText) findViewById(R.id.editTextAttrLon);
         editTextAttrDescription = (EditText) findViewById(R.id.editTextAttrDescription);
         imageViewAttr = (ImageView) findViewById(R.id.imageViewEditAttr);
 
-        List<Chip> typeChips = Arrays.asList(
-                new Chip(ContextCompat.getDrawable(this, R.drawable.ic_favorite_red_24dp), "test1", null),
-                new Chip(ContextCompat.getDrawable(this, R.drawable.ic_add_location_black_24dp), "test2", null),
-                new Chip(ContextCompat.getDrawable(this, R.drawable.ic_add_black_24dp), "test3", null)
-        );
+        typeChips = new ArrayList<>(ATTRACTION_TYPES.size());
+        selectedTypes = new ArrayList<>();
 
-        chipsInputAttrTypes.setFilterableList(typeChips);
+        for (final String type : ATTRACTION_TYPES) {
+            final ChipView chip = new ChipView(this);
+            chip.setLabel(type);
+            chip.setOnChipClicked(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // do we have to select or deselect the chip?
+                    if (selectedTypes.contains(type)) {
+                        selectedTypes.remove(type);
+                        chip.setChipBackgroundColor(ContextCompat.getColor(
+                                EditAttractionActivity.this, R.color.colorChipViewBackground));
+                    } else {
+                        selectedTypes.add(type);
+                        chip.setChipBackgroundColor(ContextCompat.getColor(
+                                EditAttractionActivity.this, R.color.colorPrimary));
+                    }
+                }
+            });
+            typeChips.add(chip);
+        }
 
-        /*
-        ChipsLayoutManager chipsLayoutManager = ChipsLayoutManager
-                .newBuilder(EditAttractionActivity.this)
-                .setChildGravity(Gravity.TOP)
-                .setOrientation(ChipsLayoutManager.HORIZONTAL)
-                .setScrollingEnabled(true)
-                .setRowStrategy(ChipsLayoutManager.STRATEGY_DEFAULT)
-                .withLastRow(true)
-                .build();
-        chipsInputAttrTypes.setLayoutManager(chipsLayoutManager);
-*/
         if (attrId != null) {
             new LoadAttrTask().execute();
         }
@@ -109,16 +121,11 @@ public class EditAttractionActivity extends BaseActivity {
      */
     public void saveAttraction(View view) {
         String name = editTextAttrName.getText().toString();
-//TODO        String types = chipsInputAttrTypes.getText().toString();
+        String typesString = TextUtils.join(",", selectedTypes);
         String descr = editTextAttrDescription.getText().toString();
         String lat = editTextAttrLat.getText().toString();
         String lon = editTextAttrLon.getText().toString();
 
-        JSONArray jsonArrayTypes = new JSONArray();
-        for (ChipInterface c : chipsInputAttrTypes.getSelectedChipList()) {
-            jsonArrayTypes.put(c.getLabel());
-        }
-        String typesString = jsonArrayTypes.toString();
         Log.d(TAG, "saveAttraction: types: " + typesString);
 
         new SaveAttrTask().execute(name, typesString, descr, lat, lon);
@@ -184,8 +191,8 @@ public class EditAttractionActivity extends BaseActivity {
             public void onClick(DialogInterface dialog, int which) {
                 attrImageUrl = editTextAttrImageUrl.getText().toString();
                 if (attrImageUrl.isEmpty()) {
-                    Picasso.with(EditAttractionActivity.this)
-                            .load(R.mipmap.ic_launcher).into(imageViewAttr);
+                    imageViewAttr.setImageDrawable(ContextCompat.getDrawable(
+                            EditAttractionActivity.this, R.drawable.ic_theme_park));
                 } else {
                     Picasso.with(EditAttractionActivity.this).load(attrImageUrl).into(imageViewAttr);
                 }
@@ -285,7 +292,6 @@ public class EditAttractionActivity extends BaseActivity {
             }
         } else if (requestCode == RC_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                // TODO maybe get the full size picture?
                 Bitmap picture = (Bitmap) data.getExtras().get("data");
 
                 // upload the picture with cloudinary
@@ -331,27 +337,54 @@ public class EditAttractionActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Attraction attr) {
             if (attr != null) {
-                if (!(attr.getImage() == null || attr.getImage().isEmpty())) {
+                if (attr.getImage() == null || attr.getImage().isEmpty()) {
+                    imageViewAttr.setImageDrawable(ContextCompat.getDrawable(
+                            EditAttractionActivity.this, R.drawable.ic_theme_park));
+                    attrImageUrl = "";
+                } else {
                     Picasso.with(EditAttractionActivity.this).load(attr.getImage()).into(imageViewAttr);
                     attrImageUrl = attr.getImage();
-                } else {
-                    Picasso.with(EditAttractionActivity.this).load(R.mipmap.ic_theme_park).into(imageViewAttr);
-                    attrImageUrl = "";
                 }
                 editTextAttrName.setText(attr.getName());
                 editTextAttrLat.setText(String.valueOf(attr.getLat()));
                 editTextAttrLon.setText(String.valueOf(attr.getLon()));
                 editTextAttrDescription.setText(attr.getDescription());
-                try {
-                    JSONArray jsonArrayAttrTypes = new JSONArray(attr.getType());
-                    for (int i = 0; i < jsonArrayAttrTypes.length(); i++) {
-                        chipsInputAttrTypes.addChip(jsonArrayAttrTypes.get(i).toString(), null);
-                    }
-                    Log.d(TAG, "onPostExecute: loaded types: " + jsonArrayAttrTypes);
 
-                } catch (JSONException e) {
-                    Log.e(TAG, "onPostExecute: reading json types failed", e);
+
+                List<String> selectedTypesRaw = Arrays.asList(TextUtils.split(attr.getType(), ","));
+                for (String potentialType : selectedTypesRaw) {
+                    // only add known types, rest will be discarded when saving
+                    if (ATTRACTION_TYPES.contains(potentialType)) {
+                        selectedTypes.add(potentialType);
+                    }
                 }
+
+                // this removes all unknown "types", normally this occurs when a type name changes
+                // or a type is removed or ...
+
+
+                Log.d(TAG, "onPostExecute: type string: \"" + attr.getType() + "\"");
+                Log.d(TAG, "onPostExecute: attraction has type " + Arrays.toString(selectedTypes.toArray()));
+
+                // add all the types to the chips layout
+                for (ChipView chip : typeChips) {
+                    // is this type selected?
+                    if (selectedTypes.contains(chip.getLabel())) {
+                        chip.setChipBackgroundColor(ContextCompat.getColor(
+                                EditAttractionActivity.this, R.color.colorPrimary));
+                    } else {
+                        chip.setChipBackgroundColor(ContextCompat.getColor(
+                                EditAttractionActivity.this, R.color.colorChipViewBackground));
+                    }
+
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(0, 5, 5, 10);
+
+                    chipsLayoutAttrTypes.addView(chip, layoutParams);
+                }
+
             }
             progressBar.setVisibility(View.GONE);
 

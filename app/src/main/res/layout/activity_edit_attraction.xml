@@ -76,16 +76,24 @@
                             android:hint="@string/name" />
                     </android.support.design.widget.TextInputLayout>
 
-                    <com.pchmn.materialchips.ChipsInput
-                        android:id="@+id/chipsInputAttrTypes"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tags"/>
+                    <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:maxRows="2"
-                        app:hint="Kategorien"
-                        app:showChipDetailed="false"
-                        app:chip_deletable="true"
+                        >
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:id="@+id/chipsLayoutAttrTypes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:gravity="center_horizontal">
 
-                        />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -124,7 +132,7 @@
 
                         <ImageButton
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:layout_marginStart="@dimen/activity_horizontal_margin"
                             android:layout_gravity="center_vertical"

@@ -7,25 +7,34 @@
         android:title="@string/search_name"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="collapseActionView|always" />
+
+    <item
+        android:id="@+id/action_filter"
+        android:icon="@drawable/ic_filter_24dp"
+        android:title="Filter"
+        app:showAsAction="always">
+    </item>
+
     <item
         android:icon="@drawable/ic_sort_black_24dp"
         android:title="@string/sort_method"
-        android:checkableBehavior="single"
         app:showAsAction="always">
         <menu>
-            <item
-                android:id="@+id/action_sort_abc"
-                android:icon="@drawable/ic_sort_by_alpha_black_24dp"
-                android:title="@string/alphabetically" />
-            <item
-                android:id="@+id/action_sort_rating"
-                android:icon="@drawable/ic_stars_black_24dp"
-                android:title="@string/rating" />
-            <item
-                android:id="@+id/action_sort_waittime"
-                android:icon="@drawable/ic_access_time_black_24dp"
-                android:title="@string/wait_time"/>
-
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_sort_abc"
+                    android:icon="@drawable/ic_sort_by_alpha_black_24dp"
+                    android:title="@string/alphabetically"
+                    android:checked="true"/>
+                <item
+                    android:id="@+id/action_sort_rating"
+                    android:icon="@drawable/ic_stars_black_24dp"
+                    android:title="@string/rating" />
+                <item
+                    android:id="@+id/action_sort_waittime"
+                    android:icon="@drawable/ic_access_time_black_24dp"
+                    android:title="@string/wait_time"/>
+            </group>
         </menu>
     </item>
 

@@ -274,7 +274,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/colorAlmostWhiteTransparent">
 
             <EditText
                 android:layout_width="0dp"

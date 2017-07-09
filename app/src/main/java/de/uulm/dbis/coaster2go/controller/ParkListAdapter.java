@@ -2,6 +2,7 @@ package de.uulm.dbis.coaster2go.controller;
 
 import android.content.Context;
 import android.location.Location;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
     }
 
     private SortMode currentSortMode;
+    private String currentSearchString;
 
     private List<Park> parkList;
     private List<Park> copyOfParkList;
@@ -100,8 +102,9 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
 
         // fill the view based on the data
         if (park.getImage() == null || park.getImage().isEmpty()) {
-            Picasso.with(context).load(R.drawable.ic_theme_park)
-                    .into(viewHolder.parkImage);
+            viewHolder.parkImage.setImageDrawable(
+                    ContextCompat.getDrawable(context, R.drawable.ic_theme_park));
+            viewHolder.parkImage.setAdjustViewBounds(true);
         } else {
             Picasso.with(context).load(park.getImage())
                     .into(viewHolder.parkImage);
@@ -250,6 +253,9 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         this.copyOfParkList = parkList;
         if (currentSortMode != null) {
             changeSort(currentSortMode);
+        }
+        if (currentSearchString != null) {
+            filterList(currentSearchString);
         }
     }
 

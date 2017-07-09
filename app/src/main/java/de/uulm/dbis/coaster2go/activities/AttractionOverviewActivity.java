@@ -23,12 +23,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.uulm.dbis.coaster2go.R;
@@ -47,6 +50,14 @@ public class AttractionOverviewActivity extends BaseActivity {
 
     private SectionsPagerAdapter tabsPagerAdapter;
 
+    // add attraction types here if necessary
+    public static List<String> ATTRACTION_TYPES = Arrays.asList(
+            "Action", "Achterbahn", "Kinderbahn", "Wasserbahn",
+            "Riesenrad", "Essen", "Show", "Sonstige"
+    );
+
+    AlertDialog typeFilterDialog;
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -56,6 +67,21 @@ public class AttractionOverviewActivity extends BaseActivity {
 
     private String parkId;
     private static boolean isParkAdmin;
+
+    /**
+     * The current filter string from the search box. <br>
+     * Apply the filter using {@link #updateFilters()}.
+     */
+    private String currentFilterString;
+
+    /**
+     * The current attraction types filter. <br>
+     * Apply the filter using {@link #updateFilters()}.
+     */
+    private List<String> currentFilterTypes;
+
+    public AttractionOverviewActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +95,9 @@ public class AttractionOverviewActivity extends BaseActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+        currentFilterString = ""; // no search string initially
+        currentFilterTypes = new ArrayList<>(ATTRACTION_TYPES); // all types initially
 
         // Create the adapter that will return a fragment for each of the two
         // sections (all vs. favorites) of the activity.
@@ -94,9 +123,7 @@ public class AttractionOverviewActivity extends BaseActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
     }
 
@@ -105,6 +132,22 @@ public class AttractionOverviewActivity extends BaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.attraction_overview_actions, menu);
+
+        boolean[] checkedItems = new boolean[ATTRACTION_TYPES.size()];
+        for (int i = 0; i < checkedItems.length; i++) {
+            checkedItems[i] = true;
+        }
+
+        typeFilterDialog = new AlertDialog.Builder(this)
+                .setTitle("Attraktionen Filtern")
+                .setMultiChoiceItems((String[]) ATTRACTION_TYPES.toArray(),checkedItems,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
+                        changeAttractionListFilter(indexSelected, isChecked);
+                    }
+                }).setPositiveButton("OK", null)
+                .create();
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -116,27 +159,14 @@ public class AttractionOverviewActivity extends BaseActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                try{
-                    AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
-                    currentFragment.attractionListAdapter.filterList(newText);
-                }catch(Exception e){
-                    e.printStackTrace();
-                    Log.e(TAG, "Attractionsearch: Probably no current fragment");
-                }
-
+                currentFilterString = newText;
+                updateFilters();
                 return true;
             }
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                try{
-                    AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
-                    currentFragment.attractionListAdapter.filterList(query);
-                }catch(Exception e){
-                    e.printStackTrace();
-                    Log.e(TAG, "Attractionsearch: Probably no current fragment");
-                }
-                return true;
+                return onQueryTextChange(query);
             }
         });
 
@@ -151,28 +181,80 @@ public class AttractionOverviewActivity extends BaseActivity {
         switch (id) {
             case R.id.action_sort_abc:
                 changeAttractionListSort(AttractionListAdapter.SortMode.NAME);
+                item.setChecked(true);
                 return true;
             case R.id.action_sort_rating:
                 changeAttractionListSort(AttractionListAdapter.SortMode.RATING);
+                item.setChecked(true);
                 return true;
             case R.id.action_sort_waittime:
                 changeAttractionListSort(AttractionListAdapter.SortMode.WAIT_TIME);
+                item.setChecked(true);
                 return  true;
             case R.id.action_refresh:
                 refreshAttractionList();
                 return true;
+            case R.id.action_filter:
+                typeFilterDialog.show();
+                return true;
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     /**
+     * @param typeIndex the zero-based index of the attraction type as defined in
+     *                  {@link #ATTRACTION_TYPES}
+     * @param addFilter set to true if the given type should be added to the filter, false if
+     *                  it should be removed from the filter
+     */
+    private void changeAttractionListFilter(int typeIndex, boolean addFilter) {
+        String filterString = ATTRACTION_TYPES.get(typeIndex);
+
+        Log.d(TAG, "onOptionsItemSelected: setting \"" + filterString + "\" "
+                + "filter state to " + addFilter);
+
+        if (addFilter) {
+            // the filter list should not already contain the filter
+            if (currentFilterTypes.contains(filterString)) {
+                new IllegalStateException("adding filter that is already active").printStackTrace();
+            }
+            currentFilterTypes.add(filterString);
+        } else {
+            currentFilterTypes.remove(filterString);
+        }
+
+        // update the filter
+        updateFilters();
+    }
+
+
+    /**
+     * Updates the search AND the type filters both at once.<br>
+     * You should update {@link #currentFilterString} or {@link #currentFilterTypes} (or both)
+     * before calling updateFilters()
+     */
+    private void updateFilters() {
+        try{
+            for (AttractionListFragment fragment: tabsPagerAdapter.fragmentList) {
+                fragment.attractionListAdapter
+                        .filterList(currentFilterString, currentFilterTypes);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            Log.e(TAG, "Attractionsearch: Probably missing fragment");
+        }
+    }
+
+    /**
      * @param sortMode one of the sort modes available in {@link AttractionListAdapter}
      */
     public void changeAttractionListSort(AttractionListAdapter.SortMode sortMode) {
-        AttractionListFragment currentFragment = tabsPagerAdapter.fragmentList.get(currentFragmentIndex);
-        if (currentFragment != null && currentFragment.attractionListAdapter != null) {
-            currentFragment.attractionListAdapter.changeSort(sortMode);
+        for (AttractionListFragment fragment: tabsPagerAdapter.fragmentList) {
+            if (fragment != null && fragment.attractionListAdapter != null) {
+                fragment.attractionListAdapter.changeSort(sortMode);
+            }
         }
     }
 
@@ -202,6 +284,7 @@ public class AttractionOverviewActivity extends BaseActivity {
 
         startActivityForResult(intent, RC_ADD_ATTR);
     }
+
 
     /**
      * A fragment containing a list of parks

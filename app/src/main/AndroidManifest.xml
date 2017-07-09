@@ -14,7 +14,7 @@
         tools:replace="android:label"
         android:label="Coaster2Go"
         android:theme="@style/AppTheme.NoActionBar"
-        android:icon="@mipmap/ic_theme_park"
+        android:icon="@drawable/ic_theme_park_splash"
         android:name="android.support.multidex.MultiDexApplication" >
         <meta-data
             android:name="com.google.android.geo.API_KEY"

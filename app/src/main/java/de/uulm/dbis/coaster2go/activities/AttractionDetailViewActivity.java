@@ -14,8 +14,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
@@ -164,27 +167,14 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
         buttonInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String attrDesc = attr.getDescription();
-
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_NEUTRAL:
-                                //Ok button clicked
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
-                                break;
-                        }
-                    }
-                };
-
                 //dialog for showing the attraction description
-                AlertDialog.Builder builder = new AlertDialog.Builder(AttractionDetailViewActivity.this);
-                builder.setMessage(attrDesc).setNeutralButton("Schließen", dialogClickListener).show();
-
+                DialogFragment infoDialog = new AttractionInfoDialogFragment();
+                Bundle infoArgs = new Bundle();
+                infoArgs.putString("attrDesc", attr.getDescription());
+                String[] attrTypes = TextUtils.split(attr.getType(), ",");
+                infoArgs.putStringArray("attrTypes", attrTypes);
+                infoDialog.setArguments(infoArgs);
+                infoDialog.show(getSupportFragmentManager(), "attrInfoDialog");
             }
         });
 
@@ -406,7 +396,8 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 if (attr2.getImage() != null && !attr2.getImage().isEmpty()) {
                     Picasso.with(AttractionDetailViewActivity.this).load(attr2.getImage()).into(attrImage);
                 } else {
-                    Picasso.with(AttractionDetailViewActivity.this).load(R.drawable.ic_theme_park).into(attrImage);
+                    attrImage.setImageDrawable(ContextCompat.getDrawable(
+                            AttractionDetailViewActivity.this, R.drawable.ic_theme_park));
                 }
                 attrName.setText(attr2.getName());
                 attrName.setSelected(true);

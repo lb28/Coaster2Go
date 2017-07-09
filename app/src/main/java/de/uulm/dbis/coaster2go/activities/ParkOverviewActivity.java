@@ -149,8 +149,9 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
             @Override
             public boolean onQueryTextChange(String newText) {
                 try{
-                    ParkListFragment currentFragment = getCurrentFragment();
-                    currentFragment.parkListAdapter.filterList(newText);
+                    for (ParkListFragment fragment : tabsPagerAdapter.fragmentList) {
+                        fragment.parkListAdapter.filterList(newText);
+                    }
                 }catch(Exception e){
                     e.printStackTrace();
                     Log.e(TAG, "Parksearch: Probably no current fragment");
@@ -160,14 +161,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                try{
-                    ParkListFragment currentFragment = getCurrentFragment();
-                    currentFragment.parkListAdapter.filterList(query);
-                }catch(Exception e){
-                    e.printStackTrace();
-                    Log.e(TAG, "Parksearch: Probably no current fragment");
-                }
-                return true;
+                return onQueryTextChange(query);
             }
         });
 

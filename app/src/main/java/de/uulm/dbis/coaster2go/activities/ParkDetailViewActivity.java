@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -137,8 +138,8 @@ public class ParkDetailViewActivity extends BaseActivity {
             } else {
                 park = park2;
                 if (park2.getImage() == null || park2.getImage().isEmpty()) {
-                    Picasso.with(ParkDetailViewActivity.this)
-                            .load(R.drawable.ic_theme_park).into(parkImage);
+                    parkImage.setImageDrawable(ContextCompat.getDrawable(
+                            ParkDetailViewActivity.this, R.drawable.ic_theme_park));
                 } else {
                     Picasso.with(ParkDetailViewActivity.this).load(park2.getImage()).into(parkImage);
                 }
