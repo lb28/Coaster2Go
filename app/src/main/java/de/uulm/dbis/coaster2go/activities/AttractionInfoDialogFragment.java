@@ -24,6 +24,7 @@ public class AttractionInfoDialogFragment extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
+        String attrName = getArguments().getString("attrName");
         String attrDesc = getArguments().getString("attrDesc");
         String[] types = getArguments().getStringArray("attrTypes");
 
@@ -31,7 +32,7 @@ public class AttractionInfoDialogFragment extends DialogFragment {
         // Pass null as the parent view because its going in the dialog layout
         View dialogView = inflater.inflate(R.layout.dialog_attraction_info, null);
 
-        if (types != null) {
+        if (types != null && types.length > 0) {
             LinearLayout chipLayout = (LinearLayout) dialogView.findViewById(R.id.chipsLayoutAttrTypes);
 
             for (String type : types) {
@@ -47,10 +48,13 @@ public class AttractionInfoDialogFragment extends DialogFragment {
 
                 chipLayout.addView(chip, layoutParams);
             }
+
+            // only add the view if there is something to show
+            builder.setView(dialogView);
         }
 
 
-        builder.setView(dialogView)
+        builder.setTitle(attrName)
                 .setMessage(attrDesc)
                 .setNegativeButton("Schließen", null);
 

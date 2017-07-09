@@ -1,7 +1,6 @@
 package de.uulm.dbis.coaster2go.activities;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -16,7 +15,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -29,7 +27,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
@@ -170,6 +167,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 //dialog for showing the attraction description
                 DialogFragment infoDialog = new AttractionInfoDialogFragment();
                 Bundle infoArgs = new Bundle();
+                infoArgs.putString("attrName", attr.getName());
                 infoArgs.putString("attrDesc", attr.getDescription());
                 String[] attrTypes = TextUtils.split(attr.getType(), ",");
                 infoArgs.putStringArray("attrTypes", attrTypes);
