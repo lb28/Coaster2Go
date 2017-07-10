@@ -2,12 +2,13 @@ package de.uulm.dbis.coaster2go.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.Date;
 
 public class Attraction {
     private String id;
     private String name;
-    private String type; //TODO make a list of all possible types
+    private String type;
     private String description;
     private double lat;
     private double lon;

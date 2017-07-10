@@ -260,9 +260,6 @@
                     android:layout_height="wrap_content"
                     android:minHeight="130dp"
                     android:layout_below="@id/attr_detail_waitingtime_view_rellayout" />
-
-                <!-- TODO ChipViews -->
-
             </RelativeLayout>
         </ScrollView>
 

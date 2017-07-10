@@ -251,7 +251,6 @@ public class EditParkActivity extends BaseActivity {
             }
         }else if (requestCode == RC_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                // TODO maybe get the full size picture?
                 Bitmap picture = (Bitmap) data.getExtras().get("data");
 
                 // upload the picture with cloudinary

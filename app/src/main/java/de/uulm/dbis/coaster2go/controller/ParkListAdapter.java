@@ -255,6 +255,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
             changeSort(currentSortMode);
         }
         if (currentSearchString != null) {
+            // TODO not working when going back from detail view
             filterList(currentSearchString);
         }
     }

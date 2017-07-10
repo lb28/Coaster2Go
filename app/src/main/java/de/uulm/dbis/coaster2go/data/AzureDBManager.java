@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -28,10 +27,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-/** Class handles all Connections between the App and the Azure SQL Data tables.
- *
- * TODO: Find a better solution for the date problems
- *
+/**
+ * Class handles all Connections between the App and the Azure SQL Data tables.
  */
 public class AzureDBManager {
 

@@ -11,7 +11,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -146,51 +145,4 @@ public class RatingListAdapter extends RecyclerView.Adapter<RatingListAdapter.Vi
         this.ratingsList = ratingsList;
     }
 
-
-    // TODO add a search bar for filtering?
-    private class RatingFilter extends Filter {
-        private final List<Review> originalList;
-        private final List<Review> filteredList;
-
-        private RatingFilter(List<Review> originalList) {
-            super();
-            this.originalList = originalList;
-            filteredList = new ArrayList<>();
-        }
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            filteredList.clear();
-            final FilterResults results = new FilterResults();
-
-            if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(originalList);
-            } else {
-                // here the filtering happens
-                final String filterString = constraint.toString().toLowerCase();
-
-                for (Review review : originalList) {
-                    if (review.getDisplayName().toLowerCase().contains(filterString)
-                            || review.getComment().toLowerCase().contains(filterString)) {
-                        filteredList.add(review);
-                    }
-                }
-            }
-            results.values = filteredList;
-            results.count = filteredList.size();
-
-            return results;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (results.count == 0) {
-                notifyItemRangeRemoved(0, ratingsList.size());
-            } else {
-                ratingsList = (ArrayList<Review>) results.values;
-                notifyDataSetChanged();
-            }
-        }
-    }
 }

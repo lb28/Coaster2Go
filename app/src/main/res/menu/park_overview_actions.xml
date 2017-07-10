@@ -20,18 +20,20 @@
         android:checkableBehavior="single"
         app:showAsAction="always">
         <menu>
-            <item
-                android:id="@+id/action_sort_abc"
-                android:icon="@drawable/ic_sort_by_alpha_black_24dp"
-                android:title="@string/alphabetically" />
-            <item
-                android:id="@+id/action_sort_rating"
-                android:icon="@drawable/ic_stars_black_24dp"
-                android:title="@string/rating" />
-            <item
-                android:id="@+id/action_sort_distance"
-                android:icon="@drawable/ic_place_black_24dp"
-                android:title="@string/distance"/>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_sort_abc"
+                    android:icon="@drawable/ic_sort_by_alpha_black_24dp"
+                    android:title="@string/alphabetically" />
+                <item
+                    android:id="@+id/action_sort_rating"
+                    android:icon="@drawable/ic_stars_black_24dp"
+                    android:title="@string/rating" />
+                <item
+                    android:id="@+id/action_sort_distance"
+                    android:icon="@drawable/ic_place_black_24dp"
+                    android:title="@string/distance"/>
+            </group>
 
         </menu>
     </item>

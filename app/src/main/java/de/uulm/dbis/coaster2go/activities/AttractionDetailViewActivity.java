@@ -1,11 +1,13 @@
 package de.uulm.dbis.coaster2go.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -302,9 +304,22 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
      * updates the GUI to match the location (i.e. distance too big?)
      */
     private void updateLocationGUI(boolean lastEntryAllowed) {
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        boolean gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        Log.d(TAG, "------ updateLocationGUI: gpsEnabled: " + gpsEnabled);
+
+        // check if GPS Service is enabled
+        if (!gpsEnabled) {
+            enterTime.setHint("GPS nicht verfügbar");
+            enterTime.setEnabled(false);
+            buttonSave.setEnabled(false);
+            return;
+        }
+
+
         if (lastEntryAllowed) {
             if (currentUserLocation != null) {
-
                 Location attrLocation = new Location("");
                 attrLocation.setLatitude(attr.getLat());
                 attrLocation.setLongitude(attr.getLon());
@@ -315,7 +330,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                     enterTime.setEnabled(false);
                     buttonSave.setEnabled(false);
                 } else {
-                    //TODO check if GPS Service is enabled and if not tell the user that he first has to enable it
+
                     enterTime.setHint("Minuten eingeben");
                     enterTime.setEnabled(true);
                     buttonSave.setEnabled(true);
@@ -457,6 +472,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                     todayWait.setTextColor(Color.WHITE);
                 } else {
                     buttonTodayWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,248,72)));
+                    todayWait.setTextColor(Color.BLACK);
                 }
                 //aktuell (letzte 3) durchschnitt
                 if(attr.getCurrentWaitingTime() < attr.getAverageWaitingTime()*0.7 || attr.getCurrentWaitingTime() <= 10){
@@ -467,6 +483,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                     currentWait.setTextColor(Color.WHITE);
                 } else {
                     buttonCurrentWait.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(255,248,72)));
+                    currentWait.setTextColor(Color.BLACK);
                 }
             }
             //AttractionDetailViewActivity.this.progressBar.setVisibility(View.GONE);
