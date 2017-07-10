@@ -148,7 +148,7 @@ public class ParkDetailViewActivity extends BaseActivity {
                 parkName.setSelected(true);
                 ratingBar.setRating((float) park2.getAverageReview());
                 DecimalFormat df = new DecimalFormat("#.#");
-                parkRatingAvg.setText(df.format(park2.getAverageReview()));
+                parkRatingAvg.setText("⌀ " + df.format(park2.getAverageReview()));
                 parkLocation.setText(park2.getLocation());
                 parkDescription.setText(park2.getDescription());
 

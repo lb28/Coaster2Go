@@ -19,11 +19,9 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.ProgressCallback;
@@ -35,8 +33,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.pchmn.materialchips.ChipView;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -112,6 +108,8 @@ public class EditAttractionActivity extends BaseActivity {
 
         if (attrId != null) {
             new LoadAttrTask().execute();
+        } else {
+            addChips();
         }
     }
 
@@ -254,6 +252,27 @@ public class EditAttractionActivity extends BaseActivity {
 
     }
 
+    private void addChips() {
+        // add all the types to the chips layout
+        for (ChipView chip : typeChips) {
+            // is this type selected?
+            if (selectedTypes.contains(chip.getLabel())) {
+                chip.setChipBackgroundColor(ContextCompat.getColor(
+                        EditAttractionActivity.this, R.color.colorPrimary));
+            } else {
+                chip.setChipBackgroundColor(ContextCompat.getColor(
+                        EditAttractionActivity.this, R.color.colorChipViewBackground));
+            }
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 5, 5, 10);
+
+            chipsLayoutAttrTypes.addView(chip, layoutParams);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
@@ -365,25 +384,8 @@ public class EditAttractionActivity extends BaseActivity {
 
                 Log.d(TAG, "onPostExecute: type string: \"" + attr.getType() + "\"");
                 Log.d(TAG, "onPostExecute: attraction has type " + Arrays.toString(selectedTypes.toArray()));
+                addChips();
 
-                // add all the types to the chips layout
-                for (ChipView chip : typeChips) {
-                    // is this type selected?
-                    if (selectedTypes.contains(chip.getLabel())) {
-                        chip.setChipBackgroundColor(ContextCompat.getColor(
-                                EditAttractionActivity.this, R.color.colorPrimary));
-                    } else {
-                        chip.setChipBackgroundColor(ContextCompat.getColor(
-                                EditAttractionActivity.this, R.color.colorChipViewBackground));
-                    }
-
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParams.setMargins(0, 5, 5, 10);
-
-                    chipsLayoutAttrTypes.addView(chip, layoutParams);
-                }
 
             }
             progressBar.setVisibility(View.GONE);

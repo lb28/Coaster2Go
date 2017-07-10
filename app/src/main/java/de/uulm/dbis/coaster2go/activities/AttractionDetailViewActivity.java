@@ -397,10 +397,11 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 } else {
                     // No user is signed in
                     enterTime.setVisibility(View.VISIBLE);
-                    enterTime.setHint("Einloggen um Wartezeiten einzutragen");
+                    enterTime.setHint("Bitte einloggen");
                     enterTime.setEnabled(false);
                     labelMinutes.setVisibility(View.INVISIBLE);
-                    buttonSave.setVisibility(View.INVISIBLE);
+                    buttonSave.setVisibility(View.VISIBLE);
+                    buttonSave.setEnabled(false);
                 }
 
                 //bar chart
@@ -416,7 +417,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                 attrName.setSelected(true);
                 attrRatingbar.setRating((float) attr2.getAverageReview());
                 DecimalFormat df = new DecimalFormat("#.#");
-                attrAvgRating.setText(df.format(attr2.getAverageReview()));
+                attrAvgRating.setText("⌀ " + df.format(attr2.getAverageReview()));
 
                 // enable buttons
                 buttonSave.setEnabled(true);

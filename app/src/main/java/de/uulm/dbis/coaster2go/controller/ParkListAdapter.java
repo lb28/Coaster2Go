@@ -113,7 +113,7 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
         viewHolder.parkName.setSelected(true);
 
         viewHolder.parkName.setText(park.getName());
-        if (user != null && park.getAdmin().equals(user.getUid())) {
+        if ((user != null && park.getAdmin().equals(user.getUid()) || park.getAdmin().isEmpty())) {
             viewHolder.parkName.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.ic_edit_black_24dp, 0, 0, 0);
         } else {
