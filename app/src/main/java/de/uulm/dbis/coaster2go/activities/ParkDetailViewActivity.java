@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -88,6 +89,16 @@ public class ParkDetailViewActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 new SetFaveAsync().execute();
+            }
+        });
+
+        ratingBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    showParkRatings(view);
+                }
+                return true;
             }
         });
     }
