@@ -21,6 +21,7 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -199,6 +200,16 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        attrRatingbar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    showAttrRatings(view);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
