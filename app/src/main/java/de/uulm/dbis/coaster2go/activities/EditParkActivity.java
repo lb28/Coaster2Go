@@ -57,6 +57,8 @@ public class EditParkActivity extends BaseActivity {
     String parkImageUrl;
     String parkId;
 
+    Park park;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -294,21 +296,24 @@ public class EditParkActivity extends BaseActivity {
         }
 
         @Override
-        protected void onPostExecute(Park park) {
-            if (park != null) {
-                if (park.getImage() == null || park.getImage().isEmpty()) {
+        protected void onPostExecute(Park p) {
+
+            park = p;
+
+            if (p != null) {
+                if (p.getImage() == null || p.getImage().isEmpty()) {
                     imageViewPark.setImageDrawable(ContextCompat.getDrawable(
                             EditParkActivity.this, R.drawable.ic_theme_park));
                     parkImageUrl = "";
                 } else {
-                    Picasso.with(EditParkActivity.this).load(park.getImage()).into(imageViewPark);
-                    parkImageUrl = park.getImage();
+                    Picasso.with(EditParkActivity.this).load(p.getImage()).into(imageViewPark);
+                    parkImageUrl = p.getImage();
                 }
-                editTextParkName.setText(park.getName());
-                editTextParkLocationName.setText(park.getLocation());
-                editTextParkLat.setText(String.valueOf(park.getLat()));
-                editTextParkLon.setText(String.valueOf(park.getLon()));
-                editTextParkDescription.setText(park.getDescription());
+                editTextParkName.setText(p.getName());
+                editTextParkLocationName.setText(p.getLocation());
+                editTextParkLat.setText(String.valueOf(p.getLat()));
+                editTextParkLon.setText(String.valueOf(p.getLon()));
+                editTextParkDescription.setText(p.getDescription());
             }
             progressBar.setVisibility(View.GONE);
         }
@@ -344,13 +349,17 @@ public class EditParkActivity extends BaseActivity {
 
             AzureDBManager dbManager = new AzureDBManager(EditParkActivity.this);
 
-            Park park = new Park(name, location, descr, lat, lon, parkImageUrl, 0, 0, user.getUid());
-
             // did the park already exist?
             if (parkId == null) {
+                park = new Park(name, location, descr, lat, lon, parkImageUrl, 0, 0, user.getUid());
                 return dbManager.createPark(park);
             } else {
-                park.setId(parkId);
+                park.setName(name);
+                park.setLocation(location);
+                park.setDescription(descr);
+                park.setLat(lat);
+                park.setLon(lon);
+                park.setImage(parkImageUrl);
                 return dbManager.updatePark(park);
             }
 
