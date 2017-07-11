@@ -175,12 +175,15 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
         switch (id) {
             case R.id.action_sort_abc:
                 changeParkListSort(ParkListAdapter.SortMode.NAME);
+                item.setChecked(true);
                 return true;
             case R.id.action_sort_rating:
                 changeParkListSort(ParkListAdapter.SortMode.RATING);
+                item.setChecked(true);
                 return true;
             case R.id.action_sort_distance:
                 changeParkListSort(ParkListAdapter.SortMode.DISTANCE);
+                item.setChecked(true);
                 return  true;
             case R.id.action_refresh:
                 refreshParkList();

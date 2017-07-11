@@ -67,6 +67,8 @@ public class EditAttractionActivity extends BaseActivity {
     private List<ChipView> typeChips;
     private List<String> selectedTypes;
 
+    private Attraction attraction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,10 +108,10 @@ public class EditAttractionActivity extends BaseActivity {
             typeChips.add(chip);
         }
 
-        if (attrId != null) {
-            new LoadAttrTask().execute();
-        } else {
+        if (attrId == null) {
             addChips();
+        } else {
+            new LoadAttrTask().execute();
         }
     }
 
@@ -252,6 +254,9 @@ public class EditAttractionActivity extends BaseActivity {
 
     }
 
+    /**
+     * adds the chips to the layout
+     */
     private void addChips() {
         // add all the types to the chips layout
         for (ChipView chip : typeChips) {
@@ -355,6 +360,9 @@ public class EditAttractionActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(Attraction attr) {
+
+            attraction = attr;
+
             if (attr != null) {
                 if (attr.getImage() == null || attr.getImage().isEmpty()) {
                     imageViewAttr.setImageDrawable(ContextCompat.getDrawable(
@@ -369,7 +377,6 @@ public class EditAttractionActivity extends BaseActivity {
                 editTextAttrLon.setText(String.valueOf(attr.getLon()));
                 editTextAttrDescription.setText(attr.getDescription());
 
-
                 List<String> selectedTypesRaw = Arrays.asList(TextUtils.split(attr.getType(), ","));
                 for (String potentialType : selectedTypesRaw) {
                     // only add known types, rest will be discarded when saving
@@ -378,14 +385,9 @@ public class EditAttractionActivity extends BaseActivity {
                     }
                 }
 
-                // this removes all unknown "types", normally this occurs when a type name changes
-                // or a type is removed or ...
-
-
                 Log.d(TAG, "onPostExecute: type string: \"" + attr.getType() + "\"");
                 Log.d(TAG, "onPostExecute: attraction has type " + Arrays.toString(selectedTypes.toArray()));
                 addChips();
-
 
             }
             progressBar.setVisibility(View.GONE);
@@ -423,14 +425,20 @@ public class EditAttractionActivity extends BaseActivity {
 
             AzureDBManager dbManager = new AzureDBManager(EditAttractionActivity.this);
 
-            Attraction attraction = new Attraction(name, types, descr, lat, lon, attrImageUrl,
-                    0, 0, 0, 0, 0, 0, 0, parkId);
-
             // did the attraction already exist?
             if (attrId == null) {
+                // create a new attraction
+                attraction = new Attraction(name, types, descr, lat, lon, attrImageUrl,
+                        0, 0, 0, 0, 0, 0, 0, parkId);
                 return dbManager.createAttraction(attraction);
             } else {
-                attraction.setId(attrId);
+                // update attraction
+                attraction.setName(name);
+                attraction.setType(types);
+                attraction.setDescription(descr);
+                attraction.setLat(lat);
+                attraction.setLon(lon);
+                attraction.setImage(attrImageUrl);
                 return dbManager.updateAttraction(attraction);
             }
 

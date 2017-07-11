@@ -24,7 +24,8 @@
                 <item
                     android:id="@+id/action_sort_abc"
                     android:icon="@drawable/ic_sort_by_alpha_black_24dp"
-                    android:title="@string/alphabetically" />
+                    android:title="@string/alphabetically"
+                    android:checked="true"/>
                 <item
                     android:id="@+id/action_sort_rating"
                     android:icon="@drawable/ic_stars_black_24dp"
