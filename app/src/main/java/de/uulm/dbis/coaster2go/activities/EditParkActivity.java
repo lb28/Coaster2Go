@@ -315,6 +315,7 @@ public class EditParkActivity extends BaseActivity {
                 editTextParkLon.setText(String.valueOf(p.getLon()));
                 editTextParkDescription.setText(p.getDescription());
             }
+            findViewById(R.id.buttonSavePark).setEnabled(true);
             progressBar.setVisibility(View.GONE);
         }
     }

@@ -170,6 +170,7 @@
             android:layout_height="wrap_content"
             android:text="@string/button_text_save"
             android:onClick="saveAttraction"
+            android:enabled="false"
             />
 
     </LinearLayout>

@@ -362,9 +362,8 @@ public class AzureDBManager {
         if(!hasActiveInternetConnection()){
             return false;
         }
-        Attraction toDelete = getAttractionById(attractionId);
-        MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
 
+        MobileServiceTable<Attraction> mAttractionTable = mClient.getTable(Attraction.class);
         try {
             mAttractionTable.delete(attractionId);
         } catch (Exception e) {

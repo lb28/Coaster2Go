@@ -390,8 +390,8 @@ public class EditAttractionActivity extends BaseActivity {
                 addChips();
 
             }
+            findViewById(R.id.buttonSaveAttr).setEnabled(true);
             progressBar.setVisibility(View.GONE);
-
         }
     }
 

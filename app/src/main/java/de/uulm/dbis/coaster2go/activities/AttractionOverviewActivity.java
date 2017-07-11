@@ -23,10 +23,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
@@ -51,7 +49,7 @@ public class AttractionOverviewActivity extends BaseActivity {
     private SectionsPagerAdapter tabsPagerAdapter;
 
     // add attraction types here if necessary
-    public static List<String> ATTRACTION_TYPES = Arrays.asList(
+    public static final List<String> ATTRACTION_TYPES = Arrays.asList(
             "Action", "Achterbahn", "Kinderbahn", "Wasserbahn",
             "Riesenrad", "Essen", "Show", "Sonstige"
     );
