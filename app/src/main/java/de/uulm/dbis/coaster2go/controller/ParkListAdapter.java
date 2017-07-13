@@ -181,6 +181,8 @@ public class ParkListAdapter extends RecyclerView.Adapter<ParkListAdapter.ViewHo
             }
         }
         parkList = resultList;
+
+        currentSearchString = searchString;
         notifyDataSetChanged();
     }
 
