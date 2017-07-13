@@ -373,7 +373,7 @@ public class ParkOverviewActivity extends BaseActivity implements GoogleApiClien
 
                             FirebaseUser user = ((ParkOverviewActivity) getActivity()).user;
 
-                            if (user != null && park.getAdmin().equals(user.getUid())) {
+                            if (user != null && park.getAdmin().equals(user.getUid()) || park.getAdmin().isEmpty()) {
                                 String[] menuOptions = {
                                         "Park bearbeiten",
                                         "Park löschen"};

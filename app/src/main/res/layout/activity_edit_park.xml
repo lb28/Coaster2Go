@@ -147,7 +147,7 @@
                 android:text="@string/button_text_save"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:onClick="savePark"
-                android:enabled="false"/>
+                android:enabled="true"/>
 
         </LinearLayout>
 
