@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item
@@ -17,8 +16,9 @@
             android:title="@string/my_account" />
     </group>
 
-    <item android:title="@string/settings">
+    <item android:title="@string/other">
         <menu>
+            <!--
             <item
                 android:id="@+id/nav_offline_switch"
                 android:icon="@drawable/ic_airplanemode_active_black_24dp"
@@ -26,6 +26,7 @@
                 app:actionLayout="@layout/offline_switch"
                 android:enabled="false"
                 />
+                -->
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_manage"

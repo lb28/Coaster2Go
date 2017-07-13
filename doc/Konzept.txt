@@ -1,0 +1,26 @@
+MAD Ideen
+
+. Login/Registrieren (Google, Facebook?)
+. Parkliste (Sort: Alph. / Nähe, Live Search?)
+	(Favoriten)
+. Park Detailansicht:
+	Öffnungszeiten
+	Preise
+	Kartenansicht
+	Als Favorit Markieren
+	Sterne (Link zu Bewertungen)
+	Button zu den Attraktionen
+. Park Bewertungsseite
+	Übersicht (Sterne)
+	Bewertungen mit Kommentaren (sort: nur neueste)
+	Eigene Bewertung verfassen / bearbeiten (benötigt login)
+. Attraktion Detailansicht
+	siehe mockup
+. Attraktion Bewertungsseite
+	(~ wie beim Park)
+. Wartezeiten-Verlauf (Liste der letzten paar Wartezeiten)
+
+
+Fragen:
+- Admins ernennen
+- JSON vs DB (Online und Lokal gleich behandeln)

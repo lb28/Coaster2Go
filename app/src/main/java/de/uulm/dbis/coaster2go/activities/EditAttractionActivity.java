@@ -88,28 +88,34 @@ public class EditAttractionActivity extends BaseActivity {
         selectedTypes = new ArrayList<>();
 
         for (final String type : ATTRACTION_TYPES) {
-            final ChipView chip = new ChipView(this);
-            chip.setLabel(type);
-            chip.setOnChipClicked(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // do we have to select or deselect the chip?
-                    if (selectedTypes.contains(type)) {
-                        selectedTypes.remove(type);
-                        chip.setChipBackgroundColor(ContextCompat.getColor(
-                                EditAttractionActivity.this, R.color.colorChipViewBackground));
-                    } else {
-                        selectedTypes.add(type);
-                        chip.setChipBackgroundColor(ContextCompat.getColor(
-                                EditAttractionActivity.this, R.color.colorPrimary));
+            try {
+                final ChipView chip = new ChipView(this);
+                chip.setLabel(type);
+                chip.setOnChipClicked(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // do we have to select or deselect the chip?
+                        if (selectedTypes.contains(type)) {
+                            selectedTypes.remove(type);
+                            chip.setChipBackgroundColor(ContextCompat.getColor(
+                                    EditAttractionActivity.this, R.color.colorChipViewBackground));
+                        } else {
+                            selectedTypes.add(type);
+                            chip.setChipBackgroundColor(ContextCompat.getColor(
+                                    EditAttractionActivity.this, R.color.colorPrimary));
+                        }
                     }
-                }
-            });
-            typeChips.add(chip);
+                });
+                typeChips.add(chip);
+            } catch (Exception e) {
+                Log.e(TAG, "onCreate: failed to load type chips", e);
+
+            }
         }
 
         if (attrId == null) {
             addChips();
+            findViewById(R.id.buttonSaveAttr).setEnabled(true);
         } else {
             new LoadAttrTask().execute();
         }
@@ -469,7 +475,7 @@ public class EditAttractionActivity extends BaseActivity {
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(EditAttractionActivity.this);
             progressDialog.setTitle("Bild wird hochgeladen");
-            progressDialog.setMessage("asdasd");
+            progressDialog.setMessage("...");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setMax(100);
             progressDialog.show();

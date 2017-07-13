@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,6 +18,8 @@ import de.uulm.dbis.coaster2go.R;
  * the attraction info dialog
  */
 public class AttractionInfoDialogFragment extends DialogFragment {
+
+    public static final String TAG = "AttrInfoDialog";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,17 +39,21 @@ public class AttractionInfoDialogFragment extends DialogFragment {
             LinearLayout chipLayout = (LinearLayout) dialogView.findViewById(R.id.chipsLayoutAttrTypes);
 
             for (String type : types) {
-                ChipView chip = new ChipView(getContext());
-                chip.setLabel(type);
-                chip.setChipBackgroundColor(
-                        ContextCompat.getColor(getContext(), R.color.colorPrimary));
+                try {
+                    ChipView chip = new ChipView(getContext());
+                    chip.setLabel(type);
+                    chip.setChipBackgroundColor(
+                            ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(0, 5, 5, 10);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(0, 5, 5, 10);
 
-                chipLayout.addView(chip, layoutParams);
+                    chipLayout.addView(chip, layoutParams);
+                } catch (Exception e) {
+                    Log.e(TAG, "onCreateDialog: failed to load chip", e);
+                }
             }
 
             // only add the view if there is something to show

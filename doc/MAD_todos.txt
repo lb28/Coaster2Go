@@ -1,0 +1,34 @@
+Mobile Apps Ablauf
+
+- Park Übersicht
+	* Menü zeigen
+	* Bewertung, Entfernung
+	* Sortieren
+	* Suchen
+	* Favoriten
+- Park Detail
+	* Kartenansicht
+	* Beschreibung
+	* zu Favoriten hinzufügen
+	* Bewertungen -->
+- Bewertungen
+	* (Sortieren)
+	* Bewertung erstellen / bearbeiten
+	* Bewertung zensieren
+- Attraktion Übersicht
+	* Bewertung, Wartezeit
+	* (Suchen)
+	* Favoriten
+	* Sortieren
+	* Filtern
+- Attraktion Detail
+	* (Bewertung, Kartenansicht)
+	* Info (mit Chips)
+	* Wartezeiten (Erklären)
+	* Verlauf BarCharts
+	* Wartezeit eintragen (Erklären)
+	* Wartezeiten-Liste
+- Spongebob Handschuhwelt: Zu weit entfernt
+- Attraktion (in Legoland) erstellen
+	* Kamera / Galerie / Link
+	* Tags an/aus

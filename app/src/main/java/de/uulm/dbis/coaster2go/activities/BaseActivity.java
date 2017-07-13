@@ -18,9 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -161,15 +159,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(this, ParkOverviewActivity.class));
         } else if (id == R.id.nav_my_account) {
             startActivity(new Intent(this, MyAccountActivity.class));
-        } else if (id == R.id.drawer_switch) {
-            Switch offlineSwitch = (Switch) findViewById(R.id.drawer_switch);
-            if (offlineSwitch.isChecked()) {
-                Toast.makeText(this, "offline mode activated (TODO)", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "online mode (TODO)", Toast.LENGTH_SHORT).show();
-            }
         } else if (id == R.id.nav_settings) {
-
+            startActivity(new Intent(this, MyAccountActivity.class));
         } else if (id == R.id.nav_sign_out) {
             AuthUI.getInstance()
                     .signOut(this)
