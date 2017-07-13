@@ -110,6 +110,7 @@ public class ParkDetailViewActivity extends BaseActivity {
         Intent intent = new Intent(this, AttractionOverviewActivity.class);
         if (user != null){
             intent.putExtra("isParkAdmin", park.getAdmin().equals(user.getUid()) || park.getAdmin().equals("") ); //Can be changed again later
+            intent.putExtra("parkAdminId", park.getAdmin());
         }
         intent.putExtra("parkId", parkId);
         startActivity(intent);
@@ -120,7 +121,7 @@ public class ParkDetailViewActivity extends BaseActivity {
         intent.putExtra("reviewedId", parkId);
         intent.putExtra("reviewedName", park.getName());
         if(user != null){
-            intent.putExtra("isParkAdmin", park.getAdmin().equals(user.getUid()) || park.getAdmin().equals("") ); //Can be changed again later
+            intent.putExtra("parkAdminId", park.getAdmin());
         }
         startActivity(intent);
     }

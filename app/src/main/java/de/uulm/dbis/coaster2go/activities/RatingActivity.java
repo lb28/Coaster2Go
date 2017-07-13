@@ -3,7 +3,6 @@ package de.uulm.dbis.coaster2go.activities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -63,7 +62,13 @@ public class RatingActivity extends BaseActivity {
         String reviewedName = getIntent().getStringExtra("reviewedName");
         setTitle(reviewedName);
 
-        isParkAdmin = getIntent().getBooleanExtra("isParkAdmin", false);
+        String parkAdminId = getIntent().getStringExtra("parkAdminId");
+
+        if (user == null) {
+            isParkAdmin = false;
+        } else {
+            isParkAdmin = (parkAdminId == null || user.getUid().equals(parkAdminId) || parkAdminId.isEmpty());
+        }
 
         ratingListAdapter = new RatingListAdapter(new ArrayList<Review>(), new OnRatingItemClickListener() {
             @Override

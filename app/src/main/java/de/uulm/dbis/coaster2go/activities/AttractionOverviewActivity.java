@@ -65,6 +65,7 @@ public class AttractionOverviewActivity extends BaseActivity {
 
     private String parkId;
     private static boolean isParkAdmin;
+    private static String parkAdminId;
 
     /**
      * The current filter string from the search box. <br>
@@ -89,6 +90,7 @@ public class AttractionOverviewActivity extends BaseActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         isParkAdmin = getIntent().getBooleanExtra("isParkAdmin", false);
+        parkAdminId = getIntent().getStringExtra("parkAdminId");
         parkId = getIntent().getStringExtra("parkId");
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -337,6 +339,7 @@ public class AttractionOverviewActivity extends BaseActivity {
                             Intent intent = new Intent(getContext(), AttractionDetailViewActivity.class);
                             intent.putExtra("attrId", attraction.getId());
                             intent.putExtra("isParkAdmin", isParkAdmin);
+                            intent.putExtra("parkAdminId", parkAdminId);
                             startActivity(intent);
                         }
                     }, new OnAttractionItemLongClickListener() {

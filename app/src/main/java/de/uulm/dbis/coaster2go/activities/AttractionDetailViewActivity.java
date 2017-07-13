@@ -85,6 +85,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
     private Attraction attr;
     private FirebaseUser user;
     private static boolean isParkAdmin;
+    private static String parkAdminId;
 
     /**
      * caution: may be null! (is null at the beginning)
@@ -154,6 +155,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
         // get attraction ID from intent
         attrID = getIntent().getStringExtra("attrId");
         isParkAdmin = getIntent().getBooleanExtra("isParkAdmin", false);
+        parkAdminId = getIntent().getStringExtra("parkAdminId");
 
         new LoadAttrAsync().execute();
 
@@ -272,7 +274,7 @@ public class AttractionDetailViewActivity extends BaseActivity implements Google
         intent.putExtra("reviewedId", attrID);
         intent.putExtra("reviewedName", attr.getName());
         intent.putExtra("isAttraction", true);
-        intent.putExtra("isParkAdmin", isParkAdmin);
+        intent.putExtra("parkAdminId", parkAdminId);
         startActivity(intent);
     }
 
