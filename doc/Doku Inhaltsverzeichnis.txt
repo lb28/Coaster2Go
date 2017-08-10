@@ -1,4 +1,4 @@
-1 Einleitung (kann man diesmal schön ausführlich machen)
+﻿1 Einleitung (kann man diesmal schön ausführlich machen)
 	1.1 Motivation und Problemstellung 
 	1.2 Zielsetzung 
 	1.3 Struktur der Arbeit 
@@ -8,14 +8,14 @@
 	2.3 Frameworks 
 3 Anforderungsanalyse
 	3.1 Funktionale Anforderungen 
-	3.2 Nichtfunktionale Anforderungen (brauchen wir die oder nicht?)
+	3.2 Nichtfunktionale Anforderungen
 4 Konzept, Entwurf und Implementierung
-	4.1 Implementierungsdetails (wieder mit Screenshots und Mockups?)
+	4.1 Implementierungsdetails 
 	4.2 Besonderheiten 
-		4.2.1 Wartezeit  berechung -und darstellung 
+		4.2.1 Wartezeitberechung und -darstellung 
 		4.2.2 Client-Server-Kommunikation mit Azure
 		4.2.3 User-Verwaltung mit Firebase
-		4.2.4 Adminfunktionen (???)
+		4.2.4 Adminfunktionen
 	4.3 Architektur 
 		4.3.1 Datenmodell und -speicherung 
 		4.3.2 Klassen- und Activity-Architektur
@@ -23,5 +23,5 @@
 	4.4 Schwierigkeiten während der Implementierung
 5 Anforderungsabgleich 
 	5.1 Funktionale Anforderungen 
-	5.2 Nicht Funktionale Anforderungen (brauchen wir die oder nicht?)
+	5.2 Nicht Funktionale Anforderungen 
 6 Zusammenfassung und Ausblick 
