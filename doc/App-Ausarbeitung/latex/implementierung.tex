@@ -12,16 +12,91 @@ Wir erklären in diesem Kapitel die einzelnen Funktionen unserer Anwendung ausf�
     \centering
     \begin{minipage}{0.49\textwidth}
         \centering
-        \includegraphics[width=0.4\textwidth]{img/screenshots/ss_parkuebersicht.png}
+        \includegraphics[width=0.49\textwidth]{img/screenshots/ss_parkuebersicht.png}
         \caption{Parkübersicht}
 		\label{figure:implementierungparkuebersicht}
     \end{minipage}
     \begin{minipage}{0.49\textwidth}
         \centering
-        \includegraphics[width=0.4\textwidth]{img/mockups/m_parkuebersicht.png}
+        \includegraphics[width=0.49\textwidth]{img/mockups/m_parkuebersicht.png}
         \caption{Mockup Parkübersicht}
     \end{minipage}
 \end{figure}
+
+Nach dem Öffnen der Anwendung befindet man sich auf der Startseite unserer App. Diese ist auch zugleich die Parkübersicht, welche in Abbildung \ref{figure:implementierungparkuebersicht} zu sehen ist. Die Pakrübersicht ist eine Liste aller Parks, die man durchsuchen und nach Alphabet, Bewertung oder Entfernung sortieren kann. Außerdem ist die Liste in zwei Tabs unterteilt. Zum Einen das Tab 'Alle', in dem, wie der Name schon sagt, alle Parks angezeigt werden, und als zweites noch das Tab 'Favoriten' in dem alle Parks angezeigt werden, die der Nutzer sich als Favorit markiert hat. 
+
+TODO Bild von der grünen Menüleiste in der man sich einloggen kann
+
+Ist ein Nutzer eingeloggt kann er Park und Attraktionen erstellen und bearbeiten, Wartezeiten eintragen und Bewertungen abgeben. Möchte man sich nicht einloggen kann man die App trotzdem als Informationsquelle nutzen, denn man kann alle Infos wie Wartezeiten und Bewertungen sehen, aber eben nicht selber eintragen. 
+
+Falls man als Nutzer, über den orangenen Plus-Button unten rechts in der Parkübersicht, einen Park erstellt hat, wird neben dem Namen des Parks das Piktogramm eines Stifts angezeigt, was bedeutet, dass man selber Admin des Parks ist und diesen und seine Attraktionen bearbeiten kann. \\
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/screenshots/ss_parkdetail.png}
+        \caption{Parkansicht}
+		\label{figure:implementierungparkansicht}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/mockups/m_park_detail.png}
+        \caption{Mockup Parkansicht}
+    \end{minipage}
+\end{figure}
+
+Wählt man nun, durch das Tippen auf einen Park, diesen aus, so kommt man als nächstes auf die Parkdetail Seite, welche in Abbildung \ref{figure:implementierungparkansicht} zu sehen ist. 
+
+Oben auf der Seite ist immer ein Bild des Parks zu sehen. Darunter befinden sich das Herz als Symbol für 'Favorit' das sich aktivieren und deaktivieren lässt, der Parkname, der Ort und falls GPS aktiviert ist auch die aktuelle Entfernung zum Park. Der Standort des Parks lässt sich außerdem durch den Button auf der rechten Seite auf GoogleMaps anzeigen. 
+
+Es befindet sich des Weiteren auch noch eine Anzeige der durchschnittlichen Bewertung (Skala von 0 bis 5) auf dieser Seite. Der Durchschnitt wird einmal als Sterne dargestellt und einmal als Dezimalzahl mit einer Nachkommastelle. Durch das Tippen auf die Sterne oder die Zahl lässt sich die Seite der Bewertungen öffnen, was aber weiter unten gezeigt wird. 
+
+Zusätzlich sind auch noch allgemeine Infos zum Park gegeben, wie z. B. die Öffnungszeiten. 
+
+Durch den am unteren Bildrand gelegenen Button 'Attraktionen' kommt man dann weiter zu den Attraktionen des Parks, die wieder, wie auch schon die Parks, als Liste gegeben sind.
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/screenshots/ss_attraktionsuebersicht.png}
+        \caption{Parkansicht}
+		\label{figure:implementierungattraktionsuebersicht}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/mockups/m_attraktionsuebersicht.png}
+        \caption{Mockup Parkansicht}
+    \end{minipage}
+\end{figure}
+
+Die Seite aller Attraktionen eines Parks, die sog. Attraktionsübersicht, die in Abbildung \ref{figure:implementierungattraktionsuebersicht} zu sehen ist, ist sehr ähnlich aufgebaut wie die Parkübersicht. Es gibt ebenfalls die Möglichkeiten zur Ansicht aller Attraktionen oder nur der Favoriten und zur Sortierung und Suche, aber hinzu kommt noch die Möglichkeit zum Filtern der Liste nach Kategorien der Attraktionen, wie z. B. Achterbahn oder Essensstand. Die einzelnen Elemente der Liste bestehen aus Bild, Name und Bewertung und dazuhin noch der Wartezeit in Minuten und wann diese eingetragen wurde. Die Farben der Wartezeiten bedeuten einfach dass man entweder nur kurz anstehen muss (grün), durchschnittlich lang (gelb) oder dass momentan die Wartezeit sehr hoch ist (rot). Später wird aber noch genauer auf die Wartezeiten eingegangen und auch der Algorithmus dahinter erklärt. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
