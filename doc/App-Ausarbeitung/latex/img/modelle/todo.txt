@@ -1,3 +1,0 @@
-- Klassen/Activity-Modell
-- Daten Down/Upload-Modell Azure
-- Firebase User Verwaltungsmodell
