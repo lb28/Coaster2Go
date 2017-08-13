@@ -61,23 +61,92 @@ Durch den am unteren Bildrand gelegenen Button 'Attraktionen' kommt man dann wei
     \begin{minipage}{0.49\textwidth}
         \centering
         \includegraphics[width=0.49\textwidth]{img/screenshots/ss_attraktionsuebersicht.png}
-        \caption{Parkansicht}
+        \caption{Attraktionsübersicht}
 		\label{figure:implementierungattraktionsuebersicht}
     \end{minipage}
     \begin{minipage}{0.49\textwidth}
         \centering
         \includegraphics[width=0.49\textwidth]{img/mockups/m_attraktionsuebersicht.png}
-        \caption{Mockup Parkansicht}
+        \caption{Mockup Attraktionsübersicht}
     \end{minipage}
 \end{figure}
 
 Die Seite aller Attraktionen eines Parks, die sog. Attraktionsübersicht, die in Abbildung \ref{figure:implementierungattraktionsuebersicht} zu sehen ist, ist sehr ähnlich aufgebaut wie die Parkübersicht. Es gibt ebenfalls die Möglichkeiten zur Ansicht aller Attraktionen oder nur der Favoriten und zur Sortierung und Suche, aber hinzu kommt noch die Möglichkeit zum Filtern der Liste nach Kategorien der Attraktionen, wie z. B. Achterbahn oder Essensstand. Die einzelnen Elemente der Liste bestehen aus Bild, Name und Bewertung und dazuhin noch der Wartezeit in Minuten und wann diese eingetragen wurde. Die Farben der Wartezeiten bedeuten einfach dass man entweder nur kurz anstehen muss (grün), durchschnittlich lang (gelb) oder dass momentan die Wartezeit sehr hoch ist (rot). Später wird aber noch genauer auf die Wartezeiten eingegangen und auch der Algorithmus dahinter erklärt. 
 
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/general/todo.jpg}
+        \caption{Attraktionsdetail}
+		\label{figure:implementierungattraktionsansicht}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/mockups/m_attraktionsdetail.png}
+        \caption{Mockup Attraktionsdetail}
+    \end{minipage}
+\end{figure}
 
+Wählt man nun eine Attraktion aus der Liste aus kommt man zur Detailansicht dieser Attraktion, wie in Abbildung \ref{figure:implementierungattraktionsansicht} zu sehen. 
 
+Auf dieser Seite kann man sich, gleich wie bei Parks, die Attraktion als Favorit hinzufügen, den Standort anzeigen lassen und die Bewertungen ansehen. Neu hinzu kommt, dass man sich noch weitere Informationen über einen 'i'-Button anzeigen lassen kann, wo auch unter Anderem zu sehen ist, in welche der Kategorien die Attraktion gehört. 
 
+Des Weiteren werden hier noch mehr Wartezeiten angezeigt, nämlich links der Durchschnitt der letzten drei Eintragungen, in der Mitte der Tagesdurchschnitt und auf der rechten Seite der Gesamtdurchschnitt. 
+Darunter wird eine andere Wartezeitstatistik angezeigt. Hier sind auf der x-Achse die Stunden dargestellt und auf der y-Achse die Minuten. Die Säulen des Diagramms sind dann also die durchschnittliche Wartezeit in der angegebenen Stunde, die aus allen bisher eingetragenen Wartezeiten berechnet wird. 
 
+Ganz unten wird, falls der Nutzer eingeloggt ist, noch ein Feld zum selbst Wartezeiten eintragen angezeigt. Das Eintragen ist aber nur möglich, falls sich der Nutzer zusätzlich noch im Park befindet (Standort muss < 2km vom Park entfernt sein) und nicht schon innerhalb der letzten Stunde für diese Attraktion eine Wartezeit eingetragen hat. 
 
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/general/todo.jpg}
+        \caption{Bewertungen}
+		\label{figure:implementierungbewertungen}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/mockups/m_park_bewertungen.png}
+        \caption{Mockup Bewertungen}
+    \end{minipage}
+\end{figure}
+
+Will man nun die Bewertungen einer Attraktion bzw. eines Parks sehen oder diese auch selbst bewerten, kommt man auf die in Abbildung \ref{figure:implementierungbewertungen} zu sehende Activity. 
+
+Ganz oben wird noch einmal der Durchschnitt aller Bewertungen angezeigt. Darunter sind alle bisherigen Bewertungen mit Nutzername, Datum und Kommentar zu sehen.
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/general/todo.jpg}
+        \caption{Bewertungen}
+		\label{figure:implementierungbewerten}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/mockups/m_bewertung_verfassen.png}
+        \caption{Mockup Bewertung verfassen}
+    \end{minipage}
+\end{figure}
+
+Um selbst eine Bewertung abzugeben tippt man auf den orangenen Plus-Button unten Rechts und es Öffnet sich ein Eingabedialog, wie in Abbildung \ref{figure:implementierungbewerten} zu sehen. Falls man zu diesem Park bzw. dieser Attraktion eine Bewertung abgegeben hat, so wird diese hier angezeigt und man kann sie bearbeiten, aber es wird keine neue erstellt. Hat man bisher noch nicht bewertet, vergibt man jetzt 0 bis 5 Sterne, schreibt ein Kommentar und speichert dann mit 'OK'.
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/general/todo.jpg}
+        \caption{Wartezeiten}
+		\label{figure:implementierungwartezeiten}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.49\textwidth]{img/mockups/m_wartezeiten.png}
+        \caption{Mockup Wartezeiten}
+    \end{minipage}
+\end{figure}
 
 
 
