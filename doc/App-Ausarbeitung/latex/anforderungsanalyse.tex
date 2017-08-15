@@ -1,4 +1,5 @@
 \newcommand{\reqtable}[3]{
+	\vspace{-1cm}
     \begin{center}
     \begin{tabular}{ | l | p{13cm} |}
     \hline
@@ -18,27 +19,59 @@ In diesem Kapitel werden die ursprünglich definierten funktionalen und nichtfun
 \section{Funktionale Anforderungen}
 \label{sec:anforderungsanalyse:funktional}
 
-\reqtable{FA1}{Startmenü}{Nach dem Start der Anwendung sieht der Benutzer ein Startmenü mit den Einträgen „Spiel starten“, „Einstellungen“, „Spielregeln“, „Deckübersicht“ („Rangliste“), („Infos“)}
-\reqtable{FA2}{Einstellungen}{Es gibt eine Möglichkeit, die Spieleinstellungen zu ändern. Diese umfassen Schwierigkeitsgrad, Soundeffekte (an/aus) und Spielmodus (rundenbasiert/zeitbasiert/Kartenbasiert)}
-\reqtable{FA3}{Spielregeln}{Es gibt eine Möglichkeit, die Spielregeln anzuzeigen.}
-\reqtable{FA4}{Infoseite}{Es gibt eine Möglichkeit, eine Infoseite (mit Copyright- und weiteren Informationen) anzuzeigen}
-\reqtable{FA5}{Deckübersicht}{Der Benutzer hat die Möglichkeit eine Liste mit allen verfügbaren Decks anzuzeigen. Beim Auswählen eines Decks kann der Benutzer durch die Karten des Decks scrollen. Dabei sieht er bei jeder Karte das Bild und die Attribute. Außerdem kann der Benutzer auf der Deckübersichts-Seite neue Decks hinzufügen. Diese Decks dienen als „Erweiterung“ und der Benutzer kann sie sich herunterladen.}
-\reqtable{FA6}{Spiel starten}{Der Benutzer hat vom Startmenü aus die Möglichkeit, das Spiel zu starten. Dafür öffnet sich ein Dialog, auf dem der Benutzer das Deck auswählt und festlegt, ob er gegen einen anderen Spieler oder gegen einen Computer spielen will. Danach werden die Karten auf die beiden Spieler verteilt und es wird zufällig bestimmt, welcher Spieler beginnt.}
-\reqtable{FA7}{Spielablauf}{Während des Spiels sieht der Spieler pro Runde nur seine „oberste Karte im Stapel“. In einer Runde werden die Werte des erstgewählten Attributs verglichen. Nach Auswahl eines Attributs vom ersten Spieler werden die zu vergleichenden Werte beider Spieler angezeigt und das gewinnende Attribut markiert. Bei einem Gleichstand werden die Karten beider Spieler unter den jeweils eigenen Stapel gelegt.}
-\reqtable{FA8}{Spielstand anzeigen}{Während des Spiels wird dauerhaft der Spielstand (Anzahl Karten Spieler 1 : Anzahl Karten Spieler 2) angezeigt.}
-\reqtable{FA9}{Spielzeit anzeigen}{Beim zeitbasierten Modus wird neben dem Spielstand auch die verbleibende Rundenzeit und die verbleibende Gesamt-Spielzeit angezeigt.}
-\reqtable{FA10}{Spielende}{Das Spiel ist vorbei, wenn
+\reqtable{FA1}{Startbildschirm}{Nach dem Start der Anwendung sieht der Benutzer einen 
+Startbildschirm, auf dem er sich anmelden bzw. registrieren kann, oder ohne Anmeldung zur 
+Parkübersicht gelangt.}
+
+\reqtable{FA2}{Parkübersicht}{Diese Ansicht zeigt eine Liste aller Parks, die auf verschiedene 
+Weisen sortiert werden kann. Außerdem gibt es eine getrennte Liste, in der sich die favorisierten 
+Parks des Nutzers befinden. Sofern die Position des Smartphones bekannt ist, wird die Entfernung 
+neben den Parks angezeigt und die Liste kann nach Entfernung sortiert werden.}
+
+\reqtable{FA3}{Park Detailansicht}{Für jeden Park gibt es eine Detailansicht mit näheren 
+Informationen. Hier befinden sich Links/Buttons zu den Bewertungen, der Kartenansicht, sowie zur 
+Attraktionsübersicht des Parks. Außerdem kann der Park zu den Favoriten hinzugefügt werden.}
+
+\reqtable{FA4}{Bewertungsseite (Park / Attraktionen)}{Es gibt eine Ansicht der neuesten Bewertungen 
+(nach Datum sortiert). Eine Bewertung hat jeweils Verfasser, Datum, Stern-Anzahl, und Kommentar. 
+Falls der Benutzer eingeloggt ist, sieht er einen Button zum Hinzufügen einer Bewertung.}
+
+\reqtable{FA5}{Bewertung verfassen}{Sofern eingeloggt, kann der Benutzer in einem separaten Dialog 
+eine Bewertung verfassen. Hat er zuvor schon eine Bewertung zu diesem Park / dieser Attraktion 
+verfasst, kann er diese bearbeiten. Der Administrator kann den Kommentar ausblenden.}
+
+\reqtable{FA6}{Attraktionsübersicht}{Diese Ansicht zeigt eine Liste aller Attraktionen, die auf 
+verschiedene Weisen sortiert und gefiltert werden kann. Außerdem gibt es eine getrennte Liste, in 
+der sich die favorisierten Attraktionen des Nutzers befinden. Neben jeder Attraktion wird, sofern 
+verfügbar, die jeweilige „aktuelle“ Wartezeit angezeigt. (Sofern die Position des Smartphones 
+bekannt ist, wird die Entfernung neben den Parks angezeigt und die Liste kann nach Entfernung 
+sortiert werden.)}
+
+\reqtable{FA7}{Attraktion Detailansicht}{Für jede Attraktion gibt es eine Detailansicht mit näheren 
+Informationen. Hier befinden sich Links/Buttons zu den Bewertungen, der Kartenansicht, sowie zu den 
+Wartezeiten. Auch kann die Attraktion zu den Favoriten hinzugefügt werden. Zudem gibt es 
+verschiedene Statistiken zu den Wartezeiten (siehe FA8). Ist der Nutzer eingeloggt und befindet 
+sich in der Nähe des Parks (GPS muss aktiviert sein), so kann er eine Wartezeit eintragen. Dies 
+kann er nur ein Mal pro Stunde machen.}
+
+\reqtable{FA8}{Wartezeit-Statistiken}{Es gibt vier verschiedene Statistiken über die Wartezeit bei 
+einer Attraktion:
 \begin{itemize}
-\item {[alle Modi]} ein Spieler alle Karten hat (Dieser Spieler hat gewonnen)
-\item {[Zeitbasiert]} die Zeit abgelaufen ist (Der Spieler mit den meisten Karten hat gewonnen)
-\item {[Rundenbasiert]} die vorher ausgewählte Anzahl an Runden gespielt worden sind (Spieler mit den meisten Karten hat gewonnen)
+	\item „Aktuell“: Zeigt die aktuelle Wartezeit an
+	\item „Heute“: Zeigt den Durchschnitt für den aktuellen Tag an
+	\item „Gesamt“: Zeigt den bisherigen Gesamtdurchschnitt an
+	\item Ein Säulendiagramm, welches den stündlichen bisherigen Durchschnitt anzeigt
 \end{itemize}
 }
-\reqtable{FA11}{Speicherung der Daten}{Die Daten des Spiels (Decks, Karten und ihre Attribute) werden in einer Datenbank gespeichert. Dabei gilt für jedes Deck:
+
+\reqtable{FA9}{Wartezeiten-Verlauf}{Es gibt eine Listenansicht der bisher eingetragenen Wartezeiten 
+einer Attraktion. Ein Wartezeiten-Eintrag enthält Verfasser, Datum, Uhrzeit, und Wartezeit (in 
+Minuten).}
+
+\reqtable{FA10}{Admin-Funktionen}{Ein Administrator hat folgende Zusatzfunktionen:
 \begin{itemize}
-\item Die Anzahl an Karten soll eine gerade Zahl zwischen 16 und 64 sein.
-\item Die Anzahl an Attributen soll eine Zahl zwischen 5 und 10 sein.
-\item Für jedes Attribut wird spezifiziert, ob ein höherer Wert oder ein niedriger Wert gewinnt.
+\item Parks / Attraktionen hinzufügen und erstellte bearbeiten
+\item Kommentare ausblenden
 \end{itemize}
 }
 
@@ -46,8 +79,16 @@ In diesem Kapitel werden die ursprünglich definierten funktionalen und nichtfun
 \section{Nichtfunktionale Anforderungen}
 \label{sec:anforderungsanalyse:nichtfunktional}
 
-\reqtable{NFA1}{Entwicklungssprache und -Umgebung}{Die Anwendung wird in Java mit der Entwicklungsumgebung „Android Studio“ entwickelt und soll auf Geräten mit Betriebssystemen ab Android [4.1] funktionieren.}
-\reqtable{NFA2}{Reaktionszeit}{Die Reaktionszeit der Anwendung soll zu jeder Zeit maximal 1,5 Sekunden betragen}
-\reqtable{NFA3}{Persistenter Spielzustand}{Während eines Spiels soll die App minimiert werden können (z.B. durch den Home Button), ohne dass der Spielzustand verloren geht. D.h., ein Spiel soll bei erneutem Öffnen fortgesetzt werden können.}
-\reqtable{NFA4}{Benutzbarkeit}{Die Anwendung soll intuitiv bedienbar sein. D.h., die Buttons und andere Auswahlmöglichkeiten sollen eine ausreichende Größe haben und wie erwartet reagieren.}
-\reqtable{NFA5}{Offline-Modus}{Die Anwendung soll stets auch das Spielen ohne Internetanbindung ermöglichen.}
+\reqtable{NFA1}{Entwicklungssprache und -Umgebung}{Die Anwendung wird in Java mit der 
+Entwicklungsumgebung „Android Studio“ entwickelt und soll auf Geräten mit Betriebssystemen ab 
+Android 4.1 funktionieren.}
+
+\reqtable{NFA2}{Reaktionszeit}{Die Reaktionszeit der Anwendung soll zu jeder Zeit maximal 1,5 
+Sekunden betragen}
+
+\reqtable{NFA3}{Benutzbarkeit}{Die Anwendung soll intuitiv bedienbar sein. D.h., die Buttons und 
+andere Auswahlmöglichkeiten sollen eine ausreichende Größe haben und wie erwartet reagieren.}
+
+\reqtable{NFA4}{Offline-Modus}{Die Anwendung soll alle Anfragen zwischenspeichern, um auch Offline 
+Zugriff auf die wichtigen Informationen zu gewährleisten (Bilder werden von der Bild-Bibliothek 
+gecached).}
