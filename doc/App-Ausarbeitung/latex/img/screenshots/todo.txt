@@ -1,0 +1,3 @@
+Screenshot Todos:
+- Mapview
+- Menu links
