@@ -69,25 +69,45 @@ Firebase bietet den Vorteil, dass es einem sämtliche Arbeiten im Bereich der Nu
 \subsection{Datenmodell und -speicherung}
 \label{sec:implementierung:architektur:datenmodell}
 
-TODO
+%Daten Modell
+\begin{figure}[htp]
+	\centering
+  	\includegraphics[width=0.99\textwidth]{img/modelle/Datenmodell.png}
+	\caption{Datenmodell}
+	\label{figure:architketurDatenmodell}
+\end{figure}
+
+In Abbildung \ref{figure:architketurDatenmodell} ist das Datenmodell für unsere App zu sehen. Es ist in diesem Fall nicht besonders kompliziert. Deswegen haben wir auch auf die Darstellung der einzelnen Attribute verzichtet, da diese sich implizit aus der Anwendungslogik ergeben. Die verschiedenen Farben sollen den Speicherort der Daten unterscheiden. Alle blauen Entitäten werden in Form von Tabellen in einer SQLite Datenbank auf einem Mircosoft Azure Server gespeichert. Die User-Daten werden von Firebase auf einem Firebase Server gespeichert. Und die Bilder werden über Cloudinary gespeichert. Der Grund hierfür ist zum einen, dass wir mit einem Studentenaccount keine Dateien bei Azure speichern können, und zum anderen, dass über Clourinary Bilder ganz einfach über einen Http-Request geladen und gleich auch noch transformiert werden können. Die Daten der beiden unterstrichenen Objekte (Attraction und Park) werden zusätzlich auch auf dem Handy in Form von JSON-Dateien gespeichert.
 
 \subsection{Klassen- und Activity-Architektur}
 \label{sec:implementierung:architektur:klassenmodell}
 
-TODO
+%Activity Modell
+\begin{figure}[htp]
+	\centering
+  	\includegraphics[width=0.99\textwidth]{img/modelle/Klassenmodell.png}
+	\caption{Klassenmodell}
+	\label{figure:architketurKlassenmodell}
+\end{figure}
+
+In Abbildung \ref{figure:architketurKlassenmodell} sieht man das Klassenmodell bzw. das Activity-Modell unserer App. Dort sind die einzelnen Activities und damit gleichzeitig Views unserer App und deren Verknüpfungen dargestellt. Die unterschiedlichen Farben sollen die Art der Activities symbolisieren. Die BaseActivity ist die Grund-Activity, von der alle anderen Activites erben, und auf die jederzeit zugegriffen werden kann. Die ParkOverviewActivity ist die Activity, die der Nutzer sieht, wenn er die App startet. Zusätzlich zu den Activities gibt es noch die Datenklassen, Klassen für die Onlinekommunikation und Offilnespeicherung der Daten, sowie einige Helferklassen und Klassen für Listadapter.
 
 \subsection{Arbeitsaufteilung}
 \label{sec:implementierung:architektur:arbeitsaufteilung}
 
-Während der Implementation wurden die Aufgaben so aufgeteilt, dass jeder aus dem Team immer für eine bestimmte Aufgabe zuständig war und diese durch alle Schichten durch erledigen musste. Bei großen Aufgaben, wie dem Spielablauf, wurden die Aufgabe zudem in kleinere Schritte aufgeteilt. Da die App aus mehreren unabhängigen Bereichen besteht, konnten die Aufgaben gut eingeteilt werden, ohne dass es zu Behinderungen kommt. Wenn gerade keine Arbeit für eine Person angefallen war, beschäftigte diese sich mit Verbesserungen, Testen von Funktionen oder mit der Weiterentwicklung des Designs.
+Während der Implementation wurden die Aufgaben so aufgeteilt, dass jeder aus dem Team immer für eine bestimmte Aufgabe zuständig war und diese durch alle Schichten durch erledigen musste. Bei großen Aufgaben, wie den Übersichten oder den Detailansichten, wurden die Aufgaben zudem in kleinere Schritte aufgeteilt. Da die App aus mehreren unabhängigen Bereichen besteht, konnten die Aufgaben gut eingeteilt werden, ohne dass es zu Behinderungen kommt. Wenn gerade keine Arbeit für eine Person angefallen war, beschäftigte diese sich mit Verbesserungen, Testen von Funktionen oder mit der Weiterentwicklung des Designs.
 
 % Abschnitt: Schwierigkeiten während der Implementierung 
-\section{Schwierigkeiten während der Implementierung}
+\section{Herausforderungen während der Implementierung}
 \label{sec:implementierung:schwierigkeiten}	
 
-TODO
+In diesem Abschnitt möchten wir noch auf einige Herausforderungen und Probleme eingehen, die wir während der Implementierung hatten, und wie wir diese gelöst haben. Generell muss man dazu sagen, dass es insgesamt doch zu deutlich weniger Problemen gekommen ist, als wir anfangs vermutet hatten. Und wenn Probleme aufkamen, hat man dank der ausführlichen Dokumentation und dank vielen Hilfen im Internet relativ schnell die Lösung dafür gefunden.
 
 \begin{itemize} 
-\item 1
-\item 2
+\item Unterstützung älterer Versionen bei Benutzung neuer Funktionen: Für fast alles gibt es bei Android mittlerweile bereits implementierte Funktionen, jedoch sind viele dieser Funktionen erst ab einer bestimmten Version verfügbar. Da wir unsere App aber explizit auch für ältere Android Modelle kompitabel machen wollten, mussten wir öfter die einfachere Variante außen vor lassen und etwas selbst implementieren.
+\item Dex-Limit bei Android oder auch genannt das 64k Methoden-Limit: Dieses Limit taucht auf, wenn die App insgesamt mit allen Bibliotheken über 64.000 Methoden besitzt und auch mit älteren Android-Versionen kompitabel sein soll. Die vielen Methoden kommen dadurch zustande, wenn man mehrere Bibliotheken einbindet, die selbst widerum abhängig zu anderen Bibliotheken sind. So hat zum Beispiel alleine die Google-Play-Bibliothek über die Hälfte der Methoden ausgefüllt. Oft ist es so, dass nur eine Funktion einer Bibliothek gebraucht wird, sie aber komplett eingebunden werden muss. So haben wir trotz nicht all zu vieler Einbindungen recht schnell dieses Limit überschritten. Mit ein wenig Recherche konnte aber auch dieses Problem umgangen werden.
+\item  Interface-Design so umsetzen wie geplant: Wie auch schon im letzten Semester kann man festhalten, dass das Designen der GUI mit Android Studio sehr angenehm ist. Trotzdem hat es uns erneut vor eine Herausforderung gestellt, die GUI auch so umzustzen wie geplant. Es gab alleine zwsichen unseren Handys und Emulatoren öfter mal größere Unterschiede bei der Darstellung.
+\item Microsoft Azure: Azure bietet zwar viele Vorteile aber auch einige Schwierigkeiten, wie ein nicht intuitives Webinterface, Einschränkungen für Studenten und einen scheinbar zwischenzeitlich zufälligen sehr langsamen Verbindungsaufbau.
+\item Möglichst wenige Verbindungen zum Server aufbauen: Die Daten schlau herunter zu laden und zwischen zu speichern, so dass der Client möglichst wenig Anfragen an den Server schicken muss, war nicht immer selbstverständlich. Es muss oft abgeschätzt werden, wann eine Anfrage an den Server sinnvoll ist und wann auf zwischengespeicherte Daten zurück gegriffen werden kann.
+\item Benutzung von Google-Services: Das Arbeiten mit bereits vorhandenen APIs wie zum Beispiel den Maps- / Standort-Services musste erst erlernt werden. Aber dank der guten Dokumentation war dies kein Problem.
 \end{itemize}
