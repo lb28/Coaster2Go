@@ -1,13 +1,71 @@
+% tabellenzeile dreispaltig
+\newcommand{\td}[3]{
+	#1 & #2 & #3 \\ \hline
+}
+
 \chapter{Anforderungsabgleich}
 \label{cha:anforderungsabgleich}
+
+Es folgt ein tabellarischer Vergleich zwischen den in Kapitel \ref{cha:anforderungsanalyse} 
+spezifizierten Anforderungen und den implementierten Funktionen. Es wird für jede der Anforderungen 
+beurteilt, inwieweit diese in der Implementierung erfüllt ist (Ja / Teilweise / Nein). Eine 
+Zuordnung zu den Einträgen aus Kapitel \ref{cha:anforderungsanalyse} ist anhand der ID möglich.
+
+Diejenigen Funktionen, die implementiert wurden, jedoch nicht im Voraus als Anforderungen 
+spezifiziert waren, werden in diesem Vergleich nicht berücksichtigt.
+
+\clearpage
 
 % Abschnitt: Funktionale Anforderungen
 \section{Funktionale Anforderungen}
 \label{sec:anforderungsabgleich:funktional}
-TODO
 
+% padding anpassen für tabelle
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.3}
 
-% Abschnitt: Nicht Funktionale Anforderungen
-\section{Nicht Funktionale Anforderungen}
+\begin{center}
+	\begin{table}[h]
+		\begin{tabular}{ | l | l | p{11.5cm} |}
+			%TODO Breite automatisch die Seite füllen lassen? (\textwidth ist zu lang)
+			\hline
+			\textbf{ID} & \textbf{Erfüllt} & \textbf{Kommentar} \\ \hline
+			\td{FA1}{Nein}{Unnötig, da die Account-Funktionen im Sidebar-Menü untergebracht wurden 
+			und die Anwendung direkt auf der Parkübersicht startet.}
+			\td{FA2}{Ja}{-}
+			\td{FA3}{Ja}{-}
+			\td{FA4}{Ja}{-}
+			\td{FA5}{Ja}{-}
+			\td{FA6}{Ja}{-}
+			\td{FA7}{Ja}{-}
+			\td{FA8}{Ja}{Es sind weiterhin 4 verschiedene Statistiken, jedoch wurde die Semantik 
+			leicht geändert, um sie hilfreicher zu machen (siehe Kapitel 4.2.1 
+			``Wartezeit-Berechnung und -darstellung'').}
+			\td{FA9}{Ja}{-}
+			\td{FA10}{Ja}{-}
+		\end{tabular}
+	\end{table}
+\end{center}
+
+% padding wieder auf standard
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1}
+
+% Abschnitt: Nichtfunktionale Anforderungen
+\section{Nichtfunktionale Anforderungen}
 \label{sec:anforderungsabgleich:nichtfunktional}
-TODO
+
+\begin{center}
+	\begin{tabular}{ | l | l | p{11.5cm} |}
+		\hline
+		\textbf{ID} & \textbf{Erfüllt} & \textbf{Kommentar} \\ \hline
+		\td{NFA1}{Ja}{-}
+		\td{NFA2}{Ja}{Die Zeit zum Hoch- oder Herunterladen von Daten liegt oft weit über 1,5 
+		Sekunden, aber dieser Vorgang blockiert nicht die Benutzeroberfläche und kann abgebrochen 
+		werden.}
+		\td{NFA3}{Ja}{Die Anforderung ist nur schwer zu beurteilen. Es wurde sich möglichst an die 
+		Android-Richtlinien für Benutzeroberflächen gehalten, und alle Bereiche der 
+		Anwendung sind nach dem Empfinden aller bisherigen Benutzer leicht bedienbar.}
+		\td{NFA4}{Ja}{-}
+	\end{tabular}
+\end{center}
