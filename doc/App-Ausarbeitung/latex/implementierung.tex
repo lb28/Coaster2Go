@@ -39,7 +39,7 @@ Nach dem Öffnen der Anwendung befindet man sich auf der Startseite unserer App.
 
 Jederzeit in der Anwendung ist das Seitenmenü (s. Abbildung \ref{figure:implementierungsidebar}) verfügbar, in dem sich der Nutzer ein- oder ausloggen oder zur 'Startseite', der Parkübersicht, zurückkehren kann.
 
-Ist ein Nutzer eingeloggt kann er Park und Attraktionen erstellen und bearbeiten, Wartezeiten eintragen und Bewertungen abgeben. Möchte man sich nicht einloggen kann man die App trotzdem als Informationsquelle nutzen, denn man kann alle Infos wie Wartezeiten und Bewertungen sehen, aber eben nicht selber eintragen. 
+Ist ein Nutzer eingeloggt kann er Park und Attraktionen erstellen und bearbeiten, Wartezeiten eintragen und Bewertungen abgeben. Möchte man sich nicht einloggen kann man die App trotzdem als Informationsquelle nutzen, denn man kann alle Infos wie Wartezeiten und Bewertungen sehen, ohne eingeloggt zu sein. 
 
 Falls man als Nutzer, über den orangenen Plus-Button unten rechts in der Parkübersicht, einen Park erstellt hat, wird neben dem Namen des Parks das Piktogramm eines Stifts angezeigt, was bedeutet, dass man selber Admin des Parks ist und diesen und seine Attraktionen bearbeiten kann. \\
 
@@ -59,7 +59,7 @@ Falls man als Nutzer, über den orangenen Plus-Button unten rechts in der Parkü
     \end{minipage}
 \end{figure}
 
-Wählt man nun, durch das Tippen auf einen Park, diesen aus, so kommt man als nächstes auf die Parkdetail Seite, welche in Abbildung \ref{figure:implementierungparkansicht} zu sehen ist. 
+Wählt man nun, durch das Tippen auf einen Park, diesen aus, so kommt man als nächstes auf die Parkdetailansicht, welche in Abbildung \ref{figure:implementierungparkansicht} zu sehen ist. 
 
 Oben auf der Seite ist immer ein Bild des Parks zu sehen. Darunter befinden sich das Herz als Symbol für 'Favorit' das sich aktivieren und deaktivieren lässt, der Parkname, der Ort und falls GPS aktiviert ist auch die aktuelle Entfernung zum Park. Der Standort des Parks lässt sich außerdem durch den Button auf der rechten Seite auf GoogleMaps anzeigen (s. Abbildung \ref{figure:implementierungstandort}). 
 
@@ -87,7 +87,7 @@ Durch den am unteren Bildrand gelegenen Button 'Attraktionen' kommt man dann wei
 
 Die Seite aller Attraktionen eines Parks, die sog. Attraktionsübersicht, die in Abbildung \ref{figure:implementierungattraktionsuebersicht} zu sehen ist, ist sehr ähnlich aufgebaut wie die Parkübersicht. 
 
-Es gibt ebenfalls die Möglichkeiten zur Ansicht aller Attraktionen oder nur der Favoriten und zur Sortierung und Suche, aber hinzu kommt noch die Möglichkeit zum Filtern der Liste nach Kategorien der Attraktionen, wie z. B. Achterbahn oder Essensstand. Die einzelnen Elemente der Liste bestehen aus Bild, Name und Bewertung und dazuhin noch der Wartezeit in Minuten und wann diese eingetragen wurde. Die Farben der Wartezeiten bedeuten einfach dass man entweder nur kurz anstehen muss (grün), durchschnittlich lang (gelb) oder dass momentan die Wartezeit sehr hoch ist (rot). Später wird aber noch genauer auf die Wartezeiten eingegangen und auch der Algorithmus dahinter erklärt. 
+Es gibt ebenfalls die Möglichkeiten zur Ansicht aller Attraktionen oder nur der Favoriten und zur Sortierung und Suche, aber hinzu kommt noch die Möglichkeit zum Filtern der Liste nach Kategorien der Attraktionen, wie z. B. Achterbahn, Kinderbahn oder Restaurant. Die einzelnen Elemente der Liste bestehen aus Bild, Name und Bewertung und dazuhin noch der Wartezeit in Minuten und wann diese eingetragen wurde. Die Farben der Wartezeiten bedeuten einfach dass man entweder nur kurz anstehen muss (grün), durchschnittlich lang (gelb) oder dass momentan die Wartezeit sehr hoch ist (rot). Später wird aber noch genauer auf die Wartezeiten eingegangen und auch der Algorithmus dahinter erklärt. 
 
 Wählt man nun eine Attraktion aus der Liste aus kommt man zur Detailansicht dieser Attraktion, wie in Abbildung \ref{figure:implementierungattraktionsansicht} zu sehen.
 
@@ -111,7 +111,7 @@ Wählt man nun eine Attraktion aus der Liste aus kommt man zur Detailansicht die
 
 Auf dieser Seite kann man sich, gleich wie bei Parks, die Attraktion als Favorit hinzufügen, den 
 Standort anzeigen lassen (s. Abbildung \ref{figure:implementierungstandort}) und die Bewertungen ansehen. Neu hinzu kommt, dass man sich noch weitere 
-Informationen über einen 'i'-Button anzeigen lassen kann, wo auch unter Anderem zu sehen ist, in 
+Informationen über den 'i'-Button anzeigen lassen kann, wo auch unter anderem zu sehen ist, in 
 welche der Kategorien die Attraktion gehört (siehe Abbildung 
 \ref{figure:implementierungattraktionsinfo}). 
 
@@ -133,10 +133,10 @@ welche der Kategorien die Attraktion gehört (siehe Abbildung
 	\end{minipage}
 \end{figure}
 
-Des Weiteren werden hier noch mehr Wartezeiten angezeigt, nämlich links der Durchschnitt der letzten drei Eintragungen, in der Mitte der Tagesdurchschnitt und auf der rechten Seite der Gesamtdurchschnitt. 
+Des Weiteren werden in der Detailansicht einer Attraktion noch mehr Wartezeiten angezeigt, nämlich links der Durchschnitt der letzten drei Eintragungen, in der Mitte der Tagesdurchschnitt und auf der rechten Seite der Gesamtdurchschnitt. 
 Darunter wird eine andere Wartezeitstatistik angezeigt. Hier sind auf der x-Achse die Stunden dargestellt und auf der y-Achse die Minuten. Die Säulen des Diagramms sind dann also die durchschnittliche Wartezeit in der angegebenen Stunde, die aus allen bisher eingetragenen Wartezeiten berechnet wird. 
 
-Ganz unten wird, falls der Nutzer eingeloggt ist, noch ein Feld zum selbst Wartezeiten eintragen angezeigt. Das Eintragen ist aber nur möglich, falls sich der Nutzer zusätzlich noch im Park befindet (Standort muss < 2km vom Park entfernt sein) und nicht schon innerhalb der letzten Stunde für diese Attraktion eine Wartezeit eingetragen hat. 
+Ganz unten wird, falls der Nutzer eingeloggt ist, noch ein Feld zum selbst Wartezeiten eintragen angezeigt. Das Eintragen ist aber nur möglich, falls sich der Nutzer zusätzlich noch im Park befindet (GPS muss aktiviert sein) und nicht schon innerhalb der letzten Stunde für diese Attraktion eine Wartezeit eingetragen hat. 
 
 Will man nun die Bewertungen einer Attraktion bzw. eines Parks sehen oder diese auch selbst bewerten, kommt man auf die in Abbildung \ref{figure:implementierungbewertungen} zu sehende Activity.
 
@@ -156,9 +156,9 @@ Will man nun die Bewertungen einer Attraktion bzw. eines Parks sehen oder diese 
     \end{minipage}
 \end{figure} 
 
-Ganz oben wird noch einmal der Durchschnitt aller Bewertungen angezeigt. Darunter sind alle bisherigen Bewertungen mit Nutzername, Datum und Kommentar zu sehen.
+Hier sind alle bisherigen Bewertungen mit Nutzername, Datum und Kommentar zu sehen. Diese lassen sich nach Datum oder nach Anzahl der Sterne sortieren.
 
-Um selbst eine Bewertung abzugeben tippt man auf den orangenen Plus-Button unten Rechts und es Öffnet sich ein Eingabedialog, wie in Abbildung \ref{figure:implementierungbewerten} zu sehen. Falls man zu diesem Park bzw. dieser Attraktion eine Bewertung abgegeben hat, so wird diese hier angezeigt und man kann sie bearbeiten, aber es wird keine neue erstellt. Hat man bisher noch nicht bewertet, vergibt man jetzt 0 bis 5 Sterne, schreibt ein Kommentar und speichert dann mit 'SPEICHERN'.
+Um selbst eine Bewertung abzugeben tippt man auf den orangenen Plus-Button unten rechts und es öffnet sich ein Eingabedialog, wie in Abbildung \ref{figure:implementierungbewerten} zu sehen. Falls man zu diesem Park bzw. dieser Attraktion eine Bewertung abgegeben hat, so wird diese hier angezeigt und man kann sie bearbeiten, aber es wird keine neue erstellt. Hat man bisher noch nicht bewertet, vergibt man jetzt 0 bis 5 Sterne, schreibt ein Kommentar und speichert dann mit 'SPEICHERN'. Ein Parkadministrator kann hier auch den Text einer Bewertung zensieren, falls diese anstößig sind.
 
 \begin{figure}[h]
     \centering
@@ -176,10 +176,7 @@ Um selbst eine Bewertung abzugeben tippt man auf den orangenen Plus-Button unten
     \end{minipage}
 \end{figure}
 
-Für Attraktionen gibt es eine separate einfache Wartezeiten-Ansicht (vgl. Abbildung 
-\ref{figure:implementierungwartezeiten}), in der die eingetragenen 
-Wartezeiten aller Benutzer zu sehen sind. Diese lässt sich nach Name, Wartezeit, oder Datum 
-sortieren.
+Für Attraktionen gibt es eine separate einfache Wartezeiten-Ansicht (vgl. Abbildung \ref{figure:implementierungwartezeiten}), in der die eingetragenen Wartezeiten aller Benutzer zu sehen sind. Diese lässt sich nach Name, Wartezeit, oder Datum sortieren.
 
 \begin{figure}[H]
     \centering
@@ -197,10 +194,7 @@ sortieren.
     \end{minipage}
 \end{figure}
 
-Die Anwendung enthält auch einen Editor für Parks und Attraktionen, der erlaubt diese zu 
-bearbeiten. Der Editor wird auch benutzt, um Parks und Attraktionen zu erstellen. Hier wussten wir 
-in der Planphase noch nicht genau, was am Ende herauskommt, und so gibt es einige Abweichungen 
-zwischen Mockup und Implementierung (vgl. Abbildung \ref{figure:implementierungeditor}).
+Die Anwendung enthält auch einen Editor für Parks und Attraktionen, der es den Administratoren erlaubt, diese zu bearbeiten. Der Editor wird auch benutzt, um Parks und Attraktionen zu erstellen. Der Name und die Informationen zu einem Park bzw. einer Attraktion können direkt eingegeben werden. Die Tags einer Attraktion können aus einer Reihe von vorgegebenen Tags ausgewählt werden. Die genaue Position kann von Hand eingegeben werden oder über ein Google-Maps-Interface bestimmt werden. Bilder können entweder direkt mit der Kamera des Handys aufgenommen werden, aus der Galerie des Handys geladen werden oder es kann ein Link zu einem Bild aus dem Web angegeben werden. Hier wussten wir in der Planphase noch nicht genau, was am Ende herauskommt, und so gibt es einige Abweichungen zwischen Mockup und Implementierung (vgl. Abbildung \ref{figure:implementierungeditor}).
 
 
 \begin{figure}[h]
